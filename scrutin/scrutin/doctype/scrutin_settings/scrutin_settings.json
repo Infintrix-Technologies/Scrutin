@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-30 18:02:20.805452",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "randomize_questions_in_each_test"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "randomize_questions_in_each_test",
+   "fieldtype": "Check",
+   "label": "Randomize Questions in each test"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-09-30 18:03:00.172739",
+ "modified_by": "Administrator",
+ "module": "Scrutin",
+ "name": "Scrutin Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
