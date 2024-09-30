@@ -242,3 +242,5 @@ app_license = "agpl-3.0"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+
+website_route_rules = [{'from_route': '/scrutin_frontend/<path:app_path>', 'to_route': 'scrutin_frontend'},]
