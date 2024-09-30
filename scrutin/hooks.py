@@ -4,7 +4,7 @@ app_publisher = "Infintrix Technologies"
 app_description = "An app to take assesments based on tests"
 app_email = "info@infintrixtech.com"
 app_license = "agpl-3.0"
-
+required_apps = ["frappe/erpnext","frappe/hrms"]
 # Apps
 # ------------------
 
