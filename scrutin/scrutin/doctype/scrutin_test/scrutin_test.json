@@ -1,21 +1,31 @@
 {
+ "_comments": "[]",
+ "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
  "creation": "2024-09-30 17:46:47.103197",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_aomd"
+  "title",
+  "test_questions"
  ],
  "fields": [
   {
-   "fieldname": "section_break_aomd",
-   "fieldtype": "Section Break"
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title"
+  },
+  {
+   "fieldname": "test_questions",
+   "fieldtype": "Table",
+   "label": "Test Questions",
+   "options": "Scrutin Test Question"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-30 17:46:47.103197",
+ "modified": "2024-10-01 15:38:30.826908",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Test",
@@ -34,7 +44,9 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "title"
 }

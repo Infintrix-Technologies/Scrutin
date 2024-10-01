@@ -1,4 +1,6 @@
 {
+ "_comments": "[]",
+ "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
  "creation": "2024-09-30 17:27:04.673714",
@@ -6,11 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
-  "language",
-  "job_designation",
-  "job_location",
-  "job_opening",
-  "candidate"
+  "language"
  ],
  "fields": [
   {
@@ -22,44 +20,17 @@
    "reqd": 1
   },
   {
-   "fieldname": "job_designation",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Job Designation",
-   "options": "Designation",
-   "reqd": 1
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
-  },
-  {
-   "fieldname": "job_location",
-   "fieldtype": "Link",
-   "label": "Job Location",
-   "options": "Country",
-   "reqd": 1
-  },
-  {
-   "fieldname": "job_opening",
-   "fieldtype": "Link",
-   "label": "Job Opening",
-   "options": "Job Opening"
-  },
-  {
-   "fieldname": "candidate",
-   "fieldtype": "Link",
-   "label": "Candidate",
-   "options": "Scrutin Candidate"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-30 20:00:16.909069",
+ "modified": "2024-10-01 14:50:36.791892",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Assessment",

@@ -1,13 +1,14 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-09-30 17:49:24.054401",
+ "creation": "2024-10-01 15:01:13.288878",
  "doctype": "DocType",
+ "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "question",
-  "type",
   "options",
+  "type",
   "answer"
  ],
  "fields": [
@@ -16,6 +17,13 @@
    "fieldtype": "Text Editor",
    "in_list_view": 1,
    "label": "Question",
+   "reqd": 1
+  },
+  {
+   "fieldname": "options",
+   "fieldtype": "Table",
+   "label": "Options",
+   "options": "Scrutin Question Option",
    "reqd": 1
   },
   {
@@ -28,21 +36,15 @@
    "reqd": 1
   },
   {
-   "fieldname": "options",
-   "fieldtype": "Table",
-   "label": "Options",
-   "options": "Scrutin Question Option"
-  },
-  {
    "fieldname": "answer",
    "fieldtype": "Data",
    "label": "Answer",
-   "length": 1
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-30 19:43:55.683709",
+ "modified": "2024-10-01 15:35:21.086930",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Question",

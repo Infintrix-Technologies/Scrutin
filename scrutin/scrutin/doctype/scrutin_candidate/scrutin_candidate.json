@@ -1,12 +1,16 @@
 {
+ "_comments": "[]",
+ "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:job_applicant",
  "creation": "2024-09-30 19:22:34.747937",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "candidate_information_section",
-  "job_applicant"
+  "job_applicant",
+  "assessment"
  ],
  "fields": [
   {
@@ -18,15 +22,26 @@
    "fieldname": "job_applicant",
    "fieldtype": "Link",
    "label": "Job Applicant",
-   "options": "Job Applicant"
+   "options": "Job Applicant",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "assessment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assessment",
+   "options": "Scrutin Assessment",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-30 19:26:30.680231",
+ "modified": "2024-10-01 15:48:33.987375",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
