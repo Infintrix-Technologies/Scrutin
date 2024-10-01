@@ -10,7 +10,10 @@
  "field_order": [
   "candidate_information_section",
   "job_applicant",
-  "assessment"
+  "assessment",
+  "invited_on",
+  "invite_accepted_on",
+  "status"
  ],
  "fields": [
   {
@@ -33,11 +36,27 @@
    "label": "Assessment",
    "options": "Scrutin Assessment",
    "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Invited\nInvite Accepted\nAssessment Started"
+  },
+  {
+   "fieldname": "invited_on",
+   "fieldtype": "Datetime",
+   "label": "Invited On"
+  },
+  {
+   "fieldname": "invite_accepted_on",
+   "fieldtype": "Datetime",
+   "label": "Invite Accepted On"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-01 15:48:33.987375",
+ "modified": "2024-10-01 20:37:16.542151",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",

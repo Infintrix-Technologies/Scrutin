@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ScrutinReponse(Document):
+class ScrutinTestFocusLinks(Document):
 	pass

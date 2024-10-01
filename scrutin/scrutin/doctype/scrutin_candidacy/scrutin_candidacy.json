@@ -3,52 +3,50 @@
  "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-09-30 17:27:04.673714",
+ "creation": "2024-09-30 19:21:42.315361",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "language",
-  "assessment_tests",
-  "custom_questions"
+  "candidate",
+  "question",
+  "answer",
+  "test"
  ],
  "fields": [
   {
-   "fieldname": "language",
+   "fieldname": "candidate",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Language",
-   "options": "Language",
+   "label": "Candidate",
+   "options": "Scrutin Candidate",
    "reqd": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "question",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "Question",
+   "options": "Scrutin Question",
    "reqd": 1
   },
   {
-   "fieldname": "assessment_tests",
-   "fieldtype": "Table",
-   "label": "Assessment Tests",
-   "options": "Scrutin Assessment Tests",
-   "reqd": 1
+   "fieldname": "answer",
+   "fieldtype": "JSON",
+   "label": "Answer"
   },
   {
-   "fieldname": "custom_questions",
-   "fieldtype": "Table",
-   "label": "Custom Questions",
-   "options": "Scrutin Assessment Questions"
+   "fieldname": "test",
+   "fieldtype": "Link",
+   "label": "Test",
+   "options": "Scrutin Test"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-01 18:09:14.750849",
+ "modified": "2024-10-01 19:01:29.716390",
  "modified_by": "Administrator",
  "module": "Scrutin",
- "name": "Scrutin Assessment",
+ "name": "Scrutin Candidacy",
  "owner": "Administrator",
  "permissions": [
   {

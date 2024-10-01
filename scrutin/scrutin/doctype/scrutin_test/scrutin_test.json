@@ -8,7 +8,15 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "test_questions"
+  "test_questions",
+  "duration",
+  "status",
+  "job_role",
+  "language",
+  "test_focus",
+  "test_format",
+  "description",
+  "level"
  ],
  "fields": [
   {
@@ -21,11 +29,60 @@
    "fieldtype": "Table",
    "label": "Test Questions",
    "options": "Scrutin Test Question"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Duration",
+   "label": "Duration"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Published\nDraft"
+  },
+  {
+   "fieldname": "job_role",
+   "fieldtype": "Link",
+   "label": "Job Role",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Link",
+   "label": "Language",
+   "options": "Language"
+  },
+  {
+   "fieldname": "test_format",
+   "fieldtype": "Select",
+   "label": "Test Format",
+   "options": "Multiple-choice\nCoding\nTyping\nQuestionnaire\nSimulation\u00a0\u00a0(0)"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Level",
+   "options": "Beginner\nIntermediate\nExpert",
+   "reqd": 1
+  },
+  {
+   "fieldname": "test_focus",
+   "fieldtype": "Table",
+   "label": "Test Focus",
+   "options": "Scrutin Test Focus Links"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-01 15:38:30.826908",
+ "modified": "2024-10-01 19:20:58.473180",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Test",

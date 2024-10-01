@@ -1,45 +1,32 @@
 {
- "_comments": "[]",
- "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-09-30 19:21:42.315361",
+ "creation": "2024-10-01 19:14:58.256481",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "candidate",
-  "question",
-  "answer"
+  "name1",
+  "focus_name"
  ],
  "fields": [
   {
-   "fieldname": "candidate",
-   "fieldtype": "Link",
+   "fieldname": "focus_name",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Candidate",
-   "options": "Scrutin Candidate",
+   "label": "Focus Name",
    "reqd": 1
   },
   {
-   "fieldname": "question",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Question",
-   "options": "Scrutin Question Old",
-   "reqd": 1
-  },
-  {
-   "fieldname": "answer",
-   "fieldtype": "JSON",
-   "label": "Answer"
+   "fieldname": "name1",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-01 15:00:53.285020",
+ "modified": "2024-10-01 19:38:08.275128",
  "modified_by": "Administrator",
  "module": "Scrutin",
- "name": "Scrutin Reponse",
+ "name": "Scrutin Test Focus",
  "owner": "Administrator",
  "permissions": [
   {
@@ -55,7 +42,9 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "focus_name"
 }
