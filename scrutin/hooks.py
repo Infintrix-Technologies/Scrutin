@@ -243,4 +243,4 @@ required_apps = ["frappe/erpnext","frappe/hrms"]
 # }
 
 
-website_route_rules = [{'from_route': '/scrutin_frontend/<path:app_path>', 'to_route': 'scrutin_frontend'},]
+website_route_rules = [{'from_route': '/scrutin/<path:app_path>', 'to_route': 'scrutin_frontend'},]
