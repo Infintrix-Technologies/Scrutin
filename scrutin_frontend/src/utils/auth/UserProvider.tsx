@@ -20,6 +20,10 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
     // const { mutate } = useSWRConfig()
     const { logout, currentUser, updateCurrentUser, isLoading } = useFrappeAuth()
+    // const frappe_auth = useFrappeAuth()
+
+
+    // console.log(frappe_auth)
 
     const handleLogout = async () => {
         // localStorage.removeItem('ravenLastChannel')
