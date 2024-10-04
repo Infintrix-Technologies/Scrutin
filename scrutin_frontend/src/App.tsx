@@ -6,6 +6,7 @@ import Jobs from "./pages/Jobs";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Cookies from 'js-cookie'
+import { GlobalStateProvider } from "./utils/StateProvider";
 const NO_CACHE_KEYS = [
   "frappe.desk.form.load.getdoctype",
   "frappe.desk.search.search_link",
@@ -115,8 +116,9 @@ function App() {
       }}
       siteName={getSiteName()}
       >
-        
+        <GlobalStateProvider>
         <RouterProvider router={router} />
+        </GlobalStateProvider>
       </FrappeProvider>
     </div>
   );

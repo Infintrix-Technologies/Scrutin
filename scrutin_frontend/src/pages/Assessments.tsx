@@ -19,10 +19,6 @@ const Assessments = (props: Props) => {
     <div className="px-32">
       <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Assessments</h1>
-        {/* <Button onClick={()=>{}}>
-          <FaPlus />
-          Create Assessment
-        </Button> */}
         <CreateAssessment/>
       </div>
 
