@@ -52,6 +52,10 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
+      fontFamily: {
+        'afacad': ['Afacad Flux','sans-serif'],
+        'montserrat': ["Montserrat", 'sans-serif'],
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

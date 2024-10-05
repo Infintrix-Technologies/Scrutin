@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FrappeProvider } from "frappe-react-sdk";
-import Login from "./pages/auth/Login";
-import Assessments from "./pages/Assessments";
-import Candidates from "./pages/Candidates";
-import Jobs from "./pages/Jobs";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
+import { RouterProvider } from "react-router-dom";
+
 import Cookies from 'js-cookie'
-import { GlobalStateProvider } from "./utils/StateProvider";
+import '@/App.css'
+
+import { GlobalStateProvider } from "@/utils/StateProvider";
+import { ThemeProvider } from "@/utils/ThemeProvider";
+import { router } from "./Routes";
+
 const NO_CACHE_KEYS = [
   "frappe.desk.form.load.getdoctype",
   "frappe.desk.search.search_link",
@@ -14,33 +16,7 @@ const NO_CACHE_KEYS = [
   "frappe.desk.reportview.get_count"
 ]
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <MainLayout />,
-    // loader: rootLoader,
-    children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "assessments",
-        element: <Assessments />,
-      },
-      {
-        path: "candidates",
-        element: <Candidates />,
-      },
-      {
-        path: "jobs",
-        element: <Jobs />,
-      },
-    ],
-  },
-],{
-   basename: `/${import.meta.env.VITE_BASE_NAME}` ?? ''
-});
+
 function App() {
 
   function localStorageProvider() {
@@ -58,8 +34,6 @@ function App() {
   
     // Before unloading the app, we write back all the data into `localStorage`.
     window.addEventListener('beforeunload', () => {
-  
-  
       // Check if the user is logged in
       const user_id = Cookies.get('user_id')
       if (!user_id || user_id === 'Guest') {
@@ -96,29 +70,39 @@ function App() {
     // We still use the map for write & read for performance.
     return map
   }
+  interface FrappeWindow extends Window {
+    frappe?: {
+      boot?: {
+        versions?: {
+          frappe?: string;
+        };
+        sitename?: string;
+      };
+    };
+  }
+  
   const getSiteName = () => {
-    // @ts-ignore
-    if (window.frappe?.boot?.versions?.frappe && (window.frappe.boot.versions.frappe.startsWith('15') || window.frappe.boot.versions.frappe.startsWith('16'))) {
-      // @ts-ignore
-      return window.frappe?.boot?.sitename ?? import.meta.env.VITE_SITE_NAME
+    const win = window as FrappeWindow;
+    if (win.frappe?.boot?.versions?.frappe && (win.frappe.boot.versions.frappe.startsWith('15') || win.frappe.boot.versions.frappe.startsWith('16'))) {
+      return win.frappe?.boot?.sitename ?? import.meta.env.VITE_SITE_NAME;
     }
-    return import.meta.env.VITE_SITE_NAME
-
+    return import.meta.env.VITE_SITE_NAME;
   }
   return (
-    <div className="App">
+    <div className="App font-montserrat">
       <FrappeProvider
       url={import.meta.env.VITE_FRAPPE_PATH ?? ''}
       socketPort={import.meta.env.VITE_SOCKET_PORT ? import.meta.env.VITE_SOCKET_PORT : undefined}
-      //@ts-ignore
       swrConfig={{
         provider: localStorageProvider
       }}
       siteName={getSiteName()}
       >
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <GlobalStateProvider>
         <RouterProvider router={router} />
         </GlobalStateProvider>
+        </ThemeProvider>
       </FrappeProvider>
     </div>
   );

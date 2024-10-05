@@ -1,6 +1,4 @@
 {
- "_comments": "[]",
- "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
  "creation": "2024-09-30 17:27:04.673714",
@@ -19,23 +17,20 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Language",
-   "options": "Language",
-   "reqd": 1
+   "options": "Language"
   },
   {
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Company",
-   "options": "Company",
-   "reqd": 1
+   "options": "Company"
   },
   {
    "fieldname": "assessment_tests",
    "fieldtype": "Table",
    "label": "Assessment Tests",
-   "options": "Scrutin Assessment Tests",
-   "reqd": 1
+   "options": "Scrutin Assessment Tests"
   },
   {
    "fieldname": "custom_questions",
@@ -52,7 +47,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-03 16:34:03.594967",
+ "modified": "2024-10-05 01:22:00.034952",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Assessment",

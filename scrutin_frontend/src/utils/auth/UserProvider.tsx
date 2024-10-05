@@ -1,8 +1,8 @@
-import { useFrappeAuth, useSWRConfig } from 'frappe-react-sdk'
+import { useFrappeAuth } from 'frappe-react-sdk'
 import { FC, PropsWithChildren } from 'react'
 import { createContext } from 'react'
 
-interface UserContextProps {
+export interface UserContextProps {
     isLoading: boolean,
     currentUser: string,
     logout: () => Promise<void>,
@@ -57,3 +57,4 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         </UserContext.Provider>
     )
 }
+

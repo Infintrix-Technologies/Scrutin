@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Table,
   TableBody,
@@ -103,7 +104,7 @@ const Candidates = () => {
         </div>
         <div className="flex gap-3">
           <Select>
-            <SelectTrigger className="w-[180px] bg-white">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Assessment" />
             </SelectTrigger>
             <SelectContent>
@@ -126,7 +127,7 @@ const Candidates = () => {
             </SelectContent>
           </Select>
           <Select>
-            <SelectTrigger className="w-[180px] bg-white">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Test" />
             </SelectTrigger>
             <SelectContent>
@@ -141,7 +142,7 @@ const Candidates = () => {
             </SelectContent>
           </Select>
           <Select>
-            <SelectTrigger className="w-[180px] bg-white">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Job Role" />
             </SelectTrigger>
             <SelectContent>

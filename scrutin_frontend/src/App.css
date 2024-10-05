@@ -1,3 +1,8 @@
+ul > a.active {
+  border-bottom: 2px solid hsl(var(--accent-foreground));
+  /* color: hsl(var(--primary-foreground)); */
+}
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;

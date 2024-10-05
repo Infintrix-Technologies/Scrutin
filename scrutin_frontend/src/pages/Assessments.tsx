@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AssessmentsList } from "@/components/AssessmentsList";
 import CreateAssessment from "@/components/CreateAssessment";
 // import { CreateAssessment } from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FaPlus } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
 
 type Props = {};
