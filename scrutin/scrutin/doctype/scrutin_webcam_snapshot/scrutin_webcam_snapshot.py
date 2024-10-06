@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ScrutinCandidacy(Document):
+class ScrutinWebcamSnapshot(Document):
 	pass

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 export default function AssessmentOverview() {
   return (
-    <div className="flex justify-center items-center px-64 h-screen">
+    <div className="px-64">
 
     <Card className="w-full">
       <CardContent className="p-6">

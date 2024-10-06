@@ -15,6 +15,7 @@ import CandidateLayout from "./layouts/CandidateLayout";
 import Setup from "./pages/Setup";
 import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
+import Intro from "./pages/Intro";
 
 export const router = createBrowserRouter(
   [
@@ -88,6 +89,10 @@ export const router = createBrowserRouter(
             {
               path: "",
               element: <Navigate to={`/assessments`} />,
+            },
+            {
+              path: ":assessment_id/intro",
+              element: <Intro />,
             },
             {
               path: ":assessment_id/overview",

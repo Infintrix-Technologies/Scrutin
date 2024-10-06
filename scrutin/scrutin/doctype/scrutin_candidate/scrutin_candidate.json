@@ -1,6 +1,4 @@
 {
- "_comments": "[]",
- "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:job_applicant",
@@ -11,9 +9,23 @@
   "candidate_information_section",
   "job_applicant",
   "assessment",
+  "user",
+  "column_break_ahwp",
   "invited_on",
+  "assessment_started_at",
   "invite_accepted_on",
-  "status"
+  "assessment_completed_at",
+  "ant_cheating_tab",
+  "cheating_monitor_section",
+  "filled_out_only_once_from_ip_address",
+  "web_cam_enabled",
+  "full_screen_mode_always_active",
+  "mouse_always_in_assessment_window",
+  "location",
+  "column_break_soyc",
+  "web_cam_snapshots",
+  "responses_tab",
+  "question_answers"
  ],
  "fields": [
   {
@@ -38,12 +50,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Invited\nInvite Accepted\nAssessment Started"
-  },
-  {
    "fieldname": "invited_on",
    "fieldtype": "Datetime",
    "label": "Invited On"
@@ -52,11 +58,93 @@
    "fieldname": "invite_accepted_on",
    "fieldtype": "Datetime",
    "label": "Invite Accepted On"
+  },
+  {
+   "fieldname": "assessment_started_at",
+   "fieldtype": "Datetime",
+   "label": "Assessment Started At"
+  },
+  {
+   "fieldname": "assessment_completed_at",
+   "fieldtype": "Datetime",
+   "label": "Assessment Completed At"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_ahwp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cheating_monitor_section",
+   "fieldtype": "Section Break",
+   "label": "Cheating Monitor"
+  },
+  {
+   "default": "0",
+   "fieldname": "filled_out_only_once_from_ip_address",
+   "fieldtype": "Check",
+   "label": "Filled out only once from IP address"
+  },
+  {
+   "default": "0",
+   "fieldname": "web_cam_enabled",
+   "fieldtype": "Check",
+   "label": "Web Cam Enabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "full_screen_mode_always_active",
+   "fieldtype": "Check",
+   "label": "Full screen mode always active"
+  },
+  {
+   "default": "0",
+   "fieldname": "mouse_always_in_assessment_window",
+   "fieldtype": "Check",
+   "label": "Mouse always in assessment window"
+  },
+  {
+   "fieldname": "responses_tab",
+   "fieldtype": "Tab Break",
+   "label": "Responses"
+  },
+  {
+   "fieldname": "question_answers",
+   "fieldtype": "Table",
+   "label": "Question Answers",
+   "options": "Scrutin Question Responses"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Geolocation",
+   "label": "Location"
+  },
+  {
+   "fieldname": "ant_cheating_tab",
+   "fieldtype": "Tab Break",
+   "label": "Ant Cheating"
+  },
+  {
+   "fieldname": "column_break_soyc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "web_cam_snapshots",
+   "fieldtype": "Table",
+   "label": "Web Cam Snapshots",
+   "options": "Scrutin Webcam Snapshot"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-01 20:37:16.542151",
+ "modified": "2024-10-06 18:12:44.000821",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",

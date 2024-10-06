@@ -47,7 +47,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-05 01:22:00.034952",
+ "modified": "2024-10-06 17:06:27.251565",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Assessment",
@@ -66,7 +66,9 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "assessment_name"
 }
