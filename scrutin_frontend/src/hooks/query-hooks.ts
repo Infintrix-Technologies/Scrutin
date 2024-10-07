@@ -39,6 +39,7 @@ export const useLanguageListQuery = () =>{
             order: 'desc',
           },
           asDict: true,
+          limit: 83,
         },
       );
 }

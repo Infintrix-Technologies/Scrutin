@@ -59,7 +59,7 @@ const jobs = [
 
 export default function Component() {
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-32">
        <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Jobs</h1>
         <Link to="/jobs/post">
