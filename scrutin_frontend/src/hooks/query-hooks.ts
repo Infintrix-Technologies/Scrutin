@@ -14,6 +14,20 @@ export const useAssessmentsListQuery = () =>{
       );
 }
 
+export const useCandidateListQuery = () =>{
+  return useFrappeGetDocList<any>(
+      'Scrutin Candidate',
+      {
+        fields: ['*'],
+        // orderBy: {
+        //   field: 'creation',
+        //   order: 'desc',
+        // },
+        asDict: true,
+      },
+    );
+}
+
 
 export const useCompanyListQuery = () =>{
     return useFrappeGetDocList<any>(

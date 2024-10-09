@@ -16,6 +16,7 @@ import Setup from "./pages/Setup";
 import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 import Intro from "./pages/Intro";
+import ApiTestPage from "./pages/ApiTestPage";
 
 export const router = createBrowserRouter(
   [
@@ -88,7 +89,8 @@ export const router = createBrowserRouter(
           children : [
             {
               path: "",
-              element: <Navigate to={`/assessments`} />,
+              element: <ApiTestPage />,
+              // element: <Navigate to={`/assessments`} />,
             },
             {
               path: ":assessment_id/intro",
