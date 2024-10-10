@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AssessmentsList } from "@/components/AssessmentsList";
+import { AssessmentsList } from "@/pages/AssessmentsList";
 import CreateAssessment from "@/components/CreateAssessment";
 // import { CreateAssessment } from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";

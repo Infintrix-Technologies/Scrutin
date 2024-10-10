@@ -8,7 +8,7 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { useAssessmentsListQuery } from "@/hooks/query-hooks";
-import { AssessmentActions } from "./AssessmentActions";
+import { AssessmentActions } from "../components/AssessmentActions";
   
   export function AssessmentsList() {
 

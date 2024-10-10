@@ -24,6 +24,10 @@ const navitems = [
     href: "/candidates",
   },
   {
+    title: "Job Applicants",
+    href: "/applicants",
+  },
+  {
     title: "Jobs",
     href: "/jobs",
   },

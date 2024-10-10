@@ -19,6 +19,7 @@ import ApiTestPage from "./pages/ApiTestPage";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import CandidateDashboard from "./pages/CandidateDashboard";
+import JobApplicants from "./pages/JobApplicants";
 
 export const router = createBrowserRouter(
   [
@@ -82,6 +83,16 @@ export const router = createBrowserRouter(
             {
               path: "post",
               element: <PostJob />,
+            },
+          ],
+        },
+        {
+          path: "applicants",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <JobApplicants />,
             },
           ],
         },

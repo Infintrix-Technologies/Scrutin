@@ -8,30 +8,45 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import { useFrappeGetDocList } from "frappe-react-sdk";
   
-  const candidates = [
-    {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      assessments: 5,
-      lastActivity: "2024-10-01",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      assessments: 3,
-      lastActivity: "2024-09-30",
-    },
-    {
-      name: "Alice Johnson",
-      email: "alice.johnson@example.com",
-      assessments: 8,
-      lastActivity: "2024-09-28",
-    },
-    // Add more data as needed
-  ]
+  // const candidates = [
+  //   {
+  //     name: "John Doe",
+  //     email: "john.doe@example.com",
+  //     assessments: 5,
+  //     lastActivity: "2024-10-01",
+  //   },
+  //   {
+  //     name: "Jane Smith",
+  //     email: "jane.smith@example.com",
+  //     assessments: 3,
+  //     lastActivity: "2024-09-30",
+  //   },
+  //   {
+  //     name: "Alice Johnson",
+  //     email: "alice.johnson@example.com",
+  //     assessments: 8,
+  //     lastActivity: "2024-09-28",
+  //   },
+  //   // Add more data as needed
+  // ]
   
   export function CandidatesList() {
+
+    const candidates_query =  useFrappeGetDocList(
+      'Scrutin Candidate',
+      {
+        fields: ['*'],
+        // orderBy: {
+        //   field: 'creation',
+        //   order: 'desc',
+        // },
+        asDict: true,
+      },
+    );
+const candidates = candidates_query?.data || []
+
     return (
       <Table>
         <TableCaption>A list of your candidates.</TableCaption>
