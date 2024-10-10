@@ -1,4 +1,4 @@
-import { useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
+import { useFrappeGetCall } from 'frappe-react-sdk';
 
 // interface Assessment {
 //   language: string;
@@ -7,13 +7,9 @@ import { useFrappeGetCall, useFrappePostCall } from 'frappe-react-sdk';
 
 const SpecificAssessments: React.FC = () => {
   
-  // const useFilterOnAssessment = useFrappeGetCall<any>("scrutin.api.create_candidate.create_scrutin_candidate");
-  // console.log(useFilterOnAssessment)
-
-
-  const createScrutinCandidates = useFrappeGetCall<any>("scrutin.api.create_scrutin_candidate.create_scrutin_candidate");
-  console.log(createScrutinCandidates)
-
+ 
+  const sendEmailToCandidate = useFrappeGetCall<any>("scrutin.api.send_email_to_candidate.create_scrutin_candidate")
+  console.log(sendEmailToCandidate)
 
   return (
     <div>
