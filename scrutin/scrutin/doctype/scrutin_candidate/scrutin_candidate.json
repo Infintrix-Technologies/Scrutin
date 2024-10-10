@@ -73,8 +73,7 @@
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "User",
-   "options": "User",
-   "unique": 1
+   "options": "User"
   },
   {
    "fieldname": "column_break_ahwp",
@@ -143,7 +142,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-09 20:00:15.315310",
+ "modified": "2024-10-10 19:12:05.350559",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",

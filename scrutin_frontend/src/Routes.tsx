@@ -11,12 +11,14 @@ import AssessmentDetail from "./pages/AssessmentDetail";
 import AdminLayout from "./layouts/AdminLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import AssessmentOverview from "./pages/AssessmentOverview";
-import CandidateLayout from "./layouts/CandidateLayout";
 import Setup from "./pages/Setup";
 import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 import Intro from "./pages/Intro";
 import ApiTestPage from "./pages/ApiTestPage";
+import CandidatacyLayout from "./layouts/CandidatacyLayout";
+import CandidateLayout from "./layouts/CandidateLayout";
+import CandidateDashboard from "./pages/CandidateDashboard";
 
 export const router = createBrowserRouter(
   [
@@ -84,8 +86,18 @@ export const router = createBrowserRouter(
           ],
         },
         {
-          path: "candidacy",
+          path: "candidate",
           element: <CandidateLayout />,
+          children : [
+            {
+              path: "",
+              element: <CandidateDashboard />,
+            },
+          ]
+        },
+        {
+          path: "candidacy",
+          element: <CandidatacyLayout />,
           children : [
             {
               path: "",
