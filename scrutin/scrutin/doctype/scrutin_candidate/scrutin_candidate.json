@@ -10,6 +10,7 @@
   "assessment",
   "job_applicant",
   "user",
+  "status",
   "column_break_ahwp",
   "invited_on",
   "assessment_started_at",
@@ -138,11 +139,19 @@
    "fieldtype": "Table",
    "label": "Web Cam Snapshots",
    "options": "Scrutin Webcam Snapshot"
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nAccepted",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-10 19:12:05.350559",
+ "modified": "2024-10-11 14:55:46.150546",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",

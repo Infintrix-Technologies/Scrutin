@@ -16,6 +16,7 @@ import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 import Intro from "./pages/Intro";
 import ApiTestPage from "./pages/ApiTestPage";
+import CandidateDetail from "./pages/ScrutinCandidate";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import CandidateDashboard from "./pages/CandidateDashboard";
@@ -111,9 +112,13 @@ export const router = createBrowserRouter(
           element: <CandidatacyLayout />,
           children : [
             {
-              path: "",
+              path: ":candidate_id",
               element: <ApiTestPage />,
               // element: <Navigate to={`/assessments`} />,
+            },
+            {
+              path: "candidate_detail",
+              element: <CandidateDetail />,
             },
             {
               path: ":assessment_id/intro",

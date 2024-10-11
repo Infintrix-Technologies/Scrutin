@@ -38,10 +38,10 @@ import { useFrappeGetDocList } from "frappe-react-sdk";
       'Scrutin Candidate',
       {
         fields: ['*'],
-        // orderBy: {
-        //   field: 'creation',
-        //   order: 'desc',
-        // },
+        orderBy: {
+          field: 'creation',
+          order: 'desc',
+        },
         asDict: true,
       },
     );
@@ -55,6 +55,8 @@ const candidates = candidates_query?.data || []
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Assessments</TableHead>
+            <TableHead>User</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Last activity</TableHead>
           </TableRow>
         </TableHeader>
@@ -62,8 +64,10 @@ const candidates = candidates_query?.data || []
           {candidates.map((candidate) => (
             <TableRow key={candidate.email}>
               <TableCell className="font-medium">{candidate.name}</TableCell>
-              <TableCell>{candidate.email}</TableCell>
-              <TableCell>{candidate.assessments}</TableCell>
+              <TableCell>{candidate.job_applicant}</TableCell>
+              <TableCell>{candidate.assessment}</TableCell>
+              <TableCell>{candidate.user}</TableCell>
+              <TableCell>{candidate.status}</TableCell>
               <TableCell>{candidate.lastActivity}</TableCell>
             </TableRow>
           ))}

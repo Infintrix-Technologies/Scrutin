@@ -38,7 +38,7 @@ const JobApplicants = () => {
   const send_invite = useFrappePostCall(
     "scrutin.api.candidate.create_candidate"
   );
-
+ 
   const job_applicants_query = useFrappeGetDocList("Job Applicant", {
     fields: ["*"],
     orderBy: {

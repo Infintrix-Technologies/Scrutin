@@ -69,7 +69,7 @@ def create_candidate(assessment,job_applicant):
 
     Your scrutin test is available at {frappe.utils.get_url()}/scrutin/candidacy/{scrutin_candidate.name}
     
-    Login with your email and password: {generated_password}
+    Login with your email:{job_applicant} and password: {generated_password}
     
     Best regards,
     Team
