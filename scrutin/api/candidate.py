@@ -91,3 +91,29 @@ def create_candidate(assessment,job_applicant):
         frappe.log_error(frappe.get_traceback(), "Failed to send email to candidate")
         # frappe.throw(f"Email sending failed: {str(e)}")
     return {"message": message, "candidate": scrutin_candidate}
+
+
+
+
+
+
+
+@frappe.whitelist()
+def update_job_applicant_status(job_applicant):
+    job_applicant_doc = frappe.get_doc("Job Applicant", job_applicant)
+    job_applicant_doc.phone_number = "03001122334"
+    job_applicant_doc.save()
+    return {"message": f"Phone Number updated to {job_applicant_doc.phone_number}"}
+
+
+
+# update the field of Scrutin Candidate #
+@frappe.whitelist()
+def update_candidate(assessment):
+    scrutin_candidate_doc = frappe.get_doc("Scrutin Candidate", assessment)
+    scrutin_candidate_doc.invite_accepted_on = datetime.datetime.now()
+    scrutin_candidate_doc.status = "Accepted"
+    scrutin_candidate_doc.save()
+    return {"message": f"Invite Accepted On {scrutin_candidate_doc.invite_accepted_on} and Status is {scrutin_candidate_doc.status}"}
+
+ 

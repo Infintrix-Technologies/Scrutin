@@ -12,6 +12,7 @@ import {
 import { Label } from "@/components/ui/label"
 
 import { useNavigate, useParams } from 'react-router-dom';
+import { CandidateStatus } from '@/components/CandidateStatus';
 
 const SpecificAssessments: React.FC = () => {
   const navigate = useNavigate();
@@ -47,39 +48,37 @@ const SpecificAssessments: React.FC = () => {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name" className='font-semibold'>Name</Label>
               <h1>
                 {candidate.name}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Email</Label>
+              <Label htmlFor="name" className='font-semibold'>Email</Label>
               <h1>
                 {candidate.job_applicant}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Assessments</Label>
+              <Label htmlFor="name" className='font-semibold'>Assessments</Label>
               <h1>
                 {candidate.assessment}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">User</Label>
+              <Label htmlFor="name" className='font-semibold'>User</Label>
               <h1>
                 {candidate.user}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Status</Label>
-              <h1>
-                {candidate.status}
-              </h1>
+              <Label htmlFor="name" className='font-semibold'>Status</Label>
+              <CandidateStatus />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Last Activity</Label>
+              <Label htmlFor="name" className='font-semibold'>Invited On</Label>
               <h1>
-                
+                {candidate.invited_on}
               </h1>
             </div>
           </div>
@@ -88,7 +87,7 @@ const SpecificAssessments: React.FC = () => {
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
         <Button onClick={() => navigate("/candidacy/:assessment_id/intro")}>
-          Accepted
+          Next
           </Button>
       </CardFooter>
     </Card>
