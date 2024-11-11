@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../apps/scrutin/scrutin/public/js/editor.bundle.js"],
+  "sourcesContent": ["console.log(\"Bundle is running\")"],
+  "mappings": ";;AAAA,UAAQ,IAAI,mBAAmB;",
+  "names": []
+}
