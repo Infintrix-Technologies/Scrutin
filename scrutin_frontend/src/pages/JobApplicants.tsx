@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -34,7 +35,50 @@ import { useForm } from "react-hook-form";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const renderStars = (rating: number) => {
+    let stars = [];
+    const fullStar = <FaStar />;
+    const halfStar = <FaStarHalfAlt />;
+    const emptyStar = <FaRegStar />;
+  
+    switch (rating) {
+      case 1:
+        stars = [fullStar, fullStar, fullStar, fullStar, fullStar];
+        break;
+      case 0.1:
+        stars = [halfStar, emptyStar, emptyStar, emptyStar, emptyStar];
+        break;
+      case 0.2:
+        stars = [fullStar, emptyStar, emptyStar, emptyStar, emptyStar];
+        break;
+      case 0.3:
+        stars = [fullStar, halfStar, emptyStar, emptyStar, emptyStar];
+        break;
+      case 0.4:
+        stars = [fullStar, fullStar, emptyStar, emptyStar, emptyStar];
+        break;
+      case 0.5:
+        stars = [fullStar, fullStar, halfStar, emptyStar, emptyStar];
+        break;
+      case 0.6:
+        stars = [fullStar, fullStar, fullStar, emptyStar, emptyStar];
+        break;
+      case 0.7:
+        stars = [fullStar, fullStar, fullStar, halfStar, emptyStar];
+        break;
+      case 0.8:
+        stars = [fullStar, fullStar, fullStar, fullStar, emptyStar];
+        break;
+      case 0.9:
+        stars = [fullStar, fullStar, fullStar, fullStar, halfStar];
+        break;
+      default:
+        stars = [emptyStar, emptyStar, emptyStar, emptyStar, emptyStar];
+    }
+  
+    return stars;
+  };
+  
   const send_invite = useFrappePostCall(
     "scrutin.api.candidate.create_candidate"
   );
@@ -47,6 +91,8 @@ const JobApplicants = () => {
     },
     asDict: true,
   });
+  const job_applicants = job_applicants_query?.data || [];
+  console.log(job_applicants,"job_aacapplicantsjob_applicants");
 
   const assessments_query = useFrappeGetDocList("Scrutin Assessment", {
     fields: ["*"],
@@ -57,8 +103,8 @@ const JobApplicants = () => {
     asDict: true,
   });
 
-  const job_applicants = job_applicants_query?.data || [];
   const assessments = assessments_query?.data || [];
+  console.log(assessments_query, "assessments_query")
 
   // React Hook Form setup
   const {
@@ -180,9 +226,11 @@ const JobApplicants = () => {
         </TableHeader>
         <TableBody>
           {job_applicants.map((applicant) => (
+                        
+            <>
             <TableRow key={applicant.name}>
               <TableCell>{applicant.applicant_name}</TableCell>
-              <TableCell>{applicant.applicant_rating}</TableCell>
+              <TableCell className="flex">{renderStars(applicant.applicant_rating)}</TableCell>
               <TableCell>{applicant.job_title}</TableCell>
               <TableCell>{applicant.status}</TableCell>
               <TableCell>
@@ -197,6 +245,7 @@ const JobApplicants = () => {
                 </Button>
               </TableCell>
             </TableRow>
+            </>
           ))}
         </TableBody>
         <TableFooter>

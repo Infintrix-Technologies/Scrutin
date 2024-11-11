@@ -16,6 +16,8 @@ import { AssessmentActions } from "../components/AssessmentActions";
     
 
     const assessments = assessments_query?.data || []
+    console.log(assessments,"assessments111");
+    
     return (
       <Table>
         <TableCaption>A list of your job postings.</TableCaption>
@@ -33,7 +35,7 @@ import { AssessmentActions } from "../components/AssessmentActions";
               <TableCell className="font-medium">{assessment.assessment_name}</TableCell>
               <TableCell>{assessment.company}</TableCell>
               <TableCell>{assessment.language}</TableCell>
-              <TableCell><AssessmentActions /></TableCell>
+              <TableCell><AssessmentActions assessment={assessment}/></TableCell>
             </TableRow>
           ))}
         </TableBody>

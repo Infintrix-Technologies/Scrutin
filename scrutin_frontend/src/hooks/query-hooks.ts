@@ -4,7 +4,7 @@ export const useAssessmentsListQuery = () =>{
     return useFrappeGetDocList<any>(
         'Scrutin Assessment',
         {
-          fields: ['assessment_name', 'company', 'language'],
+          fields: ['assessment_name', 'company', 'language', 'name'],
           orderBy: {
             field: 'creation',
             order: 'desc',

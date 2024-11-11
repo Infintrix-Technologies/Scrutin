@@ -6,18 +6,28 @@ import CreateAssessment from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
+import {  useFrappeDeleteDoc } from "frappe-react-sdk";
 
 type Props = {};
+
 
 
 
 const Assessments = (props: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // const delete_api = useFrappeDeleteDoc()
+
+
+  
+
   const status = searchParams.get("status") || "active";
 
   return (
     <div className="px-32">
+      {/* <Button onClick={()=>{
+        delete_api.deleteDoc('Scrutin Assessment', '0b1bdsk5tu')
+      }}>Delete</Button> */}
       <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Assessments</h1>
         <CreateAssessment/>
