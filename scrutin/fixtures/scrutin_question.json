@@ -1,0 +1,98 @@
+[
+ {
+  "answer": "any",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "modified": "2024-11-12 19:12:10.786896",
+  "name": "3libomlodf",
+  "options": [
+   {
+    "label": "12-15",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "16-18",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "20-25",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "30+",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is your age?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "any",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "modified": "2024-11-12 19:13:59.972369",
+  "name": "3mhqm798c5",
+  "options": [
+   {
+    "label": "BBA",
+    "parent": "3mhqm798c5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "BSCS",
+    "parent": "3mhqm798c5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "LLB",
+    "parent": "3mhqm798c5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "BSSE",
+    "parent": "3mhqm798c5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is your Degree?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "a",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "modified": "2024-10-01 15:32:59.222043",
+  "name": "c7kg0nr1du",
+  "options": [
+   {
+    "label": "Representational State Transfer",
+    "parent": "c7kg0nr1du",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "a"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is RESTful API?</p></div>",
+  "type": "Single Choice"
+ }
+]

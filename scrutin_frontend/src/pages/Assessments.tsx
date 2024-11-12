@@ -6,7 +6,6 @@ import CreateAssessment from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
-import {  useFrappeDeleteDoc } from "frappe-react-sdk";
 
 type Props = {};
 
