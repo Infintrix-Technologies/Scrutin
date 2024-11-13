@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
   Table,
@@ -18,7 +24,6 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   // SelectLabel,
   SelectTrigger,
@@ -34,7 +39,6 @@ import {
   FaStar,
   FaCog,
 } from "react-icons/fa";
-import { CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import {
@@ -48,10 +52,22 @@ import {
 } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
+import {
+  Dialog,
+  // DialogClose,
+  DialogContent,
+  DialogDescription,
+  // DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  // DialogTrigger,
+} from "@/components/ui/dialog";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Eye, Settings2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { useGlobalState } from "@/utils/StateProvider";
 
 interface Question {
   text: string;
@@ -79,6 +95,7 @@ const questions: Question[] = [
 
 const AssessmentDashboard: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
+  const globalState = useGlobalState();
 
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
@@ -149,20 +166,32 @@ const AssessmentDashboard: React.FC = () => {
                 <p className="text-gray-600">General public link</p>
               </div>
 
+              <p className="font-bold text-lg py-5"> Hiring stage </p>
+
               <div className="mb-2">
                 <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a fruit" />
+                  <SelectTrigger className="w-[220px]">
+                    <SelectValue placeholder="Not yet evaluated" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectGroup>
-                      {/* <SelectLabel>Fruits</SelectLabel> */}
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </SelectGroup>
+                    {/* <SelectGroup> */}
+
+                    <SelectItem value="2"> Evaluated</SelectItem>
+                    <SelectItem value="3"> Invited for interview</SelectItem>
+                    <SelectItem value="4"> Interviewed</SelectItem>
+                    <SelectItem value="5">
+                      {" "}
+                      Invited for take-home test
+                    </SelectItem>
+                    <SelectItem value="6"> Take-home test completed</SelectItem>
+                    <SelectItem value="7"> References checked</SelectItem>
+                    <SelectItem value="8"> Offer sent</SelectItem>
+                    <SelectItem value="9"> Offer declined</SelectItem>
+                    <SelectItem value="10"> Candidate withdrew</SelectItem>
+                    <SelectItem value="11"> Candidate unresponsive</SelectItem>
+                    <SelectItem value="12"> Rejected</SelectItem>
+                    <SelectItem value="13"> Hired 🎉</SelectItem>
+                    {/* </SelectGroup> */}
                   </SelectContent>
                 </Select>
               </div>
@@ -181,7 +210,12 @@ const AssessmentDashboard: React.FC = () => {
                   </div>
                 </div>
                 <Progress className="mt-4" value={15} max={100} />
-                <p className="text-xs mt-2 text-gray-500">
+                <p
+                  className="py-2 text-blue-600 cursor-pointer"
+                  onClick={() =>
+                    globalState.openModal("interpret_results", true)
+                  }
+                >
                   How to interpret results
                 </p>
               </CardHeader>
@@ -235,6 +269,9 @@ const AssessmentDashboard: React.FC = () => {
                   Anti-cheating monitor
                 </CardTitle>
                 <Link
+                  onClick={() =>
+                    globalState.openModal("anti_cheating_measures", true)
+                  }
                   className="text-primary hover:underline text-sm font-medium"
                   to="#"
                 >
@@ -248,14 +285,14 @@ const AssessmentDashboard: React.FC = () => {
                       <FaDesktop className="h-4 w-4" />
                       <span className="text-sm">Device used</span>
                     </div>
-                    <span className="text-sm font-medium">Desktop</span>
+                    <span className="text-sm font-bold">Desktop</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <FaMapPin className="h-4 w-4" />
                       <span className="text-sm">Location</span>
                     </div>
-                    <span className="text-sm font-medium">Lahore (PB), PK</span>
+                    <span className="text-sm font-bold">Lahore (PB), PK</span>
                   </div>
                   <Separator />
                   <div className="flex items-center justify-between">
@@ -641,6 +678,231 @@ const AssessmentDashboard: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {/* Modals */}
+
+      <Dialog
+        open={globalState.modals.interpret_results.open}
+        onOpenChange={(open) =>
+          globalState.openModal("interpret_results", open)
+        }
+      >
+        <DialogContent className="sm:max-w-[725px] mt-2 overflow-scroll">
+          <DialogHeader>
+            <DialogTitle>How to interpret results</DialogTitle>
+            <DialogDescription>
+              <p className="py-5">
+                Scrutin offers two main scoring methods to help you interpret
+                the performance of your candidates: Percentage correct and
+                Percentile scoring.
+              </p>
+
+              <Tabs defaultValue="percentile_answer" className="">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="percentile_answer">
+                    Percentage correct answers
+                  </TabsTrigger>
+                  <TabsTrigger value="percentile_score">
+                    Percentile score
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="percentile_answer">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="leading-5">
+                        <p>
+                          {" "}
+                          A measure of how well a candidate performed on a test,
+                          calculated by taking the number of points scored and
+                          dividing it by the total number of points available on
+                          the test, then multiplying by 100 to express the
+                          result as a percentage. For example, if a candidate
+                          answered 5 questions correctly out of 10 questions on
+                          a test where each question was worth 1 point, then
+                          they scored 5/10 points, and their percentage correct
+                          would be 50% because 5/10 x 100 = 50%.
+                        </p>
+                        <p>
+                          Percentage correct is a simple way to understand a
+                          person's performance on a test, but it does not take
+                          into account the difficulty of the test.
+                        </p>
+                      </CardTitle>
+                      <CardDescription>
+                        <hr className="my-3" />
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="col-span-1">
+                          <p>Average score</p>
+                          <p>
+                            Represents the mathematical average of the
+                            candidate's percentage correct score across
+                            individual tests in the assessment, rounded to the
+                            nearest whole number. The results of any personality
+                            tests are excluded from this average because we do
+                            not recommend that these tests be included in
+                            ranking candidates to make a hiring decision.
+                          </p>
+                          <p>
+                            In this example the average score of 80% is
+                            calculated by averaging the results of four out of
+                            five tests in an assessment (excluding the 16 types
+                            personality test).
+                          </p>
+                        </div>
+                        <div className="col-span-2">
+                          <div className="bg-white text-black rounded-md shadow-md px-4 py-3">
+                            <div className="flex justify-between items-center mb-2">
+                              <h2 className="text-lg font-bold">
+                                Average score
+                              </h2>
+
+                              <span className="text-2xl font-bold text-blue-500">
+                                80%
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-none gap-4">
+                              <div className="flex justify-between bg-gray-100 rounded-md p-3">
+                                <p className="font-medium">Critical thinking</p>
+
+                                <span className="text-gray-600">91%</span>
+                              </div>
+
+                              <div className="flex justify-between bg-gray-100 rounded-md p-3">
+                                <p className="font-medium">
+                                  Exploratory data analysis
+                                </p>
+
+                                <span className="text-gray-600">53%</span>
+                              </div>
+
+                              <div className="flex justify-between bg-gray-100 rounded-md p-3">
+                                <p className="font-medium">Verbal reasoning</p>
+
+                                <span className="text-gray-600">93%</span>
+                              </div>
+
+                              <div className="flex justify-between bg-gray-100 rounded-md p-3">
+                                <p className="font-medium">Culture add</p>
+
+                                <span className="text-gray-600">82%</span>
+                              </div>
+                            </div>
+
+                            <div className="mt-4 ">
+                              <h3 className="font-medium py-2">Personality</h3>
+
+                              <div className="flex justify-between bg-gray-100 rounded-md p-3">
+                                <p className="font-medium">16 types</p>
+
+                                <span className="text-gray-600">
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-purple-100 text-purple-800"
+                                  >
+                                    eStj
+                                  </Badge>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="percentile_score">
+                  <Card>
+                    <CardHeader>
+                      <p className="leading-6">
+                        Percentile scoring allows you to easily compare your
+                        candidate's performance relative to other candidates by
+                        choosing a comparison group. For example, if a
+                        candidate’s score is in the 87th percentile, this means
+                        that 87% of candidates in the comparison group have
+                        scored lower than the candidate. Percentile scoring is
+                        helpful for comparing how a candidate performs relative
+                        to other candidates in a given comparison group.
+                      </p>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <p className="text-xl">Comparison groups</p>
+                      <p className="leading-6">
+                        When you select the percentile scoring method, the
+                        default comparison group that your candidate is compared
+                        to is All candidates who have taken this test (across
+                        all jobs, levels and organizations in our database). We
+                        also offer a variety of more specific comparison groups
+                        that can make the comparison more nuanced, allowing you
+                        to compare candidates in our database based on highest
+                        educational attainment, business function, or level of
+                        seniority.
+                      </p>
+                      <Card className="flex justify-between items-center">
+                        <img
+                          className="h-[210px]"
+                          src="https://app.testgorilla.com/assets/others/percentile-bell-curve-rebrand.png"
+                          alt="test image"
+                        />
+                        {/* <p>Candidate name scored as well or better than, 68% of candidates in comparison group: All candidates.</p> */}
+                      </Card>
+
+                      <p className="leading-6">
+                        Please note that Coding tests and Culture add tests are
+                        always scored using the Percentage of correct answers
+                        scoring method, even if you select Percentile scoring.
+                        In other words, the scores on these tests are never
+                        relative to other candidates.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={globalState.modals.anti_cheating_measures.open}
+        onOpenChange={(open) =>
+          globalState.openModal("anti_cheating_measures", open)
+        }
+      >
+        <DialogContent className="sm:max-w-[755px] px-10">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Anti-cheating measures</DialogTitle>
+          </DialogHeader>
+          <p className="font-bold"> Device and location</p>
+          <p>
+            We register the candidate’s type of device used for the assessment,
+            as well as the geographic location, based on their IP address.
+          </p>
+
+          <p className="font-bold"> Filled out only once from IP address</p>
+          <p>
+          Using the IP address, we check if candidates fill out the assessment only once (with a public link to the assessment, candidates could use multiple email addresses to take repeated attempts at the assessment).
+          </p>
+
+          <p className="font-bold"> Webcam/front camera enabled</p>
+          <p>
+          When candidates start their assessment, we ask them to activate their webcam/camera. This allows us to capture images of your candidates every 30 seconds. This way you can see if the same (and only one) person has worked on the assessment.
+          </p>
+
+          <p className="font-bold"> Full-screen mode always active</p>
+          <p>
+          For candidates that use a desktop or laptop, we also activate full-screen mode to ensure candidates don’t browse the internet to look up answers. While we cannot prevent that candidates deactivate full-screen mode, we can detect if they did. It indicates a potential violation.
+          </p>
+
+          <p className="font-bold"> Mouse always in assessment window</p>
+          <p>
+          We can detect if the mouse has always been on the test window. Candidates that have two screens could otherwise still have another window open to browse the internet.
+          </p>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
