@@ -9,7 +9,8 @@
   "question",
   "options",
   "type",
-  "answer"
+  "answer",
+  "duration"
  ],
  "fields": [
   {
@@ -36,15 +37,21 @@
    "reqd": 1
   },
   {
+   "default": "{\n\"answer\" : null\n}",
    "fieldname": "answer",
-   "fieldtype": "Data",
+   "fieldtype": "JSON",
    "label": "Answer",
    "reqd": 1
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Duration",
+   "label": "Duration"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-10 17:55:52.312761",
+ "modified": "2024-11-13 14:33:13.672433",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Question",
