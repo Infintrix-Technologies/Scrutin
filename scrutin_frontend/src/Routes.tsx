@@ -21,6 +21,8 @@ import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import JobApplicants from "./pages/JobApplicants";
+import AssessmentDashboard from "./pages/AssessmentDashboard";
+import CandidateAssessmentDashboard from "./pages/CandidateAssessmentDashboard";
 
 export const router = createBrowserRouter(
   [
@@ -100,6 +102,26 @@ export const router = createBrowserRouter(
         {
           path: "candidate",
           element: <CandidateLayout />,
+          children : [
+            {
+              path: "",
+              element: <CandidateDashboard />,
+            },
+          ]
+        },
+        {
+          path: "assessment-dashboard",
+          element: <AssessmentDashboard />,
+          children : [
+            {
+              path: "",
+              element: <CandidateDashboard />,
+            },
+          ]
+        },
+        {
+          path: "candidate-assessment-dashboard",
+          element: <CandidateAssessmentDashboard />,
           children : [
             {
               path: "",
