@@ -24,7 +24,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  // DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -42,6 +50,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useGlobalState } from "@/utils/StateProvider";
 
 interface Test {
   name: string;
@@ -58,6 +67,7 @@ interface Question {
 
 const CandidateAssessmentDashboard = () => {
   const [showWeights, setShowWeights] = useState(false);
+  const globalState = useGlobalState();
 
   const tests: Test[] = [
     { name: "Problem Solving", weight: "--", impact: "--", duration: "9'" },
@@ -230,7 +240,40 @@ const CandidateAssessmentDashboard = () => {
 
             <div className="flex items-center gap-2">
               <Switch checked={showWeights} onCheckedChange={setShowWeights} />
-              <span className="text-sm font-medium">Set test weights</span>
+              <span
+          className="text-sm font-medium cursor-pointer"
+          onClick={() => globalState.openModal("set_test_weights", true)} // Open modal on text click
+        >
+          Set test weights
+        </span>
+
+        <Dialog
+        open={globalState.modals.set_test_weights.open}
+        onOpenChange={(open) => globalState.openModal("set_test_weights", open)}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Set Test Weights</DialogTitle>
+            <DialogDescription>
+              Adjust the test weights for your assessments here.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                // Add your submit logic for the weights here
+                globalState.openModal("set_test_weights", false); // Close modal after submitting
+              }}
+            >
+              Save
+            </Button>
+            <Button onClick={() => globalState.openModal("set_test_weights", false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
             </div>
 
             <div className="border rounded-lg">
