@@ -20,7 +20,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
+  // SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -51,6 +51,7 @@ import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Eye, Settings2 } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 
 interface Question {
   text: string;
@@ -107,16 +108,16 @@ const AssessmentDashboard: React.FC = () => {
             </div>
           </div>
           <div className="flex space-x-4">
-            <button className="rounded-full border p-2 hover:bg-gray-200">
+            <button className="rounded-full border p-2 hover:bg-green-800">
               <FaQuestionCircle />
             </button>
-            <button className="rounded-full border p-2 hover:bg-gray-200">
+            <button className="rounded-full border p-2 hover:bg-green-800">
               <FaDownload />
             </button>
-            <button className="rounded-full border p-2 hover:bg-gray-200">
+            <button className="rounded-full border p-2 hover:bg-green-800">
               <FaEnvelope />
             </button>
-            <button className="rounded-full border p-2 hover:bg-gray-200">
+            <button className="rounded-full border p-2 hover:bg-green-800">
               <FaUserTimes />
             </button>
           </div>
@@ -155,7 +156,7 @@ const AssessmentDashboard: React.FC = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Fruits</SelectLabel>
+                      {/* <SelectLabel>Fruits</SelectLabel> */}
                       <SelectItem value="apple">Apple</SelectItem>
                       <SelectItem value="banana">Banana</SelectItem>
                       <SelectItem value="blueberry">Blueberry</SelectItem>
@@ -228,7 +229,7 @@ const AssessmentDashboard: React.FC = () => {
             </Card>
           </div>
           <div className="col-span-1">
-            <Card className="w-full max-w-2xl mx-auto">
+            <Card className="w-full max-w-2xl mx-auto ">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-xl font-semibold">
                   Anti-cheating monitor
@@ -317,6 +318,7 @@ const AssessmentDashboard: React.FC = () => {
                     <FaLock className="h-8 w-8 text-muted-foreground" />
                   </div>
                 </div>
+                <Slider defaultValue={[33]} max={100} step={1} />
               </CardContent>
             </Card>
           </div>
@@ -438,7 +440,7 @@ const AssessmentDashboard: React.FC = () => {
 
             <div className="space-y-4">
               <p className="text-sm font-medium">Anti-cheating monitor</p>
-              <div className="grid gap-2">
+              <div className="grid gap-2 space-y-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm">Device used</p>
                   <p className="text-sm font-medium">Desktop</p>
@@ -490,9 +492,9 @@ const AssessmentDashboard: React.FC = () => {
 
           <div className="container mx-auto pt-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-1">
+              <div className="col-span-1 mt-4 ">
                 <CardContent className="space-y-6">
-                  <div className="space-y-2">
+                  <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium">Invited</p>
                       <p className="text-sm">August 28th, 2024</p>
@@ -571,10 +573,10 @@ const AssessmentDashboard: React.FC = () => {
                   </CardHeader>
                 </Card>
               </div>
-              <div className="col-span-1 p-5">
-                <div className="space-y-4">
+              <div className="col-span-1 p-5 ">
+                <div className="space-y-6">
                   <p className="text-sm font-medium">Anti-cheating monitor</p>
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 space-y-2">
                     <div className="flex items-center justify-between">
                       <p className="text-sm">Device used</p>
                       <p className="text-sm font-medium">Desktop</p>

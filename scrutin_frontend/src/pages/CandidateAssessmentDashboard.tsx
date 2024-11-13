@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -14,7 +14,7 @@ import {
   FaSlidersH,
 } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Clock, Edit, MessageSquare, Upload } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
@@ -98,7 +98,7 @@ const CandidateAssessmentDashboard = () => {
   return (
     <>
       <div className="container mx-auto p-6">
-        <Card className="">
+        {/* <Card className="">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
               MOTIVATION TEST SURVEY
@@ -163,7 +163,7 @@ const CandidateAssessmentDashboard = () => {
               </Button>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
         <Card className="my-6 px-6">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
