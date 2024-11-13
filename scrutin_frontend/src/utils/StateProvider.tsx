@@ -19,7 +19,11 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
     // const { mutate } = useSWRConfig()
     const [modals, setModals] = useState<ModalState>({
         "create_assessment" : { open: false},
-        "set_test_weights" : { open: false},
+        "set_test_weights"  : { open: false},
+        "feed_back"         : { open: false},
+        "add_team_member"   : { open: false},
+        "interpret_results" : { open: false},
+        "anti_cheating_measures": { open: false},
 
     })
 
