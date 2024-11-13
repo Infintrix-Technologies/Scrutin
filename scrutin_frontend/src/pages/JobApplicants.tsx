@@ -32,6 +32,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
+import { JobApplicantActions } from "@/components/JobApplicantActions";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -102,9 +104,26 @@ const JobApplicants = () => {
     },
     asDict: true,
   });
-
   const assessments = assessments_query?.data || [];
   console.log(assessments_query, "assessments_query")
+
+  const job_opening_query =  useFrappeGetDocList(
+    'Job Opening',
+    {
+      fields: ['name', 'job_title'],
+      orderBy: {
+        field: 'creation',
+        order: 'desc',
+      },
+      asDict: true,
+    },
+  );
+  const job_opening = job_opening_query?.data || []
+  console.log(job_opening_query, "job_opening_query")
+  const job_openingMap = job_opening.reduce((map, jobopening) => {
+    map[jobopening.name] = jobopening.job_title;
+    return map;
+  }, {});
 
   // React Hook Form setup
   const {
@@ -221,7 +240,8 @@ const JobApplicants = () => {
             <TableHead>Rating</TableHead>
             <TableHead>Job Title</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead>Send Invite</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -231,8 +251,29 @@ const JobApplicants = () => {
             <TableRow key={applicant.name}>
               <TableCell>{applicant.applicant_name}</TableCell>
               <TableCell className="flex">{renderStars(applicant.applicant_rating)}</TableCell>
-              <TableCell>{applicant.job_title}</TableCell>
-              <TableCell>{applicant.status}</TableCell>
+              {/* <TableCell>{applicant.job_title}</TableCell> */}
+              <TableCell>{job_openingMap[applicant.job_title] || 'N/A'}</TableCell>
+
+              {/* <TableCell>{applicant.status}</TableCell> */}
+              <TableCell>
+              <div className="flex items-center gap-2">
+                {/* <span className="w-16 text-sm text-muted-foreground">Status</span> */}
+                {applicant.status === 'Open' || applicant.status === 'Replied' ? (
+                  <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-100">
+                    {/* Open */}
+                    {applicant.status === 'Open' ? "Open": "Replied"}
+                  </Badge>
+                ): applicant.status === 'Rejected' || applicant.status === 'Hold' ?(
+                  <Badge variant="secondary" className="bg-red-100 text-red-700 hover:bg-red-100">
+                    {applicant.status === 'Rejected' ? "Rejected": "Hold"}
+                  </Badge>
+                ): (
+                  <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100">
+                    Accepted
+                  </Badge>
+                )}
+              </div>
+            </TableCell>
               <TableCell>
                 <Button
                   variant="ghost"
@@ -244,6 +285,7 @@ const JobApplicants = () => {
                   <FaPaperPlane />
                 </Button>
               </TableCell>
+              <TableCell><JobApplicantActions applicant={applicant}/></TableCell>
             </TableRow>
             </>
           ))}

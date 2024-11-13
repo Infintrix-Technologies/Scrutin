@@ -20,6 +20,9 @@ console.log(update_candidate);
 const update_applicant = useFrappePostCall("scrutin.api.candidate.update_job_applicant_status");
 console.log(update_applicant);
 
+const get_assessment_name = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_name")
+console.log(get_assessment_name);
+
   return (
     <div>CandidateDashboard
 

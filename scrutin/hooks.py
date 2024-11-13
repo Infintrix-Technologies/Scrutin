@@ -8,6 +8,14 @@ required_apps = ["frappe/erpnext","frappe/hrms"]
 # Apps
 # ------------------
 
+#Add Fixtures of Scrutin Assessment, Test & Question
+
+fixtures = [
+    "Scrutin Assessment", "Scrutin Test", "Scrutin Question"
+]
+
+
+
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page

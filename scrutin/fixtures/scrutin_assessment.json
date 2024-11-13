@@ -1,0 +1,40 @@
+[
+ {
+  "assessment_name": "React Developer",
+  "assessment_tests": [
+   {
+    "parent": "vk1m38vch1",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "Front End Development",
+    "weight": "1"
+   }
+  ],
+  "company": "Infintrix",
+  "custom_questions": [],
+  "docstatus": 0,
+  "doctype": "Scrutin Assessment",
+  "language": "en-US",
+  "modified": "2024-11-12 19:34:50.908283",
+  "name": "vk1m38vch1"
+ },
+ {
+  "assessment_name": "Python Developer",
+  "assessment_tests": [
+   {
+    "parent": "0b1bdsk5tu",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "Backend Development",
+    "weight": "1"
+   }
+  ],
+  "company": "Infintrix",
+  "custom_questions": [],
+  "docstatus": 0,
+  "doctype": "Scrutin Assessment",
+  "language": "sq",
+  "modified": "2024-11-12 19:35:01.734279",
+  "name": "0b1bdsk5tu"
+ }
+]
