@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
+import { useFrappeDeleteDoc, useFrappeGetCall, useFrappeGetDoc, useFrappeGetDocList, useFrappePostCall } from "frappe-react-sdk";
 
 
 const CandidateDashboard = () => {
@@ -22,6 +22,47 @@ console.log(update_applicant);
 
 const get_assessment_name = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_name")
 console.log(get_assessment_name);
+
+
+const assessment_data =  useFrappeGetDoc(
+  'Scrutin Assessment', '0b1bdsk5tu',
+  {
+    fields: ['*'],
+    orderBy: {
+      field: 'creation',
+      order: 'desc',
+    },
+    asDict: true,
+  },
+);
+console.log(assessment_data, 'assessmentdata');
+
+const test_data = useFrappeGetDoc(
+  "Scrutin Test", 'Backend Development',
+  {
+    fields:['*'],
+    orderBy: {
+      field: 'creation',
+      order: 'desc',
+    },
+    asDict: true,
+  },
+);
+console.log(test_data, 'testdata');
+
+const question_data = useFrappeGetDocList(
+  "Scrutin Question",
+  {
+    fields:['*'],
+    orderBy: {
+      field: 'creation',
+      order: 'desc',
+    },
+    asDict: true,
+  },
+);
+console.log(question_data, 'questiondata');
+
 
   return (
     <div>CandidateDashboard
