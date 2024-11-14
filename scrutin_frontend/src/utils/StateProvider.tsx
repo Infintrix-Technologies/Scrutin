@@ -23,7 +23,9 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
         "feed_back"         : { open: false},
         "add_team_member"   : { open: false},
         "interpret_results" : { open: false},
-        "anti_cheating_measures": { open: false},
+        "anti_cheating_measures" : { open: false},
+        "choose_scoring_method" : { open: false},
+        "communication_skills_assessment" : { open: false},
 
     })
 
