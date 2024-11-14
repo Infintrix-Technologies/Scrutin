@@ -1,6 +1,6 @@
 [
  {
-  "answer": "any",
+    "answer": {},
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "modified": "2024-11-12 19:12:10.786896",
@@ -39,7 +39,7 @@
   "type": "Single Choice"
  },
  {
-  "answer": "any",
+  "answer": {},
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "modified": "2024-11-12 19:13:59.972369",
@@ -78,7 +78,7 @@
   "type": "Single Choice"
  },
  {
-  "answer": "a",
+    "answer": {},
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "modified": "2024-10-01 15:32:59.222043",
