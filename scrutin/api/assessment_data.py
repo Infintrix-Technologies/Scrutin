@@ -84,108 +84,61 @@ def get_applicant_jobtitle():
 
     
 @frappe.whitelist()
+
 def get_applicant_name_assessment_name_for_candidate():
-    candidate_detail = frappe.db.sql("""
-        SELECT 
-            sc.name AS candidate_name,
-            sa.assessment_name,
-            ja.applicant_name
-        FROM 
-            `tabScrutin Candidate` sc
-        LEFT JOIN 
-            `tabScrutin Assessment` sa ON sc.assessment = sa.name
-        LEFT JOIN 
-            `tabJob Applicant` ja ON sc.job_applicant = ja.name
-    """, as_dict=True)
+
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    JobApplicant = DocType("Job Applicant")
+
+    candidate_detail = (
+        frappe.qb.from_(ScrutinCandidate)
+        .left_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
+        .left_join(JobApplicant)
+        .on(JobApplicant.name == ScrutinCandidate.job_applicant)
+        .select(
+            ScrutinCandidate.name.as_("candidate_name"),
+            ScrutinAssessment.assessment_name,
+            JobApplicant.applicant_name,
+        )
+    ).run(as_dict=True)
 
     return candidate_detail
 
 
-@frappe.whitelist()
-
-# def get_assessment_candidate():
-    # assessment_candidate = frappe.db.sql("""
-    #     SELECT 
-    #         sc.job_applicant AS candidate_email,
-    #         sc.assessment
-    #     FROM 
-    #         `tabScrutin Candidate` sc
-    #     WHERE 
-    #         sc.assessment IN (
-    #             SELECT 
-    #                 assessment
-    #             FROM 
-    #                 `tabScrutin Candidate`
-    #             GROUP BY 
-    #                 assessment
-    #             HAVING 
-    #                 COUNT(job_applicant) > 1
-    #         )
-    #     ORDER BY 
-    #         sc.assessment, sc.job_applicant;
-    # """, as_dict=True)
-    
-    # return assessment_candidate
-
-
-
-
-# def get_assessment_candidate():
-#     assessment_candidate = frappe.db.sql("""
-#         SELECT 
-#             sc1.job_applicant as candidate_email,
-#             sc1.assessment
-#         FROM 
-#             `tabScrutin Candidate` sc1
-#         WHERE 
-#             EXISTS (
-#                 SELECT 1
-#                 FROM `tabScrutin Candidate` sc2
-#                 WHERE sc1.assessment = sc2.assessment
-#                 AND sc1.job_applicant != sc2.job_applicant
-#             )
-#         ORDER BY 
-#             sc1.assessment, sc1.job_applicant;
-#     """, as_dict=True)
-    
-#     return assessment_candidate
-
-
-
-def get_assessment_candidate(assessment):
-    assessment_candidate = frappe.db.sql("""
-        SELECT 
-            sc1.job_applicant AS candidate_email,
-            sc1.assessment
-        FROM 
-            `tabScrutin Candidate` sc1
-        WHERE 
-            sc1.assessment = %(assessment)s
-            AND EXISTS (
-                SELECT 1
-                FROM `tabScrutin Candidate` sc2
-                WHERE sc1.assessment = sc2.assessment
-                AND sc1.job_applicant != sc2.job_applicant
-            )
-        ORDER BY 
-            sc1.assessment, sc1.job_applicant;
-    """, {'assessment': assessment}, as_dict=True)
-    
-    return assessment_candidate
 
 
 @frappe.whitelist()
+
 def specific_assessment_candidates(assessmnt):
     assessment = DocType("Scrutin Assessment")
     candidate = DocType("Scrutin Candidate")
 
     query = (
         frappe.qb.from_(assessment)
-        .join(candidate).on(candidate.assessment == assessmnt)
+        .join(candidate).on(candidate.assessment == assessment.name)
         .select(candidate.job_applicant, candidate.assessment)
+        .where(assessment.name == assessmnt)
     )
     
     results = query.run(as_dict=True)
 
     return results
+
+
+# def specific_assessment_candidates(assessmnt):
+#     assessment = DocType("Scrutin Assessment")
+#     candidate = DocType("Scrutin Candidate")
+
+#     query = (
+#         frappe.qb.from_(assessment)
+#         .join(candidate).on(candidate.assessment == assessmnt)
+#         .select(candidate.job_applicant, candidate.assessment)
+#     )
+    
+#     results = query.run(as_dict=True)
+
+#     return results
+
  

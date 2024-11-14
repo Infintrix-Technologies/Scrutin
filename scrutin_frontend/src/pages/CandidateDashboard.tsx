@@ -24,6 +24,9 @@ console.log(assessment_tests);
 const get_assessment_name = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_name")
 console.log(get_assessment_name, "assessment_name");
 
+const get_specific_assessments = useFrappeGetCall("scrutin.api.assessment_data.get_specific_assessments")
+console.log(get_specific_assessments, "get_specific_assessments");
+
 //this api give specific Assessment all details 
 const assessment_tessts = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_test_custom_question")
 console.log(assessment_tessts, "assessment_tessts");
@@ -46,7 +49,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
 <Button onClick={() => {
         specific_assessment_candidates.call({
-          assessmnt: '0b1bdsk5tu',
+          assessmnt: 'vk1m38vch1',
           // job_applicant: 'bilal123@gmail.com'
         });
       }}>
