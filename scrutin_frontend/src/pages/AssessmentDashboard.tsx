@@ -9,6 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Table,
   TableBody,
   TableCell,
@@ -38,7 +44,6 @@ import {
   FaEnvelope,
   FaUserTimes,
   FaStar,
-  FaCog,
 } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
@@ -57,9 +62,11 @@ import { Button } from "@/components/ui/button";
 import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
 import {
   Dialog,
+  DialogClose,
   // DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   // DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -70,13 +77,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Eye, Settings2 } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useGlobalState } from "@/utils/StateProvider";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaClock, FaLanguage, FaChartLine } from "react-icons/fa";
-import { MdCheckCircle } from "react-icons/md";
+import { MdCheckCircle, MdTimer } from "react-icons/md";
 import { VscTypeHierarchySuper } from "react-icons/vsc";
 interface Question {
   text: string;
@@ -143,7 +150,7 @@ const AssessmentDashboard: React.FC = () => {
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
   };
-  const totalWidth = 400; // Total width of the bar in pixels
+  const totalWidth = 400; // Total width of the bar in pixels in the Scoring method sections...
   return (
     <>
       <Card className="container m-auto p-5 mt-4">
@@ -166,23 +173,67 @@ const AssessmentDashboard: React.FC = () => {
             </div>
           </div>
           <div className="flex space-x-4">
-            <button className="rounded-full border p-2 hover:bg-green-800">
-              <FaQuestionCircle />
-            </button>
-            <button className="rounded-full border p-2 hover:bg-green-800">
-              <FaDownload />
-            </button>
-            <button className="rounded-full border p-2 hover:bg-green-800">
-              <FaEnvelope />
-            </button>
-            <button className="rounded-full border p-2 hover:bg-green-800">
-              <FaUserTimes />
-            </button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className="rounded-full border p-2 hover:bg-green-800"
+                    onClick={() =>
+                      globalState.openModal("interpret_results", true)
+                    }
+                  >
+                    <FaQuestionCircle />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Learn more</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="rounded-full border p-2 hover:bg-green-800">
+                    <FaDownload />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Download results</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="rounded-full border p-2 hover:bg-green-800">
+                    <FaEnvelope />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Send results to candidate</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="rounded-full border p-2 hover:bg-green-800">
+                    <FaUserTimes />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Reject</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </Card>
       <div className="container mx-auto pt-4">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
           <div className="col-span-1">
             <div className="p-4 border rounded-md">
               <div className="mb-2">
@@ -496,12 +547,12 @@ const AssessmentDashboard: React.FC = () => {
                     <AccordionContent>
                       <div className="flex justify-between items-center">
                         <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />                          
-                          Basic 
+                          <AiOutlineBarChart />
+                          Basic
                         </p>
                         <p className="flex gap-2 items-center">
-                          <RxTimer />                          
-                          Finished in 00:07:35 out of 00:08:00 {" "}
+                          <RxTimer />
+                          Finished in 00:07:35 out of 00:08:00{" "}
                         </p>
                       </div>
 
@@ -589,13 +640,12 @@ const AssessmentDashboard: React.FC = () => {
                   <AccordionItem value="4">
                     <AccordionTrigger className="flex justify-between ">
                       <span>Motivation</span>
-                      <span className="ml-[250px] ">  Survey Needed </span>
+                      <span className="ml-[250px] "> Survey Needed </span>
                     </AccordionTrigger>
-                   
                   </AccordionItem>
                 </Accordion>
                 <p className="font-bold py-3">
-                Tests not included in overall assessment score 
+                  Tests not included in overall assessment score
                 </p>
 
                 <Accordion key="4" type="single" collapsible>
@@ -607,16 +657,13 @@ const AssessmentDashboard: React.FC = () => {
                     <AccordionContent>
                       <div className="flex justify-between items-center">
                         <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />                          
-                          Basic 
+                          <AiOutlineBarChart />
+                          Basic
                         </p>
                         <p className="flex gap-2 items-center">
-                          
-                          The candidate did not answer all of the questions. {" "}
+                          The candidate did not answer all of the questions.{" "}
                         </p>
                       </div>
-
-                    
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
@@ -740,12 +787,13 @@ const AssessmentDashboard: React.FC = () => {
           <CardHeader>
             <CardTitle>Custom questions</CardTitle>
           </CardHeader>
-          <Table className="">
+          <hr />
+          <Table className="mx-2">
             <TableHeader>
-              <TableRow>
-                <TableHead>Question</TableHead>
-                <TableHead>View Answer</TableHead>
-                <TableHead>Average Rating</TableHead>
+              <TableRow className="whitespace-nowrap">
+                <TableHead className="font-bold">Question</TableHead>
+                <TableHead className="font-bold">View Answer</TableHead>
+                <TableHead className="font-bold">Average Rating</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="">
@@ -762,7 +810,10 @@ const AssessmentDashboard: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 cursor-pointer"
+                      onClick={() =>
+                        globalState.openModal("review_answer", true)
+                      }
                     >
                       <Eye className="w-4 h-4" />
                       Read
@@ -789,262 +840,24 @@ const AssessmentDashboard: React.FC = () => {
             </TableBody>
           </Table>
           <hr className="mt-10" />
-          <div className="flex mt-6 justify-between">
-            <CardHeader>
+          <div className="flex flex-col lg:flex-row mt-6 justify-between space-y-4 lg:space-y-0 lg:space-x-4">
+            <CardHeader className="flex-1">
               <CardTitle>Your rating</CardTitle>
               <p className="text-sm text-muted-foreground">
                 Give your personal overall rating of this candidate based on
                 your impressions and interactions with him or her.
               </p>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mt-2">
                 {[...Array(5)].map((_, i) => (
                   <StarIcon key={i} className="w-6 h-6 text-gray-300" />
                 ))}
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <div className="space-y-4">
                 <Textarea
                   placeholder="Add your private notes here (auto-saved)..."
-                  className="min-h-[100px] w-[30rem] resize-none"
-                />
-              </div>
-            </CardContent>
-          </div>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Assessment</CardTitle>
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-medium">
-                Software Engineer - Pakistan - On/Site
-              </p>
-              <Settings2 className="w-4 h-4" />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Scoring method</p>
-                <Button variant="outline" size="sm">
-                  Change
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Percentage of correct answers
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <p className="text-sm font-medium">
-                Tests included in overall assessment score
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm">Problem Solving</p>
-                  <p className="text-sm">0%</p>
-                </div>
-                <Progress value={0} className="h-2" />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <p className="text-sm font-medium">Anti-cheating monitor</p>
-              <div className="grid gap-2 space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm">Device used</p>
-                  <p className="text-sm font-medium">Desktop</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm">Webcam enabled?</p>
-                  <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-600 rounded">
-                    No
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm">Full-screen mode always active?</p>
-                  <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-600 rounded">
-                    Yes
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm">Mouse always in assessment window?</p>
-                  <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-600 rounded">
-                    Yes
-                  </span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="flex items-center gap-5">
-                  Assessment{" "}
-                  <p className="text-sm font-medium">
-                    Software Engineer - Pakistan - On/Site
-                  </p>
-                </span>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <StarIcon key={i} className="w-6 h-6 text-gray-300" />
-                  ))}
-                </div>
-              </div>
-              <Button variant="outline" size="icon">
-                <FaCog className="w-4 h-4" />
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <hr />
-
-          <div className="container mx-auto pt-4">
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-1 mt-4 ">
-                <CardContent className="space-y-6">
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">Invited</p>
-                      <p className="text-sm">August 28th, 2024</p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">
-                        Extra time breakdown
-                      </p>
-                      <p className="text-sm">Disability +50%</p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">Source</p>
-                      <p className="text-sm">Invitation by email</p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">Hiring stage</p>
-                      <Select defaultValue="not-yet-evaluated">
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select stage" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="not-yet-evaluated">
-                            Not yet evaluated
-                          </SelectItem>
-                          <SelectItem value="interview">Interview</SelectItem>
-                          <SelectItem value="offer">Offer</SelectItem>
-                          <SelectItem value="hired">Hired</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CardContent>
-              </div>
-              <div className="col-span-1">
-                <Card className="container mt-4">
-                  <CardHeader>
-                    <div className="max-w-2xl space-y-6">
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2">
-                          <h2 className="text-sm font-medium text-muted-foreground">
-                            Scoring method
-                          </h2>
-                          <p className="text-lg font-semibold">
-                            Percentage of correct answers
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          className="flex justify-between items-center gap-2 rounded-full border"
-                        >
-                          <Pencil1Icon className="h-4 w-4" />
-                          Change
-                        </Button>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium">
-                          Tests included in overall assessment score
-                        </h3>
-                      </div>
-                    </div>
-
-                    {Array(2)
-                      .fill(null)
-                      .map((_, index) => (
-                        <Accordion key={index} type="single" collapsible>
-                          <AccordionItem value={`item-${index + 1}`}>
-                            <AccordionTrigger>
-                              Is it accessible?
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              Yes. It adheres to the WAI-ARIA design pattern.
-                            </AccordionContent>
-                          </AccordionItem>
-                        </Accordion>
-                      ))}
-                  </CardHeader>
-                </Card>
-              </div>
-              <div className="col-span-1 p-5 ">
-                <div className="space-y-6">
-                  <p className="text-sm font-medium">Anti-cheating monitor</p>
-                  <div className="grid gap-2 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm">Device used</p>
-                      <p className="text-sm font-medium">Desktop</p>
-                    </div>
-                    <hr />
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm">
-                        Filled out only once from IP address?
-                      </p>
-                      <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-600 rounded">
-                        Yes
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm">Webcam enabled?</p>
-                      <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-600 rounded">
-                        No
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm">Full-screen mode always active?</p>
-                      <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-600 rounded">
-                        Yes
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm">
-                        Mouse always in assessment window?
-                      </p>
-                      <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-600 rounded">
-                        Yes
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <hr className="mt-10" />
-          <div className="flex mt-6 justify-between">
-            <CardHeader>
-              <CardTitle>Your rating</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Give your personal overall rating of this candidate based on
-                your impressions and interactions with him or her.
-              </p>
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className="w-6 h-6 text-gray-300" />
-                ))}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Textarea
-                  placeholder="Add your private notes here (auto-saved)..."
-                  className="min-h-[100px] w-[30rem] resize-none"
+                  className="min-h-[100px] w-full lg:w-[30rem] resize-none"
                 />
               </div>
             </CardContent>
@@ -1483,7 +1296,7 @@ const AssessmentDashboard: React.FC = () => {
                   Preview Sample Questions
                 </Button>{" "}
                 Problem Solving
-              </CardTitle>             
+              </CardTitle>
               <p>
                 This Problem Solving test evaluates candidates' ability to
                 define problems and analyze data <br /> and textual information
@@ -1620,6 +1433,93 @@ const AssessmentDashboard: React.FC = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Communication Skills Assessment Modal */}
+      <Dialog
+        open={globalState.modals.review_answer.open}
+        onOpenChange={(open) => globalState.openModal("review_answer", open)}
+      >
+        <DialogContent className="max-h-svh sm:max-w-[1255px] overflow-x-hidden px-10">
+          <p className="text-xl">Review answer</p>
+          <hr />
+          <div className="container mx-auto p-4">
+            <div className="sm:max-w-[1255px]  max-w-4xl mx-auto">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Question</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <p className="font-semibold">
+                      Tell us about yourself, what attracts you to this
+                      opportunity, and why you are a great candidate for this
+                      role.
+                    </p>
+                    <p className="text-sm text-gray-500 italic">
+                      Pro tip: it might be helpful to pretend you are writing
+                      this to a new friend and just be yourself. We want to get
+                      to know you better.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Textarea
+                      placeholder="Enter your answer here"
+                      className="h-32"
+                      defaultValue="I am a good boy"
+                    />
+                    <div className="flex items-center py-5 justify-between text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <MdTimer className="mr-1" />
+                        <span>Finished in 00:00:47 out of 00:05:00</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center text-[20px] gap-1">
+                      Rate answer:
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={`ml-1 ${
+                            i < 3 ? "text-yellow-400" : "text-gray-300"
+                          } text-[20px]`}
+                        />
+                      ))}
+                    </div>
+                    <Textarea placeholder="Comment" className="h-24" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">
+                    What to look for in the answer?
+                  </h3>
+                  <p className="text-sm">
+                    In the candidate's answer, look for agreement between their
+                    stated motivation and the challenges and opportunities that
+                    the role you are seeking to fill provides. Is the candidate
+                    motivated in ways that reflect what your organization can
+                    offer and the effort needed to get the results you require
+                    in this role?
+                  </p>
+                  <p className="text-sm mt-2">
+                    Look for a clear understanding of the requirements and
+                    expectations listed in your job post. A strong candidate
+                    should
+                  </p>
+                </div>
+              </CardContent>
+
+              <DialogFooter className="">
+                <DialogClose asChild>
+                  <div className="flex gap-2">
+                    <Button type="button" variant="secondary">
+                      Cancel
+                    </Button>
+                    <Button> Confirm</Button>
+                  </div>
+                </DialogClose>
+              </DialogFooter>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

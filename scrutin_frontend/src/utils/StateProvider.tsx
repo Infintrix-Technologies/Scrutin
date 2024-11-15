@@ -26,6 +26,7 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
         "anti_cheating_measures" : { open: false},
         "choose_scoring_method" : { open: false},
         "communication_skills_assessment" : { open: false},
+        "review_answer" : { open: false},
 
     })
 
