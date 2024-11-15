@@ -40,22 +40,6 @@ def get_specific_assessments():
 
 
 @frappe.whitelist()
-def get_assessment_name():
-    # Query to get assessment names that are present in both Scrutin Assessment and Scrutin Candidate
-    assessment_names = frappe.db.sql("""
-        SELECT sa.assessment_name
-        FROM `tabScrutin Assessment` sa
-        JOIN `tabScrutin Candidate` sc ON sa.name = sc.assessment
-    """, as_dict=True)
-    
-    # Extract assessment names from the result
-    assessment_names = [d.assessment_name for d in assessment_names]
-    
-    return assessment_names
-
-
-
-@frappe.whitelist()
 def get_assessment_test_custom_question():
 
     doc = frappe.get_doc("Scrutin Assessment", "0b1bdsk5tu")
@@ -82,9 +66,8 @@ def get_applicant_jobtitle():
 
     return results
 
-    
+#this api give the candidate Job_applicant_name and Assessment_name
 @frappe.whitelist()
-
 def get_applicant_name_assessment_name_for_candidate():
 
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -114,6 +97,7 @@ def get_applicant_name_assessment_name_for_candidate():
 def specific_assessment_candidates(assessmnt):
     assessment = DocType("Scrutin Assessment")
     candidate = DocType("Scrutin Candidate")
+    job_applicant = DocType("Job Applicant")
 
     query = (
         frappe.qb.from_(assessment)
@@ -126,19 +110,89 @@ def specific_assessment_candidates(assessmnt):
 
     return results
 
+@frappe.whitelist()
+def get_assessment_language(candi):
+    Assessment = DocType("Scrutin Assessment")
+    Candidate = DocType("Scrutin Candidate")
 
-# def specific_assessment_candidates(assessmnt):
-#     assessment = DocType("Scrutin Assessment")
-#     candidate = DocType("Scrutin Candidate")
+    query = (
+        frappe.qb.from_(Candidate)
+        .inner_join(Assessment)
+        .on(Assessment.name == Candidate.assessment)
+        .select(Assessment.language)
+        .where(Candidate.name == candi)
+    )
+    results = query.run(as_dict=True)
+    return results
 
-#     query = (
-#         frappe.qb.from_(assessment)
-#         .join(candidate).on(candidate.assessment == assessmnt)
-#         .select(candidate.job_applicant, candidate.assessment)
-#     )
+
+
+#this api will provide the specific assessment candidate and candidate name fetch from applicant_name
+@frappe.whitelist()
+def get_specific_assessment_candidate_name(assessmnt):
+
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    JobApplicant = DocType("Job Applicant")
+
+    candidate_detail = (
+        frappe.qb.from_(ScrutinCandidate)
+        .left_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
+        .left_join(JobApplicant)
+        .on(JobApplicant.name == ScrutinCandidate.job_applicant)
+        .select(
+            ScrutinCandidate.name.as_("candidate_name"),
+            ScrutinCandidate.job_applicant,
+            ScrutinAssessment.assessment_name,
+            JobApplicant.applicant_name,
+        )
+        .where(ScrutinCandidate.assessment == assessmnt)
+    ).run(as_dict=True)
+
+    return candidate_detail
+
+
+
+# Function to get all tests of a specific Scrutin Assessment
+@frappe.whitelist()
+def get_tests_for_assessment(assessment_name):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
     
-#     results = query.run(as_dict=True)
+    query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.title)
+        .select(ScrutinAssessmentTest.test,
+                ScrutinTest.title,
+                ScrutinTest.duration)
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    result = query.run(as_dict=True)
+    return result
 
-#     return results
 
- 
+#this api will provide the all custom questions that are associated with specific assessment
+@frappe.whitelist()
+def get_custom_questions_for_assessment(assessment_name):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+    ScrutinQuestion = DocType("Scrutin Question")
+    
+    query = (
+        frappe.qb.from_(ScrutinAssessmentQuestion)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinAssessmentQuestion.question, 
+                ScrutinQuestion.question,
+                ScrutinQuestion.type)
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    result = query.run(as_dict=True)
+    return result
