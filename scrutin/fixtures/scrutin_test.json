@@ -3,70 +3,176 @@
   "description": null,
   "docstatus": 0,
   "doctype": "Scrutin Test",
-  "duration": 600.0,
-  "job_role": "Junior Backend Developer",
+  "duration": null,
+  "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-12 19:33:50.125884",
-  "name": "Front End Development",
+  "modified": "2024-11-15 20:34:02.404151",
+  "name": "k887uj90a1",
   "status": "Draft",
   "test_focus": [],
   "test_format": "Multiple-choice",
   "test_questions": [
    {
-    "parent": "Front End Development",
+    "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
     "question": "3libomlodf"
    },
    {
-    "parent": "Front End Development",
+    "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
     "question": "3mhqm798c5"
    },
    {
-    "parent": "Front End Development",
+    "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
     "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "k887uj90a1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k6biv72md1"
    }
   ],
-  "title": "Front End Development"
+  "title": "Forntend Developer"
  },
  {
   "description": null,
   "docstatus": 0,
   "doctype": "Scrutin Test",
-  "duration": 600.0,
-  "job_role": "Junior Backend Developer",
+  "duration": null,
+  "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-12 19:33:35.674157",
-  "name": "Backend Development",
+  "modified": "2024-11-15 20:33:48.349667",
+  "name": "k8krlm90s7",
   "status": "Draft",
   "test_focus": [],
   "test_format": "Multiple-choice",
   "test_questions": [
    {
-    "parent": "Backend Development",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "3libomlodf"
-   },
-   {
-    "parent": "Backend Development",
+    "parent": "k8krlm90s7",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
     "question": "3mhqm798c5"
    },
    {
-    "parent": "Backend Development",
+    "parent": "k8krlm90s7",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
     "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "k8krlm90s7",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k73hovk115"
+   },
+   {
+    "parent": "k8krlm90s7",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k7t5uipoao"
    }
   ],
-  "title": "Backend Development"
+  "title": "Backend Developer"
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Scrutin Test",
+  "duration": null,
+  "job_role": null,
+  "language": "en",
+  "level": "Beginner",
+  "modified": "2024-11-15 20:34:56.553839",
+  "name": "k9a5emvdd6",
+  "status": "Draft",
+  "test_focus": [],
+  "test_format": "Multiple-choice",
+  "test_questions": [
+   {
+    "parent": "k9a5emvdd6",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "3libomlodf"
+   },
+   {
+    "parent": "k9a5emvdd6",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "3mhqm798c5"
+   },
+   {
+    "parent": "k9a5emvdd6",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "k9a5emvdd6",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "g1j0lvkc26"
+   },
+   {
+    "parent": "k9a5emvdd6",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k73hovk115"
+   },
+   {
+    "parent": "k9a5emvdd6",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k7t5uipoao"
+   }
+  ],
+  "title": "Full Stack Developer"
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Scrutin Test",
+  "duration": null,
+  "job_role": null,
+  "language": "en",
+  "level": "Beginner",
+  "modified": "2024-11-15 20:35:41.159744",
+  "name": "k9o3uoe1ob",
+  "status": "Draft",
+  "test_focus": [],
+  "test_format": "Multiple-choice",
+  "test_questions": [
+   {
+    "parent": "k9o3uoe1ob",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "3mhqm798c5"
+   },
+   {
+    "parent": "k9o3uoe1ob",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "k9o3uoe1ob",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "g1j0lvkc26"
+   },
+   {
+    "parent": "k9o3uoe1ob",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k6biv72md1"
+   }
+  ],
+  "title": "Python Developer"
  }
 ]

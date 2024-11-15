@@ -41,6 +41,7 @@ console.log(get_candidate_details, "get_candidate_details");
 //this api will provide the specific assessment candidate and candidate name fetch from applicant_name
 const get_specific_assessment_candidate_name = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_candidate_name")
 
+
 // get the all test for the specific assessment
 const get_tests_for_assessment = useFrappePostCall("scrutin.api.assessment_data.get_tests_for_assessment")
 
@@ -49,10 +50,14 @@ const get_tests_for_assessment = useFrappePostCall("scrutin.api.assessment_data.
 const get_custom_questions_for_assessment = useFrappePostCall("scrutin.api.assessment_data.get_custom_questions_for_assessment")
 
 
-
-
 const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment_data.specific_assessment_candidates")
 // console.log(specific_assessment_candidates, "specific_assessment_candidates");
+
+//this api will give the all question for the specific test
+const get_questions_for_test = useFrappePostCall("scrutin.api.assessment_data.get_questions_for_test")
+
+//this api will provide the specific test total duration based on the total question in the test
+const get_total_duration_for_test = useFrappePostCall("scrutin.api.assessment_data.get_total_duration_for_test")
 
 
   return (
@@ -61,7 +66,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
 <Button onClick={() => {
         specific_assessment_candidates.call({
-          assessmnt: 'vk1m38vch1',
+          assessmnt: 'Python Developer',
         });
       }}>
         Update Job Applicant
@@ -69,7 +74,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
       <Button onClick={() => {
         get_specific_assessment_candidate_name.call({
-          assessmnt: '0b1bdsk5tu',
+          assessment_name: 'jvecvcvl4o',
         });
       }}>
         Assessment Candidate Name
@@ -77,7 +82,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
       <Button onClick={() => {
         get_tests_for_assessment.call({
-          assessment_name: '0b1bdsk5tu',
+          assessment_name: 'jvecvcvl4o',
         });
       }}>
         Assessment Test
@@ -85,10 +90,29 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
       <Button onClick={() => {
         get_custom_questions_for_assessment.call({
-          assessment_name: '0b1bdsk5tu',
+          assessment_name: 'jvecvcvl4o',
         });
       }}>
         Assessment Custom Question
+      </Button>
+
+
+      <Button onClick={() => {
+        get_questions_for_test.call({
+          test_name: 'Backend Development',
+        });
+      }}>
+        Test Questions
+      </Button>
+
+
+
+      <Button onClick={() => {
+        get_total_duration_for_test.call({
+          test_name: 'Front End Development',
+        });
+      }}>
+        Test Duration
       </Button>
 
 {/* <Button onClick={() => {
