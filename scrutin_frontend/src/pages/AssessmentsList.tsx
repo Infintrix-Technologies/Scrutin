@@ -9,6 +9,7 @@ import {
   } from "@/components/ui/table"
 import { useAssessmentsListQuery } from "@/hooks/query-hooks";
 import { AssessmentActions } from "../components/AssessmentActions";
+import { Link } from "react-router-dom";
   
   export function AssessmentsList() {
 
@@ -31,12 +32,16 @@ import { AssessmentActions } from "../components/AssessmentActions";
         </TableHeader>
         <TableBody>
           {assessments.map((assessment) => (
+            <>
             <TableRow key={assessment.name}>
+            <Link to={`/assessments/${assessment.name}`}>
               <TableCell className="font-medium">{assessment.assessment_name}</TableCell>
+            </Link>
               <TableCell>{assessment.company}</TableCell>
               <TableCell>{assessment.language}</TableCell>
               <TableCell><AssessmentActions assessment={assessment}/></TableCell>
             </TableRow>
+            </>
           ))}
         </TableBody>
       </Table>
