@@ -157,18 +157,21 @@ def get_specific_assessment_candidate_name(assessmnt):
 # Function to get all tests of a specific Scrutin Assessment
 @frappe.whitelist()
 def get_tests_for_assessment(assessment_name):
-
     ScrutinAssessment = DocType("Scrutin Assessment")
-    ScrutinAssessmentTests = DocType("Scrutin Assessment Tests")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    
     query = (
-        frappe.qb.from_(ScrutinAssessmentTests)
+        frappe.qb.from_(ScrutinAssessmentTest)
         .inner_join(ScrutinAssessment)
-        .on(ScrutinAssessment.name == ScrutinAssessmentTests.parent)
-        .select(ScrutinAssessmentTests.test)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.title)
+        .select(ScrutinAssessmentTest.test,
+                ScrutinTest.title,
+                ScrutinTest.duration)
         .where(ScrutinAssessment.name == assessment_name)
     )
-
-    # Execute the query and fetch results
     result = query.run(as_dict=True)
     return result
 
@@ -186,9 +189,10 @@ def get_custom_questions_for_assessment(assessment_name):
         .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
         .inner_join(ScrutinQuestion)
         .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
-        .select(ScrutinAssessmentQuestion.question, ScrutinQuestion.question)
+        .select(ScrutinAssessmentQuestion.question, 
+                ScrutinQuestion.question,
+                ScrutinQuestion.type)
         .where(ScrutinAssessment.name == assessment_name)
     )
-
     result = query.run(as_dict=True)
     return result
