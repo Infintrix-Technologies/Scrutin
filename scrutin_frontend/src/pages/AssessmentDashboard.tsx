@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardContent,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -50,6 +51,8 @@ import {
   FaMousePointer,
   FaVideo,
 } from "react-icons/fa";
+import { AiOutlineBarChart } from "react-icons/ai";
+import { RxTimer } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
 import {
@@ -62,6 +65,8 @@ import {
   DialogTitle,
   // DialogTrigger,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -69,10 +74,46 @@ import { Eye, Settings2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useGlobalState } from "@/utils/StateProvider";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { FaClock, FaLanguage, FaChartLine } from "react-icons/fa";
+import { MdCheckCircle } from "react-icons/md";
+import { VscTypeHierarchySuper } from "react-icons/vsc";
 interface Question {
   text: string;
   rating: number;
 }
+interface SkillData {
+  skill: string;
+  correct: number;
+  incorrect: number;
+}
+const skillsData: SkillData[] = [
+  {
+    skill: "Understanding and interpreting written communication",
+    correct: 2,
+    incorrect: 2,
+  },
+  {
+    skill: "Listening actively and interpreting non-verbal cues",
+    correct: 1,
+    incorrect: 4,
+  },
+  {
+    skill: "Communicating clearly in business contexts",
+    correct: 1.75,
+    incorrect: 2.25,
+  },
+  {
+    skill: "Using professional communication etiquette",
+    correct: 1.4,
+    incorrect: 3.6,
+  },
+  {
+    skill: "Priority and planning",
+    correct: 0,
+    incorrect: 5,
+  },
+];
 
 const questions: Question[] = [
   {
@@ -102,7 +143,7 @@ const AssessmentDashboard: React.FC = () => {
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
   };
-
+  const totalWidth = 400; // Total width of the bar in pixels
   return (
     <>
       <Card className="container m-auto p-5 mt-4">
@@ -235,6 +276,9 @@ const AssessmentDashboard: React.FC = () => {
                     <Button
                       variant="outline"
                       className="flex justify-between items-center gap-2 rounded-full border"
+                      onClick={() =>
+                        globalState.openModal("choose_scoring_method", true)
+                      }
                     >
                       <Pencil1Icon className="h-4 w-4" />
                       Change
@@ -247,18 +291,335 @@ const AssessmentDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                {Array(5)
-                  .fill(null)
-                  .map((_, index) => (
-                    <Accordion key={index} type="single" collapsible>
-                      <AccordionItem value={`item-${index + 1}`}>
-                        <AccordionTrigger>Is it accessible?</AccordionTrigger>
-                        <AccordionContent>
-                          Yes. It adheres to the WAI-ARIA design pattern.
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  ))}
+                <Accordion key="1" type="single" collapsible>
+                  <AccordionItem value={"1"}>
+                    <AccordionTrigger className="flex justify-between ">
+                      <span>Problem Solving</span>
+                      <span className="ml-[250px] "> 0% </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex justify-between items-center">
+                        <p className="flex gap-2 items-center">
+                          <AiOutlineBarChart />
+                          intermediate
+                        </p>
+                        <p className="flex gap-2 items-center">
+                          <RxTimer />
+                          Finished in 00:09:00 out of 00:09:00{" "}
+                        </p>
+                      </div>
+
+                      <Card className="w-full max-w-2xl my-3">
+                        <CardHeader>
+                          <CardTitle className="text-lg font-semibold">
+                            Communication Skills Assessment
+                          </CardTitle>
+                          <hr />
+                        </CardHeader>
+                        <CardContent>
+                          <ul className="space-y-6">
+                            {skillsData.map((item, index) => (
+                              <li key={index} className="space-y-2">
+                                <p className="text-sm">{item.skill}</p>
+                                <div className="flex h-6 w-full">
+                                  <div
+                                    className="bg-green-400  text-black font-bold text-center"
+                                    style={{
+                                      width: `${
+                                        (item.correct /
+                                          (item.correct + item.incorrect)) *
+                                        totalWidth
+                                      }px`,
+                                    }}
+                                  >
+                                    {item?.correct}
+                                  </div>
+                                  <div
+                                    className={`${
+                                      item.incorrect === 5
+                                        ? "bg-[#9e9e9e]"
+                                        : "bg-red-300"
+                                    } text-black font-bold text-center`}
+                                    style={{
+                                      width: `${
+                                        (item.incorrect /
+                                          (item.correct + item.incorrect)) *
+                                        totalWidth
+                                      }px`,
+                                    }}
+                                  >
+                                    {item?.correct}
+                                  </div>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                              <span>Correct</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                              <span>Incorrect</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                              <span>Not answered</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <hr />
+                        <CardFooter>
+                          <Button
+                            variant="link"
+                            className="text-pink-500 p-0"
+                            onClick={() =>
+                              globalState.openModal(
+                                "communication_skills_assessment",
+                                true
+                              )
+                            }
+                          >
+                            Learn more
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+
+                <Accordion key="2" type="single" collapsible>
+                  <AccordionItem value={"2"}>
+                    <AccordionTrigger className="flex justify-between ">
+                      <span>Communication</span>
+                      <span className="ml-[250px] "> 67% </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex justify-between items-center">
+                        <p className="flex gap-2 items-center">
+                          <AiOutlineBarChart />
+                          intermediate
+                        </p>
+                        <p className="flex gap-2 items-center">
+                          <RxTimer />
+                          Finished in 00:09:00 out of 00:09:00{" "}
+                        </p>
+                      </div>
+
+                      <Card className="w-full max-w-2xl my-3">
+                        <CardHeader>
+                          <CardTitle className="text-lg font-semibold">
+                            Communication Skills Assessment
+                          </CardTitle>
+                          <hr />
+                        </CardHeader>
+                        <CardContent>
+                          <ul className="space-y-6">
+                            {skillsData.map((item, index) => (
+                              <li key={index} className="space-y-2">
+                                <p className="text-sm">{item.skill}</p>
+                                <div className="flex h-6 w-full">
+                                  <div
+                                    className="bg-green-400  text-black font-bold text-center"
+                                    style={{
+                                      width: `${
+                                        (item.correct /
+                                          (item.correct + item.incorrect)) *
+                                        totalWidth
+                                      }px`,
+                                    }}
+                                  >
+                                    {item?.correct}
+                                  </div>
+                                  <div
+                                    className={`${
+                                      item.incorrect === 5
+                                        ? "bg-[#9e9e9e]"
+                                        : "bg-red-300"
+                                    } text-black font-bold text-center`}
+                                    style={{
+                                      width: `${
+                                        (item.incorrect /
+                                          (item.correct + item.incorrect)) *
+                                        totalWidth
+                                      }px`,
+                                    }}
+                                  >
+                                    {item?.correct}
+                                  </div>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                              <span>Correct</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                              <span>Incorrect</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                              <span>Not answered</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <hr />
+                        <CardFooter>
+                          <Button
+                            variant="link"
+                            className="text-pink-500 p-0"
+                            onClick={() =>
+                              globalState.openModal(
+                                "communication_skills_assessment",
+                                true
+                              )
+                            }
+                          >
+                            Learn more
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+
+                <Accordion key="3" type="single" collapsible>
+                  <AccordionItem value="3">
+                    <AccordionTrigger className="flex justify-between ">
+                      <span>Time Management</span>
+                      <span className="ml-[250px] "> 7% </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex justify-between items-center">
+                        <p className="flex gap-2 items-center">
+                          <AiOutlineBarChart />                          
+                          Basic 
+                        </p>
+                        <p className="flex gap-2 items-center">
+                          <RxTimer />                          
+                          Finished in 00:07:35 out of 00:08:00 {" "}
+                        </p>
+                      </div>
+
+                      <Card className="w-full max-w-2xl my-3">
+                        <CardHeader>
+                          <CardTitle className="text-lg font-semibold">
+                            Communication Skills Assessment
+                          </CardTitle>
+                          <hr />
+                        </CardHeader>
+                        <CardContent>
+                          <ul className="space-y-6">
+                            {skillsData.map((item, index) => (
+                              <li key={index} className="space-y-2">
+                                <p className="text-sm">{item.skill}</p>
+                                <div className="flex h-6 w-full">
+                                  <div
+                                    className="bg-green-400  text-black font-bold text-center"
+                                    style={{
+                                      width: `${
+                                        (item.correct /
+                                          (item.correct + item.incorrect)) *
+                                        totalWidth
+                                      }px`,
+                                    }}
+                                  >
+                                    {item?.correct}
+                                  </div>
+                                  <div
+                                    className={`${
+                                      item.incorrect === 5
+                                        ? "bg-[#9e9e9e]"
+                                        : "bg-red-300"
+                                    } text-black font-bold text-center`}
+                                    style={{
+                                      width: `${
+                                        (item.incorrect /
+                                          (item.correct + item.incorrect)) *
+                                        totalWidth
+                                      }px`,
+                                    }}
+                                  >
+                                    {item?.correct}
+                                  </div>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                              <span>Correct</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                              <span>Incorrect</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                              <span>Not answered</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <hr />
+                        <CardFooter>
+                          <Button
+                            variant="link"
+                            className="text-pink-500 p-0"
+                            onClick={() =>
+                              globalState.openModal(
+                                "communication_skills_assessment",
+                                true
+                              )
+                            }
+                          >
+                            Learn more
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+
+                <Accordion key="4" type="single" collapsible>
+                  <AccordionItem value="4">
+                    <AccordionTrigger className="flex justify-between ">
+                      <span>Motivation</span>
+                      <span className="ml-[250px] ">  Survey Needed </span>
+                    </AccordionTrigger>
+                   
+                  </AccordionItem>
+                </Accordion>
+                <p className="font-bold py-3">
+                Tests not included in overall assessment score 
+                </p>
+
+                <Accordion key="4" type="single" collapsible>
+                  <AccordionItem value="4">
+                    <AccordionTrigger className="flex justify-between ">
+                      <span>Big 5 (OCEAN)</span>
+                      <span className="ml-[250px] "> Unavailable </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex justify-between items-center">
+                        <p className="flex gap-2 items-center">
+                          <AiOutlineBarChart />                          
+                          Basic 
+                        </p>
+                        <p className="flex gap-2 items-center">
+                          
+                          The candidate did not answer all of the questions. {" "}
+                        </p>
+                      </div>
+
+                    
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardHeader>
             </Card>
           </div>
@@ -304,7 +665,10 @@ const AssessmentDashboard: React.FC = () => {
                     </div>
                     <Badge
                       variant="secondary"
-                      className="bg-green-100 text-green-700 hover:bg-green-100"
+                      className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
+                      onClick={() =>
+                        globalState.openModal("anti_cheating_measures", true)
+                      }
                     >
                       Yes
                     </Badge>
@@ -316,7 +680,10 @@ const AssessmentDashboard: React.FC = () => {
                     </div>
                     <Badge
                       variant="secondary"
-                      className="bg-green-100 text-green-700 hover:bg-green-100"
+                      className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
+                      onClick={() =>
+                        globalState.openModal("anti_cheating_measures", true)
+                      }
                     >
                       Yes
                     </Badge>
@@ -330,7 +697,10 @@ const AssessmentDashboard: React.FC = () => {
                     </div>
                     <Badge
                       variant="secondary"
-                      className="bg-red-100 text-red-700 hover:bg-red-100"
+                      className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
+                      onClick={() =>
+                        globalState.openModal("anti_cheating_measures", true)
+                      }
                     >
                       No
                     </Badge>
@@ -344,7 +714,10 @@ const AssessmentDashboard: React.FC = () => {
                     </div>
                     <Badge
                       variant="secondary"
-                      className="bg-red-100 text-red-700 hover:bg-red-100"
+                      className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
+                      onClick={() =>
+                        globalState.openModal("anti_cheating_measures", true)
+                      }
                     >
                       No
                     </Badge>
@@ -681,13 +1054,14 @@ const AssessmentDashboard: React.FC = () => {
 
       {/* Modals */}
 
+      {/*interpret results Modal */}
       <Dialog
         open={globalState.modals.interpret_results.open}
         onOpenChange={(open) =>
           globalState.openModal("interpret_results", open)
         }
       >
-        <DialogContent className="sm:max-w-[725px] mt-2 overflow-scroll">
+        <DialogContent className="sm:max-w-[725px] h-screen overflow-x-hidden mt-2">
           <DialogHeader>
             <DialogTitle>How to interpret results</DialogTitle>
             <DialogDescription>
@@ -865,7 +1239,7 @@ const AssessmentDashboard: React.FC = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-
+      {/* anti cheating measures Modal */}
       <Dialog
         open={globalState.modals.anti_cheating_measures.open}
         onOpenChange={(open) =>
@@ -874,8 +1248,11 @@ const AssessmentDashboard: React.FC = () => {
       >
         <DialogContent className="sm:max-w-[755px] px-10">
           <DialogHeader>
-            <DialogTitle className="text-xl">Anti-cheating measures</DialogTitle>
+            <DialogTitle className="text-xl">
+              Anti-cheating measures
+            </DialogTitle>
           </DialogHeader>
+          <hr />
           <p className="font-bold"> Device and location</p>
           <p>
             We register the candidate’s type of device used for the assessment,
@@ -884,25 +1261,365 @@ const AssessmentDashboard: React.FC = () => {
 
           <p className="font-bold"> Filled out only once from IP address</p>
           <p>
-          Using the IP address, we check if candidates fill out the assessment only once (with a public link to the assessment, candidates could use multiple email addresses to take repeated attempts at the assessment).
+            Using the IP address, we check if candidates fill out the assessment
+            only once (with a public link to the assessment, candidates could
+            use multiple email addresses to take repeated attempts at the
+            assessment).
           </p>
 
           <p className="font-bold"> Webcam/front camera enabled</p>
           <p>
-          When candidates start their assessment, we ask them to activate their webcam/camera. This allows us to capture images of your candidates every 30 seconds. This way you can see if the same (and only one) person has worked on the assessment.
+            When candidates start their assessment, we ask them to activate
+            their webcam/camera. This allows us to capture images of your
+            candidates every 30 seconds. This way you can see if the same (and
+            only one) person has worked on the assessment.
           </p>
 
           <p className="font-bold"> Full-screen mode always active</p>
           <p>
-          For candidates that use a desktop or laptop, we also activate full-screen mode to ensure candidates don’t browse the internet to look up answers. While we cannot prevent that candidates deactivate full-screen mode, we can detect if they did. It indicates a potential violation.
+            For candidates that use a desktop or laptop, we also activate
+            full-screen mode to ensure candidates don’t browse the internet to
+            look up answers. While we cannot prevent that candidates deactivate
+            full-screen mode, we can detect if they did. It indicates a
+            potential violation.
           </p>
 
           <p className="font-bold"> Mouse always in assessment window</p>
           <p>
-          We can detect if the mouse has always been on the test window. Candidates that have two screens could otherwise still have another window open to browse the internet.
+            We can detect if the mouse has always been on the test window.
+            Candidates that have two screens could otherwise still have another
+            window open to browse the internet.
           </p>
         </DialogContent>
       </Dialog>
+      {/* choose_scoring_method Modal */}
+      <Dialog
+        open={globalState.modals.choose_scoring_method.open}
+        onOpenChange={(open) =>
+          globalState.openModal("choose_scoring_method", open)
+        }
+      >
+        <DialogContent className="sm:max-w-[900px] px-4 sm:px-10 overflow-x-hidden h-screen">
+          <DialogHeader>
+            <DialogTitle className="text-lg sm:text-xl">
+              Choose a scoring method
+            </DialogTitle>
+          </DialogHeader>
+          <hr />
+          <RadioGroup defaultValue="percentage" className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="percentage" id="r1" />
+              <Label htmlFor="r1">Percentage of correct answers</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="percentile" id="r2" />
+              <Label htmlFor="r2">Percentile</Label>
+            </div>
+          </RadioGroup>
+
+          <p className="py-2 leading-7 text-sm sm:text-base">
+            The percentile scoring method allows you to compare the candidate
+            against others in the TestGorilla database who have taken this test
+            and are in the chosen comparison group.
+          </p>
+
+          <p className="font-bold text-sm sm:text-base">
+            Choose a comparison group
+          </p>
+
+          <p className="text-sm sm:text-base">
+            A comparison group only becomes available for a given test once we
+            have sufficient data, i.e., sufficient candidates in our database
+            who have taken the test and are in the chosen comparison group.
+          </p>
+
+          <p className="font-bold text-sm sm:text-base">All candidates</p>
+          <div className="flex justify-between rounded-lg border cursor-pointer p-3 w-full sm:w-56">
+            <RadioGroup defaultValue="">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="candidates" id="p1" />
+                <Label htmlFor="p1">All candidates</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <hr />
+
+          <p className="font-bold text-sm sm:text-base">Education level</p>
+          <p className="text-sm sm:text-base">
+            Compare with candidates with a certain level of educational
+            attainment.
+          </p>
+
+          <RadioGroup
+            defaultValue=""
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
+            <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+              <RadioGroupItem value="bachelor_degree" id="p2" />
+              <Label htmlFor="p2">Bachelor's Degree</Label>
+            </div>
+            <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+              <RadioGroupItem value="master_degree" id="p3" />
+              <Label htmlFor="p3">Master's Degree or Higher</Label>
+            </div>
+          </RadioGroup>
+
+          <hr />
+
+          <p className="font-bold text-sm sm:text-base">Business function</p>
+          <p className="text-sm sm:text-base">
+            Compare with candidates who are in a certain business function.
+          </p>
+
+          <RadioGroup
+            defaultValue=""
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="administrative" id="s1" />
+                <label htmlFor="s1">Administrative</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="copywriting_editing" id="s2" />
+                <label htmlFor="s2">Copywriting/Editing</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="it_support" id="s3" />
+                <label htmlFor="s3">Customer/IT Support</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="marketing" id="s10" />
+                <label htmlFor="s10">Marketing</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="operations" id="s11" />
+                <label htmlFor="s11">Operations</label>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="design" id="s4" />
+                <label htmlFor="s4">Design</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="engineering" id="s5" />
+                <label htmlFor="s5">Engineering</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="finance" id="s6" />
+                <label htmlFor="s6">Finance/Accounting</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="qa" id="s12" />
+                <label htmlFor="s12">Quality Assurance</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="research_development" id="s13" />
+                <label htmlFor="s13">Research & Development</label>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="hr" id="s7" />
+                <label htmlFor="s7">Human Resources</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="legal" id="s8" />
+                <label htmlFor="s8">Legal</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="management" id="s9" />
+                <label htmlFor="s9">Management</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="account_management" id="s14" />
+                <label htmlFor="s14">Sales/Account Management</label>
+              </div>
+              <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+                <RadioGroupItem value="software_development" id="s15" />
+                <label htmlFor="s15">Software Development</label>
+              </div>
+            </div>
+          </RadioGroup>
+
+          <hr />
+
+          <p className="font-bold text-sm sm:text-base">Seniority</p>
+          <p className="text-sm sm:text-base">
+            Compare with candidates with certain number of years of work
+            experience.
+          </p>
+
+          <RadioGroup
+            defaultValue=""
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
+            <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+              <RadioGroupItem value="junior" id="p4" />
+              <Label htmlFor="p4">Junior (up to 3 years of experience)</Label>
+            </div>
+            <div className="flex items-center space-x-2 rounded-lg border cursor-pointer p-3">
+              <RadioGroupItem value="senior" id="p5" />
+              <Label htmlFor="p5">Senior (4 or more years of experience)</Label>
+            </div>
+          </RadioGroup>
+        </DialogContent>
+      </Dialog>
+
+      {/* Communication Skills Assessment Modal */}
+      <Dialog
+        open={globalState.modals.communication_skills_assessment.open}
+        onOpenChange={(open) =>
+          globalState.openModal("communication_skills_assessment", open)
+        }
+      >
+        <DialogContent className="sm:max-w-[1755px] max-h-svh  overflow-x-hidden px-10">
+          <div className="sm:max-w-[1755px] mx-auto">
+            <CardHeader>
+              <CardTitle className="text-3xl font-bold flex flex-col">
+                <Button variant="outline" className="w-max rounded-lg mb-5 p-3">
+                  Preview Sample Questions
+                </Button>{" "}
+                Problem Solving
+              </CardTitle>             
+              <p>
+                This Problem Solving test evaluates candidates' ability to
+                define problems and analyze data <br /> and textual information
+                to make correct decisions. This test helps you identify
+                candidates <br />
+                who use analytical skills to evaluate and respond to complex
+                situations.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="flex items-center justify-around">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <VscTypeHierarchySuper className="text-2xl text-gray-600" />
+                      <div>
+                        <h3 className="font-semibold">Type</h3>
+                        <p>Cognitive ability</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 mb-4">
+                      <FaClock className="text-2xl text-gray-600" />
+                      <div>
+                        <h3 className="font-semibold">Time</h3>
+                        <p>9 mins</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-4 mb-4">
+                      <FaLanguage className="text-2xl text-gray-600" />
+                      <div>
+                        <h3 className="font-semibold">Language</h3>
+                        <p>
+                          English
+                          {/* , German, Danish, Dutch, French, Italian, Japanese, Norwegian, Polish, Portuguese (Brazil), Spanish, Swedish */}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-4 mb-4">
+                      <FaChartLine className="text-2xl text-gray-600" />
+                      <div>
+                        <h3 className="font-semibold">Level</h3>
+                        <p>Intermediate</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="font-semibold mb-2">Covered skills</h3>
+                    <ul className="space-y-1">
+                      <li className="flex items-center">
+                        <MdCheckCircle className="mr-2 text-green-500" />{" "}
+                        Creating and adjusting schedules
+                      </li>
+                      <li className="flex items-center">
+                        <MdCheckCircle className="mr-2 text-green-500" />{" "}
+                        Interpreting data and applying logic to make decisions
+                      </li>
+                      <li className="flex items-center">
+                        <MdCheckCircle className="mr-2 text-green-500" />{" "}
+                        Prioritizing and applying order based on a given set of
+                        rules
+                      </li>
+                      <li className="flex items-center">
+                        <MdCheckCircle className="mr-2 text-green-500" />{" "}
+                        Analyzing textual and numerical information to draw
+                        conclusions
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">
+                      This test is relevant for
+                    </h3>
+                    <p>
+                      Any role that involves managing constantly shifting
+                      variables with tight deadlines. This may include
+                      administrative assistants, project managers, planners, and
+                      people working in hospitality or sales.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Description</h3>
+                  <p className="mb-4">
+                    Effective problem-solving requires a broad skill set that
+                    enables individuals, teams, and businesses to advance
+                    towards stated objectives. It involves the ability to define
+                    a problem, to break it down into manageable parts, to
+                    develop approaches to solve the (sub)problem using
+                    creativity and analytical thinking, and to execute
+                    flawlessly.
+                  </p>
+                  <p className="mb-4">
+                    scenarios and asks them to make the best decision to solve
+                    each situation in the most efficient and productive way.
+                  </p>
+                  <p>
+                    The test requires candidates to identify the right answers
+                    to the questions in a limited amount of time. Successful
+                    candidates can quickly identify the key elements of the
+                    problem and work through the problem at speed without making
+                    mistakes. This is a great test to include to check
+                    candidates' overall analytical skills.
+                  </p>
+
+                  <div className="">
+                    <p>About the subject-matter expert</p>
+                    <div className="flex items-center mt-6 space-x-4">
+                      <Avatar>
+                        <AvatarImage src="/placeholder.svg" alt="Laurens H." />
+                        <AvatarFallback>LH</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h4 className="font-semibold">Laurens H.</h4>
+                        <p className="">
+                          Laurens has significant professional experience in the
+                          private sector as well as politics and has over 19
+                          years of experience as a trainer. He has trained on
+                          time management strategies for countless groups and
+                          individuals from various backgrounds, countries,
+                          sectors and roles. He also likes experimenting and
+                          implementing novel time management concepts in his
+                          daily work. Laurens currently lives, works and
+                          volunteers in Brussels and enjoys socializing with
+                          family and friends when he's not working.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </>
   );
 };
