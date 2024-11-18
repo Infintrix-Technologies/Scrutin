@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useFrappeDeleteDoc, useFrappeGetCall, useFrappeGetDoc, useFrappeGetDocList, useFrappePostCall } from "frappe-react-sdk";
+import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 
 
 const CandidateDashboard = () => {
@@ -11,10 +11,6 @@ console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
 // const session_user = useFrappeGetCall("scrutin.api.user.get_logged_user");
 // console.log(session_user);
 
-
-const assessment_tests = useFrappeGetCall("scrutin.api.user.get_assessment_test");
-console.log(assessment_tests);
-
 // const update_candidate = useFrappePostCall("scrutin.api.candidate.update_candidate");
 // console.log(update_candidate);
 
@@ -25,9 +21,6 @@ console.log(assessment_tests);
 const get_specific_assessments = useFrappeGetCall("scrutin.api.assessment_data.get_specific_assessments")
 console.log(get_specific_assessments, "get_specific_assessments");
 
-//this api give specific Assessment all details 
-const assessment_tessts = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_test_custom_question")
-console.log(assessment_tessts, "assessment_tessts");
 
 //this api give job_title of specific Job Applicant
 const get_applicant_jobtitle = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_jobtitle")
@@ -38,26 +31,23 @@ const get_candidate_details = useFrappeGetCall("scrutin.api.assessment_data.get_
 console.log(get_candidate_details, "get_candidate_details");
 
 
-//this api will provide the specific assessment candidate and candidate name fetch from applicant_name
-const get_specific_assessment_candidate_name = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_candidate_name")
-
-
-// get the all test for the specific assessment
-const get_tests_for_assessment = useFrappePostCall("scrutin.api.assessment_data.get_tests_for_assessment")
-
-
-//get the all custom question for the specific assessment
-const get_custom_questions_for_assessment = useFrappePostCall("scrutin.api.assessment_data.get_custom_questions_for_assessment")
-
-
 const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment_data.specific_assessment_candidates")
 // console.log(specific_assessment_candidates, "specific_assessment_candidates");
 
-//this api will give the all question for the specific test
-const get_questions_for_test = useFrappePostCall("scrutin.api.assessment_data.get_questions_for_test")
+//this api will give the all question for the specific test and their total duration
+const get_questions_for_test_and_total_duration = useFrappePostCall("scrutin.api.assessment_data.get_questions_for_test_and_total_duration")
 
-//this api will provide the specific test total duration based on the total question in the test
-const get_total_duration_for_test = useFrappePostCall("scrutin.api.assessment_data.get_total_duration_for_test")
+
+//this api give the all test of specific assessment with the total dutation of invidual test
+const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_assessment_data")
+
+
+
+//this api will give the candidate assesment based on the job_applicant email
+const get_candidate_assessment = useFrappePostCall("scrutin.api.assessment_data.get_candidate_assessment")
+
+
+const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail")
 
 
   return (
@@ -72,66 +62,38 @@ const get_total_duration_for_test = useFrappePostCall("scrutin.api.assessment_da
         Update Job Applicant
       </Button>
 
+
       <Button onClick={() => {
-        get_specific_assessment_candidate_name.call({
+        get_questions_for_test_and_total_duration.call({
+          test_name: 'k9a5emvdd6',
+        });
+      }}>
+        Test Questions & Total Duration
+      </Button>
+
+      <Button onClick={() => {
+        get_assessment_data.call({
           assessment_name: 'jvecvcvl4o',
         });
       }}>
-        Assessment Candidate Name
+        Assessment Detail
       </Button>
 
       <Button onClick={() => {
-        get_tests_for_assessment.call({
-          assessment_name: 'jvecvcvl4o',
+        get_candidate_assessment.call({
+          email: 'qandeelhaider@gmail.com',
         });
       }}>
-        Assessment Test
+        Candidate Assessment
       </Button>
-
       <Button onClick={() => {
-        get_custom_questions_for_assessment.call({
-          assessment_name: 'jvecvcvl4o',
+        get_candidate_detail.call({
+          candidate: 'k3jas5g82l',
         });
       }}>
-        Assessment Custom Question
+        Candidate Detail
       </Button>
 
-
-      <Button onClick={() => {
-        get_questions_for_test.call({
-          test_name: 'Backend Development',
-        });
-      }}>
-        Test Questions
-      </Button>
-
-
-
-      <Button onClick={() => {
-        get_total_duration_for_test.call({
-          test_name: 'Front End Development',
-        });
-      }}>
-        Test Duration
-      </Button>
-
-{/* <Button onClick={() => {
-        update_applicant.call({
-          // assessment: 'vk1m38vch1',
-          job_applicant: 'bilal123@gmail.com'
-        });
-      }}>
-        Update Job Applicant
-      </Button> */}
-
-      {/* <Button onClick={() => {
-        update_candidate.call({
-          assessment: 'pfn2mphqjf',
-          // job_applicant: 'bilal123@gmail.com'
-        });
-      }}>
-        Update Scrutin Candidate
-      </Button> */}
     </div>
     
   )

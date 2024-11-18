@@ -4,16 +4,8 @@ from frappe.query_builder import functions as fn
 
 @frappe.whitelist()
 def get_specific_assessments():
-    assessment = frappe.qb.DocType("Scrutin Assessment")
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
-
-
-    # query = (
-    #     frappe.qb.from_(assessment)
-    #     .select(assessment.language, assessment.company)
-    #     .where(assessment.language == "en")
-    # )
 
     query = (
         frappe.qb.from_(ScrutinAssessmentTest)
@@ -23,32 +15,13 @@ def get_specific_assessments():
             ScrutinAssessment.name,
             ScrutinAssessment.assessment_name,            
             ScrutinAssessmentTest.test,        
-            ScrutinAssessmentTest.weight       
+            ScrutinAssessmentTest.weight
         )
     )
-
     results = query.run(as_dict=True)
-
     return results
 
-
-
-# @frappe.whitelist()
-# def get_assessment_name():
-#     assessment = DocType("Scrutin Assessment")
-#     candidate = DocType("Scrutin Candidate")
-
-
-
-@frappe.whitelist()
-def get_assessment_test_custom_question():
-
-    doc = frappe.get_doc("Scrutin Assessment", "Python Assessment")
-
-    return doc
-
-
-
+#This API provide the Job_title for Job_applicant
 @frappe.whitelist()
 def get_applicant_jobtitle():
     applicant = DocType("Job Applicant")
@@ -64,7 +37,6 @@ def get_applicant_jobtitle():
         )
     )
     results = query.run(as_dict=True)
-
     return results
 
 #this api give the candidate Job_applicant_name and Assessment_name
@@ -91,32 +63,108 @@ def get_applicant_name_assessment_name_for_candidate():
     return candidate_detail
 
 
+#This API provide the questions of individual test and also provide the total duration of the test
 @frappe.whitelist()
-def get_assessment_language(candi):
-    Assessment = DocType("Scrutin Assessment")
-    Candidate = DocType("Scrutin Candidate")
-
-    query = (
-        frappe.qb.from_(Candidate)
-        .inner_join(Assessment)
-        .on(Assessment.name == Candidate.assessment)
-        .select(Assessment.language)
-        .where(Candidate.name == candi)
+def get_questions_for_test_and_total_duration(test_name):
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    
+    # Query to get questions for the given test
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question, 
+                ScrutinQuestion.question.as_("question_text"),
+                ScrutinQuestion.type,
+                ScrutinQuestion.duration)
+        .where(ScrutinTest.name == test_name)
     )
-    results = query.run(as_dict=True)
-    return results
+    tests = question_query.run(as_dict=True)
+
+    # Query to calculate the total duration for the test
+    duration_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+        .where(ScrutinTest.name == test_name)
+    )
+    duration_result = duration_query.run(as_dict=True)
+    total_duration = duration_result[0]['total_duration'] if duration_result else 0
+
+    # Add total duration to the response
+    return {
+        'questions': tests,
+        'total_duration': total_duration
+    }
 
 
-
-#this api will provide the specific assessment candidate and candidate name fetch from applicant_name
+#This API will provide the candidate assessment based on the email because email is used as a id in candidate
 @frappe.whitelist()
-def get_specific_assessment_candidate_name(assessment_name):
-
+def get_candidate_assessment(email):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
 
-    candidate_detail = (
+    assessment_query = (
+        frappe.qb.from_(ScrutinAssessment)
+        .left_join(ScrutinCandidate)
+        .on(ScrutinCandidate.assessment == ScrutinAssessment.name)
+        .left_join(JobApplicant)
+        .on(JobApplicant.name == ScrutinCandidate.job_applicant)
+        .select(
+            ScrutinAssessment.assessment_name,
+            ScrutinCandidate.job_applicant,
+            ScrutinCandidate.name,
+        )
+        .where(ScrutinCandidate.job_applicant == email)
+    )
+    candidate_assessment = assessment_query.run(as_dict=True)
+
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinAssessmentTest.weight,
+            ScrutinTest.title
+        )
+        .where(ScrutinAssessment.name == ScrutinCandidate.assessment)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    return {
+        'candidate_assessment': candidate_assessment,
+        'tests': tests
+    }
+
+
+#This APIs give the all details about the assessment like assessment total candidate, assessment all tests
+#and assessment all custom questions and it also give the total duration of each test present in the assessment
+@frappe.whitelist()
+def get_assessment_data(assessment_name):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    JobApplicant = DocType("Job Applicant")
+
+    #Query to get the candidate of the specific assessment
+    candidate_query = (
         frappe.qb.from_(ScrutinCandidate)
         .left_join(ScrutinAssessment)
         .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
@@ -131,97 +179,79 @@ def get_specific_assessment_candidate_name(assessment_name):
             JobApplicant.applicant_name
         )
         .where(ScrutinCandidate.assessment == assessment_name)
-    ).run(as_dict=True)
-
-    return candidate_detail
-
-
-
-# Function to get all tests of a specific Scrutin Assessment
-@frappe.whitelist()
-def get_tests_for_assessment(assessment_name):
-    ScrutinAssessment = DocType("Scrutin Assessment")
-    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
-    ScrutinTest = DocType("Scrutin Test")
-    
-    query = (
-        frappe.qb.from_(ScrutinAssessmentTest)
-        .inner_join(ScrutinAssessment)
-        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
-        .inner_join(ScrutinTest)
-        .on(ScrutinAssessmentTest.test == ScrutinTest.title)
-        .select(ScrutinAssessmentTest.test,
-                ScrutinAssessmentTest.weight,
-                ScrutinTest.title,
-                ScrutinTest.duration,)
-        .where(ScrutinAssessment.name == assessment_name)
     )
-    result = query.run(as_dict=True)
-    return result
 
+    candidate_name = candidate_query.run(as_dict=True)
 
-#this api will provide the all custom questions that are associated with specific assessment
-@frappe.whitelist()
-def get_custom_questions_for_assessment(assessment_name):
-    ScrutinAssessment = DocType("Scrutin Assessment")
-    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
-    ScrutinQuestion = DocType("Scrutin Question")
-    
-    query = (
+    # Query to get custom questions of the specific assessment
+    questions_query = (
         frappe.qb.from_(ScrutinAssessmentQuestion)
         .inner_join(ScrutinAssessment)
         .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
         .inner_join(ScrutinQuestion)
         .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
-        .select(ScrutinAssessmentQuestion.question, 
-                ScrutinQuestion.question,
-                ScrutinQuestion.type)
+        .select(
+            ScrutinAssessmentQuestion.question,
+            ScrutinQuestion.question,
+            ScrutinQuestion.type
+        )
         .where(ScrutinAssessment.name == assessment_name)
     )
-    result = query.run(as_dict=True)
-    return result
+    custom_questions = questions_query.run(as_dict=True)
 
-
-
-
-#get all questions of specific test
-@frappe.whitelist()
-def get_questions_for_test(test_name):
-    ScrutinTest = DocType("Scrutin Test")
-    ScrutinTestQuestion = DocType("Scrutin Test Question")
-    ScrutinQuestion = DocType("Scrutin Question")
-    
-    query = (
-        frappe.qb.from_(ScrutinTestQuestion)
+    # Query to get all tests of the specific assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
         .inner_join(ScrutinTest)
-        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-        .inner_join(ScrutinQuestion)
-        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-        .select(ScrutinTestQuestion.question, 
-                ScrutinQuestion.question,
-                ScrutinQuestion.type,
-                ScrutinQuestion.duration)
-        .where(ScrutinTest.name == test_name)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinAssessmentTest.weight,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
     )
-    result = query.run(as_dict=True)
-    return result
+    tests = tests_query.run(as_dict=True)
+
+    # Add total duration for each test
+    for test in tests:
+        test_name = test['test']
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        total_duration = duration_result[0]['total_duration'] if duration_result else 0
+        test['total_duration'] = total_duration
+
+    return {
+        'custom_questions': custom_questions,
+        'tests': tests,
+        'candidate_name': candidate_name,
+    }
 
 
 
 @frappe.whitelist()
-def get_total_duration_for_test(test_name):
-    ScrutinTest = DocType("Scrutin Test")
-    ScrutinTestQuestion = DocType("Scrutin Test Question")
-    ScrutinQuestion = DocType("Scrutin Question")
-    
-    query = (
-        frappe.qb.from_(ScrutinTestQuestion)
-        .inner_join(ScrutinTest)
-        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-        .inner_join(ScrutinQuestion)
-        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-        .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
-        .where(ScrutinTest.name == test_name)
+def get_candidate_detail(candidate):
+    ScrutinCandidate = DocType("Scrutin Candidate")
+
+    candidate_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(
+            ScrutinCandidate.name,
+            ScrutinCandidate.job_applicant,
+            ScrutinCandidate.status,
+            ScrutinCandidate.invited_on,
+            ScrutinCandidate.assessment
+        )
+        .where(ScrutinCandidate.name == candidate)
     )
-    result = query.run(as_dict=True)
-    return result[0]['total_duration'] if result else 0
+    return candidate_query.run(as_dict=True)
