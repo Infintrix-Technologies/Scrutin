@@ -166,14 +166,14 @@ const CandidatesDetailPage: React.FC = () => {
   return (
     <>
 
-<header className="flex items-center justify-between px-4 py-3 border-b">
+<header className="flex  justify-between px-4 py-3 border-b">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950">
           <FaChevronLeft className="h-4 w-4" />
           <span className="sr-only">Go back</span>
         </Button>
         
-        <div className="flex flex-col sm:flex-row sm:items-center gap-0 sm:gap-2">
+        <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
           <h1 className="text-base font-semibold">Abdul Muqeet</h1>
           <Link 
             // to="mailto:muqeet@infintrotech.com"

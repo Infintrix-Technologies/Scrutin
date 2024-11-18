@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IoPersonAddSharp } from "react-icons/io5";
@@ -6,7 +5,6 @@ import { LuSendHorizonal } from "react-icons/lu";
 import {
   Card,
   CardContent,
-  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,7 +15,6 @@ import {
   FaSlidersH,
 } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
-// import { Link } from "react-router-dom";
 import { Clock, Edit, MessageSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
@@ -127,7 +124,7 @@ const AssessmentDetailPage = () => {
   const get_specific_assessment =
     get_specific_assessment_candidate_name?.data?.message || [];
   const tests_for_assessment = get_tests_for_assessment?.data?.message || [];
-  console.log(tests_for_assessment, "get_tests_for_assessment");
+  console.log(get_specific_assessment, "get_specific_assessment");
 
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY hh:mm:ss A");
@@ -144,13 +141,6 @@ const AssessmentDetailPage = () => {
       hired: false,
     },
   ];
-  // const tests: Test[] = [
-  //   { name: "Problem Solving", weight: "--", impact: "--", duration: "9'" },
-  //   { name: "Communication", weight: "--", impact: "--", duration: "8'" },
-  //   { name: "Time Management", weight: "--", impact: "--", duration: "9'" },
-  //   { name: "Motivation", weight: "--", impact: "--", duration: "15'" },
-  //   { name: "Big 5 (OCEAN)", weight: "--", impact: "--", duration: "10'" },
-  // ];
 
   return (
     <><hr />
