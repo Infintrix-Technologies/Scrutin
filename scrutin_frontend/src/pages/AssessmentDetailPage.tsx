@@ -70,28 +70,8 @@ import "dayjs/locale/en";
 import { useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
+import { AssessmentData, Candidate, Test } from "@/components/Interfaces/Interface";
 
-interface Test {
-  duration: number;
-  weight: string;
-  title: string;
-  impact: string;
-}
-interface Candidate {
-  name: string;
-  score: number;
-  hired: boolean;
-}
-
-interface AssessmentData {
-  applicant_name: string;
-  status: string;
-  invited_on: string;
-  job_applicant: string;
-  question: string;
-  type: string;
-  duration: string;
-}
 
 const AssessmentDetailPage = () => {
   const [showWeights, setShowWeights] = useState(false);
@@ -411,10 +391,6 @@ const AssessmentDetailPage = () => {
                           </div>
                         </div>
                       </div>
-                      {/* <div className="h-[20rem] border border-slate-700 rounded-lg">
-                      </div> */}
-
-                      {/* <hr /> */}
                       <div className="flex items-center justify-between">
                         <div className="flex  ">
                           <div className="flex items-center justify-between gap-2">
@@ -442,7 +418,7 @@ const AssessmentDetailPage = () => {
               </Dialog>
 
               <Dialog
-                open={globalState.modals.set_test_weights.open}
+                open={globalState?.modals?.set_test_weights.open}
                 onOpenChange={(open) =>
                   globalState.openModal("set_test_weights", open)
                 }
@@ -457,7 +433,7 @@ const AssessmentDetailPage = () => {
                 </DialogContent>
               </Dialog>
               <Dialog
-                open={globalState.modals.feed_back.open}
+                open={globalState?.modals?.feed_back?.open}
                 onOpenChange={(open) =>
                   globalState.openModal("feed_back", open)
                 }
@@ -500,10 +476,10 @@ const AssessmentDetailPage = () => {
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {candidates.map((candidate) => (
-                                    <TableRow key={candidate.name}>
-                                      <TableCell>{candidate.name}</TableCell>
-                                      <TableCell>{candidate.score}</TableCell>
+                                  {candidates?.map((candidate) => (
+                                    <TableRow key={candidate?.name}>
+                                      <TableCell>{candidate?.name}</TableCell>
+                                      <TableCell>{candidate?.score}</TableCell>
                                       <TableCell>
                                         <Checkbox
                                         // checked={candidate.hired}
@@ -563,16 +539,15 @@ const AssessmentDetailPage = () => {
             <div className="border rounded-lg">
               <Table>
                 <TableHeader>
-                  <TableRow className="whitespace-nowrap">
+                  <TableRow className="">
                     <TableHead className="w-12">
                       <Checkbox />
                     </TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Overall</TableHead>
-                    <TableHead>Problem Solving</TableHead>
-                    <TableHead>Communication</TableHead>
-                    <TableHead>Time Management</TableHead>
-                    <TableHead>Motivation</TableHead>
+                    {tests_for_assessment.map((test: Test, index: number) => (
+          <TableHead key={index}>{test.title}</TableHead>
+        ))}
                     <TableHead>Hiring stage</TableHead>
 
                     <TableHead>Status</TableHead>
@@ -596,12 +571,13 @@ const AssessmentDetailPage = () => {
                             Owner
                           </Badge>
                         </div>
-                      </TableCell>
-                      <TableCell>11%</TableCell>
-                      <TableCell>0%</TableCell>
-                      <TableCell>32%</TableCell>
-                      <TableCell>0%</TableCell>
-                      <TableCell>-</TableCell>
+                      </TableCell>                    
+                       <TableCell>{data.overall || "N/A"}</TableCell>
+          {tests_for_assessment.map((test: Test, index: number) => (
+            <TableCell key={index}>
+              {data?.test_scores?.[test.title] || "0%"}
+            </TableCell>
+          ))}
                       <TableCell>
                         <Select>
                           <SelectTrigger className="w-[200px]">
@@ -653,7 +629,7 @@ const AssessmentDetailPage = () => {
                           {data?.status}
                         </Badge>{" "}
                       </TableCell>
-                      <TableCell>{formatDate(data?.invited_on)}</TableCell>
+                      <TableCell>{(formatDate(data?.invited_on ))}</TableCell>
                       <TableCell>
                         <div className="flex justify-center gap-1">
                           {[...Array(5)].map((_, i) => (
@@ -739,14 +715,14 @@ const AssessmentDetailPage = () => {
                     <div>Impact</div>
                     <div>Duration</div>
                   </div>
-                  {tests_for_assessment.map((data: Test, index: number) => (
+                  {tests_for_assessment?.map((data: Test, index: number) => (
                     <div
                       key={index}
                       className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
                     >
-                      <div>{data.title}</div>
-                      <div>{data.weight}</div>
-                      <div>{data.impact || "--"}</div>
+                      <div>{data?.title}</div>
+                      <div>{data?.weight || "--"}</div>Weight
+                      <div>{data?.impact || "--"}</div>
                       <div className="flex items-center">
                         <Clock className="mr-2 h-4 w-4" />
                         {data?.duration < 60

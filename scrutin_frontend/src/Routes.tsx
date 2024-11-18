@@ -22,7 +22,7 @@ import CandidateLayout from "./layouts/CandidateLayout";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import JobApplicants from "./pages/JobApplicants";
 import AssessmentDashboard from "./pages/CandidatesDetailPage";
-import CandidateAssessmentDashboard from "./pages/AssessmentDetailPage";
+import AssessmentDetailPage from "./pages/AssessmentDetailPage";
 
 export const router = createBrowserRouter(
   [
@@ -56,7 +56,7 @@ export const router = createBrowserRouter(
             },
             {
               path: ":assessment_id",
-              element: <CandidateAssessmentDashboard />,
+              element: <AssessmentDetailPage />,
             },
             
           ],

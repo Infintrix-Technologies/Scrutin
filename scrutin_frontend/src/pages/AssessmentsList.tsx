@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 
     const assessments_query = useAssessmentsListQuery()
     
-
     const assessments = assessments_query?.data || []
     console.log(assessments,"assessments111");
     
@@ -33,12 +32,14 @@ import { Link } from "react-router-dom";
         <TableBody>
           {assessments.map((assessment) => (
             <>
-            <TableRow key={assessment.name}>
-            <Link to={`/assessments/${assessment.name}`}>
-              <TableCell className="font-medium">{assessment.assessment_name}</TableCell>
+            <TableRow key={assessment?.assessment_name}>
+            <Link 
+            to={`/assessments/${assessment?.name}`}
+            >
+              <TableCell className="font-medium">{assessment?.assessment_name}</TableCell>
             </Link>
-              <TableCell>{assessment.company}</TableCell>
-              <TableCell>{assessment.language}</TableCell>
+              <TableCell>{assessment?.company}</TableCell>
+              <TableCell>{assessment?.language}</TableCell>
               <TableCell><AssessmentActions assessment={assessment}/></TableCell>
             </TableRow>
             </>
