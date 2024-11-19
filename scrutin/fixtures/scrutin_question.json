@@ -1,48 +1,105 @@
 [
  {
-    "answer": {},
+  "answer": "{\n\"answer\" : null\n}",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "modified": "2024-11-12 19:12:10.786896",
-  "name": "3libomlodf",
+  "duration": 120.0,
+  "modified": "2024-11-15 20:36:13.040466",
+  "name": "k6biv72md1",
   "options": [
    {
-    "label": "12-15",
-    "parent": "3libomlodf",
+    "label": "In React",
+    "parent": "k6biv72md1",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
-   },
-   {
-    "label": "16-18",
-    "parent": "3libomlodf",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "2"
-   },
-   {
-    "label": "20-25",
-    "parent": "3libomlodf",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "3"
-   },
-   {
-    "label": "30+",
-    "parent": "3libomlodf",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is your age?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>How to integrate APIs?</p></div>",
   "type": "Single Choice"
  },
  {
-  "answer": {},
+  "answer": "{\n\"answer\" : null\n}",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "modified": "2024-11-12 19:13:59.972369",
+  "duration": 120.0,
+  "modified": "2024-11-15 20:36:01.711681",
+  "name": "k73hovk115",
+  "options": [
+   {
+    "label": "Beijing",
+    "parent": "k73hovk115",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the Capital of China?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "{\n\"answer\" : null\n}",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 120.0,
+  "modified": "2024-11-15 20:35:50.711287",
+  "name": "k7t5uipoao",
+  "options": [
+   {
+    "label": "The Pacific Ocean",
+    "parent": "k7t5uipoao",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the deepest Ocean in the World?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "\n{}",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 120.0,
+  "modified": "2024-11-15 16:20:22.374233",
+  "name": "c7kg0nr1du",
+  "options": [
+   {
+    "label": "Representational State Transfer",
+    "parent": "c7kg0nr1du",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "a"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is RESTful API?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "{\n\"answer\" : null\n}",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 120.0,
+  "modified": "2024-11-15 16:43:18.410442",
+  "name": "g1j0lvkc26",
+  "options": [
+   {
+    "label": "Nothing",
+    "parent": "g1j0lvkc26",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Difference b/w Python &amp; Java?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "{}",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 120.0,
+  "modified": "2024-11-15 16:20:40.386881",
   "name": "3mhqm798c5",
   "options": [
    {
@@ -78,21 +135,43 @@
   "type": "Single Choice"
  },
  {
-    "answer": {},
+  "answer": "{\r\n\"type\" : \"single\",\r\n\"answer\" : []\r\n}",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "modified": "2024-10-01 15:32:59.222043",
-  "name": "c7kg0nr1du",
+  "duration": 120.0,
+  "modified": "2024-11-15 15:54:43.430669",
+  "name": "3libomlodf",
   "options": [
    {
-    "label": "Representational State Transfer",
-    "parent": "c7kg0nr1du",
+    "label": "12-15",
+    "parent": "3libomlodf",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
-    "value": "a"
+    "value": "1"
+   },
+   {
+    "label": "16-18",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "20-25",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "30+",
+    "parent": "3libomlodf",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is RESTful API?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>What is your age?</p></div>",
   "type": "Single Choice"
  }
 ]

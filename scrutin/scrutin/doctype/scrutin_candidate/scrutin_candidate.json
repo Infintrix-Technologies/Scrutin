@@ -145,13 +145,13 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Open\nAccepted",
+   "options": "Open\nAccepted\nCompleted\nStarted\nNot Started\nDisqualified",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-11 14:55:46.150546",
+ "modified": "2024-11-15 16:07:23.821624",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",

@@ -1,40 +1,145 @@
 [
  {
-  "assessment_name": "React Developer",
-  "assessment_tests": [
-   {
-    "parent": "vk1m38vch1",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "Front End Development",
-    "weight": "1"
-   }
-  ],
-  "company": "Infintrix",
-  "custom_questions": [],
-  "docstatus": 0,
-  "doctype": "Scrutin Assessment",
-  "language": "en-US",
-  "modified": "2024-11-12 19:34:50.908283",
-  "name": "vk1m38vch1"
- },
- {
   "assessment_name": "Python Developer",
   "assessment_tests": [
    {
-    "parent": "0b1bdsk5tu",
+    "parent": "ju7mgf9ceg",
     "parentfield": "assessment_tests",
     "parenttype": "Scrutin Assessment",
-    "test": "Backend Development",
+    "test": "k9o3uoe1ob",
+    "weight": "1"
+   },
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k8krlm90s7",
+    "weight": "1"
+   }
+  ],
+  "company": "Infintrix (Demo)",
+  "custom_questions": [
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "g1j0lvkc26"
+   }
+  ],
+  "docstatus": 0,
+  "doctype": "Scrutin Assessment",
+  "language": "en",
+  "modified": "2024-11-15 20:37:05.959048",
+  "name": "ju7mgf9ceg"
+ },
+ {
+  "assessment_name": "React Developer",
+  "assessment_tests": [
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k887uj90a1",
+    "weight": "1"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k9a5emvdd6",
+    "weight": "1"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k9o3uoe1ob",
     "weight": "1"
    }
   ],
   "company": "Infintrix",
-  "custom_questions": [],
+  "custom_questions": [
+   {
+    "parent": "juocinh9un",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "3mhqm798c5"
+   }
+  ],
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
-  "language": "sq",
-  "modified": "2024-11-12 19:35:01.734279",
-  "name": "0b1bdsk5tu"
+  "language": "en",
+  "modified": "2024-11-15 20:37:25.061322",
+  "name": "juocinh9un"
+ },
+ {
+  "assessment_name": "Full Stack Developer",
+  "assessment_tests": [
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k887uj90a1",
+    "weight": "1"
+   },
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k8krlm90s7",
+    "weight": "1"
+   },
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k9a5emvdd6",
+    "weight": "1"
+   }
+  ],
+  "company": "Infintrix",
+  "custom_questions": [
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "3libomlodf"
+   },
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "3mhqm798c5"
+   },
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "jvecvcvl4o",
+    "parentfield": "custom_questions",
+    "parenttype": "Scrutin Assessment",
+    "question": "g1j0lvkc26"
+   }
+  ],
+  "docstatus": 0,
+  "doctype": "Scrutin Assessment",
+  "language": "en",
+  "modified": "2024-11-15 20:36:48.526383",
+  "name": "jvecvcvl4o"
  }
 ]

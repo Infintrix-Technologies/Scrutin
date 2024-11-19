@@ -22,21 +22,6 @@ def get_user_candidates():
 
     return query.run(as_dict=True)
 
-@frappe.whitelist()
-def get_specific_candidate_detail():
-
-    candidate_detail = frappe.get_doc("Scrutin Candidate", "j8kvgfi36d")
-
-    return candidate_detail.as_dict()
-
-
-@frappe.whitelist()
-def get_assessment_test():
-    assessment_test = frappe.get_doc("Scrutin Assessment", "vk1m38vch1")
-
-    return assessment_test.as_dict()
-
-
 
 from frappe.utils import random_string
 
