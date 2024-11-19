@@ -44,7 +44,7 @@ const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_a
 
 
 //this api will give the candidate assesment based on the job_applicant email
-const get_candidate_assessment = useFrappePostCall("scrutin.api.assessment_data.get_candidate_assessment")
+const get_candidate_assessment_and_assessment_tests = useFrappePostCall("scrutin.api.assessment_data.get_candidate_assessment_and_assessment_tests")
 
 
 const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail")
@@ -80,8 +80,8 @@ const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_
       </Button>
 
       <Button onClick={() => {
-        get_candidate_assessment.call({
-          email: 'qandeelhaider@gmail.com',
+        get_candidate_assessment_and_assessment_tests.call({
+          email: 'muhammadsaad123@gmail.com',
         });
       }}>
         Candidate Assessment
