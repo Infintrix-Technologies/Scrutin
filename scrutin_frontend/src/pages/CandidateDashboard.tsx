@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import { useFrappeDeleteDoc, useFrappeGetCall, useFrappeGetDoc, useFrappeGetDocList, useFrappePostCall } from "frappe-react-sdk";
 
@@ -69,7 +70,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
       <Button onClick={() => {
         get_specific_assessment_candidate_name.call({
-          assessmnt: '0b1bdsk5tu',
+          assessmnt: 'u3qafmr9qo',
         });
       }}>
         Assessment Candidate Name
@@ -77,7 +78,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
       <Button onClick={() => {
         get_tests_for_assessment.call({
-          assessment_name: '0b1bdsk5tu',
+          assessment_name: 'vk1m38vch1',
         });
       }}>
         Assessment Test
@@ -85,7 +86,7 @@ const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment
 
       <Button onClick={() => {
         get_custom_questions_for_assessment.call({
-          assessment_name: '0b1bdsk5tu',
+          // assessment_name: 'ch3du7gs2j',
         });
       }}>
         Assessment Custom Question

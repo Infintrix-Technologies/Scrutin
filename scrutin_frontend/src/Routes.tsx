@@ -7,7 +7,7 @@ import Jobs from "@/pages/Jobs";
 import MainLayout from "./layouts/MainLayout";
 import JobDetailPage from "./pages/JobDetailPage";
 import PostJob from "./pages/PostJob";
-import AssessmentDetail from "./pages/AssessmentDetail";
+// import AssessmentDetail from "./pages/AssessmentDetail";
 import AdminLayout from "./layouts/AdminLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import AssessmentOverview from "./pages/AssessmentOverview";
@@ -21,8 +21,8 @@ import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import JobApplicants from "./pages/JobApplicants";
-import AssessmentDashboard from "./pages/AssessmentDashboard";
-import CandidateAssessmentDashboard from "./pages/CandidateAssessmentDashboard";
+import AssessmentDashboard from "./pages/CandidatesDetailPage";
+import AssessmentDetailPage from "./pages/AssessmentDetailPage";
 
 export const router = createBrowserRouter(
   [
@@ -55,8 +55,8 @@ export const router = createBrowserRouter(
               element: <Assessments />,
             },
             {
-              path: "detail",
-              element: <AssessmentDetail />,
+              path: ":assessment_id",
+              element: <AssessmentDetailPage />,
             },
             
           ],
@@ -119,16 +119,16 @@ export const router = createBrowserRouter(
             },
           ]
         },
-        {
-          path: "candidate-assessment-dashboard",
-          element: <CandidateAssessmentDashboard />,
-          children : [
-            {
-              path: "",
-              element: <CandidateDashboard />,
-            },
-          ]
-        },
+        // {
+        //   path: "candidate-assessment-dashboard",
+        //   element: <CandidateAssessmentDashboard />,
+        //   children : [
+        //     {
+        //       path: "",
+        //       element: <CandidateDashboard />,
+        //     },
+        //   ]
+        // },
         {
           path: "candidacy",
           element: <CandidatacyLayout />,
