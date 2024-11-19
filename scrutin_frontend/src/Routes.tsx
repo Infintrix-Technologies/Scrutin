@@ -19,10 +19,11 @@ import ApiTestPage from "./pages/ApiTestPage";
 import CandidateDetail from "./pages/ScrutinCandidate";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
-import CandidateDashboard from "./pages/CandidateDashboard";
+import CandidateDashboard from "./pages/TestAPI";
 import JobApplicants from "./pages/JobApplicants";
 import AssessmentDashboard from "./pages/CandidatesDetailPage";
 import AssessmentDetailPage from "./pages/AssessmentDetailPage";
+import TestAPI from "./pages/TestAPI";
 
 export const router = createBrowserRouter(
   [
@@ -69,6 +70,10 @@ export const router = createBrowserRouter(
               path: "",
               element: <Candidates />,
             },
+            {
+              path: ":email",
+              element: <AssessmentDashboard />,
+            },
           ],
         },
         {
@@ -100,12 +105,12 @@ export const router = createBrowserRouter(
           ],
         },
         {
-          path: "candidate",
+          path: "testapi",
           element: <CandidateLayout />,
           children : [
             {
               path: "",
-              element: <CandidateDashboard />,
+              element: <TestAPI />,
             },
           ]
         },

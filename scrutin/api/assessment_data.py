@@ -240,7 +240,7 @@ def get_assessment_data(assessment_name):
 
 # This api provide the specific candidate all assessment and their tests and custom questions
 @frappe.whitelist()
-def get_candidate_assessment_and_assessment_tests(email):
+def get_candidate_details(email):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")

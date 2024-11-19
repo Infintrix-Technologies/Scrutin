@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 
 
-const CandidateDashboard = () => {
+const TestAPI = () => {
 
 const getCandidatesOfSpecificUser = useFrappeGetCall("scrutin.api.user.get_user_candidates");
 console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
@@ -28,8 +28,8 @@ const get_applicant_jobtitle = useFrappeGetCall("scrutin.api.assessment_data.get
 console.log(get_applicant_jobtitle, "get_applicant_jobtitle");
 
 //this api give the name of job_applicant_name and assessment_name for Candidate
-const get_candidate_details = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate")
-console.log(get_candidate_details, "get_candidate_details");
+// const get_candidate_details = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate")
+// console.log(get_candidate_details, "get_candidate_details");
 
 
 const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment_data.specific_assessment_candidates")
@@ -45,14 +45,14 @@ const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_a
 
 
 //this api will give the candidate assesment based on the job_applicant email
-const get_candidate_assessment_and_assessment_tests = useFrappePostCall("scrutin.api.assessment_data.get_candidate_assessment_and_assessment_tests")
+const get_candidate_details = useFrappePostCall("scrutin.api.assessment_data.get_candidate_details")
 
 
 const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail")
 
 
   return (
-    <div>CandidateDashboard
+    <div>TestAPI
 
 
 <Button onClick={() => {
@@ -81,7 +81,7 @@ const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_
       </Button>
 
       <Button onClick={() => {
-        get_candidate_assessment_and_assessment_tests.call({
+        get_candidate_details.call({
           email: 'muhammadsaad123@gmail.com',
         });
       }}>
@@ -100,4 +100,66 @@ const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_
   )
 }
 
-export default CandidateDashboard
+export default TestAPI
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const CandidatesDetailPage: React.FC = () => {
+//   const params = useParams();
+//   const email = params?.email || null;
+
+//   const get_candidate_details = useFrappeGetCall(
+//     "scrutin.api.assessment_data.get_candidate_details",
+//     {
+//       email: email,
+//     }
+//   );
+
+//   console.log('i am email', email);
+
+//   const get_specific_assessment = get_candidate_details?.data?.message?.candidate_assessment || [];
+
+//   console.log(get_specific_assessment, 'i am assessment details');
+
+//   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
+//   const globalState = useGlobalState();
+
+//   const handleRatingChange = (index: number) => {
+//     const updatedRatings = [...ratings];
+//     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
+//     setRatings(updatedRatings);
+//   };
+
+//   const totalWidth = 400; 
+
+//   return (
+//     <>
+//       <header className="flex justify-between px-4 py-3 border-b">
+//         <div className="flex items-center gap-3">
+//           <Button variant="ghost" size="icon" className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950">
+//             <FaChevronLeft className="h-4 w-4" />
+//             <span className="sr-only">Go back</span>
+//           </Button>
+
+//             <>
+              
+//                 <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
+//                   <h1 className="text-base font-semibold">{get_specific_assessment[0].candidate_name}</h1>
+//                   <Link to="#" className="text-sm text-muted-foreground hover:underline">
+//                     {get_specific_assessment[0].job_applicant}
+//                   </Link>
+//                 </div>
+              
+//             </>
+        
+//       </div>

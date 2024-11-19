@@ -11,6 +11,7 @@ import {
 import { useFrappeGetDocList } from "frappe-react-sdk";
 import { CandidateActions } from "./CandidateActions";
 import { Badge } from "./ui/badge";
+import { useNavigate } from "react-router-dom";
 
   export const CandidatesList = () => {
     const candidates_query =  useFrappeGetDocList(
@@ -54,6 +55,17 @@ const applicant_query =  useFrappeGetDocList(
     asDict: true,
   },
 );
+
+const navigate = useNavigate()
+
+const handleNavigate = (candidateEmail: string) => {
+  // Navigate to the candidate details page
+  
+  console.log('Navigate to candidate details page');
+  navigate(`/candidates/${candidateEmail}`)
+
+}
+
 const applicants = applicant_query?.data || []
 const applicantMap = applicants.reduce((map, applicant) => {
   map[applicant.email_id] = applicant.applicant_name;
@@ -79,7 +91,7 @@ const applicantMap = applicants.reduce((map, applicant) => {
          {console.log(candidate,"candidate")}
             <TableRow key={candidate.email}>
               {/* <TableCell className="font-medium">{candidate.name}</TableCell> */}
-              <TableCell>{applicantMap[candidate.job_applicant] || 'N/A'}</TableCell>
+              <TableCell onClick={() => {handleNavigate(candidate.job_applicant)}}>{applicantMap[candidate.job_applicant] || 'N/A'}</TableCell>
               <TableCell>{candidate.job_applicant}</TableCell>
               {/* <TableCell>{candidate.assessment}</TableCell> */}
               <TableCell>{assessmentMap[candidate.assessment] || 'N/A'}</TableCell>
