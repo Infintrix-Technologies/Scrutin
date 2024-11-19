@@ -5,7 +5,6 @@ import { LuSendHorizonal } from "react-icons/lu";
 import {
   Card,
   CardContent,
-  // CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,8 +15,7 @@ import {
   FaSlidersH,
 } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
-// import { Link } from "react-router-dom";
-import { Clock, Edit, MessageSquare, Upload } from "lucide-react";
+import { Clock, Edit, MessageSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
 import {
@@ -51,33 +49,71 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ChevronLeft, Edit2, Eye, Globe, MoreVertical } from 'lucide-react'
+
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGlobalState } from "@/utils/StateProvider";
 import SetTestWeights from "@/components/Modal/SetTestWeights";
 import { MdAlternateEmail, MdOutlinePersonAddAlt } from "react-icons/md";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { StarIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useFrappeGetCall } from "frappe-react-sdk";
+import dayjs from "dayjs";
+import "dayjs/locale/en";
+import { useParams } from "react-router-dom";
+import { RxTimer } from "react-icons/rx";
+import { PiNotepadBold } from "react-icons/pi";
+import { AssessmentData, Candidate, Test } from "@/components/Interfaces/Interface";
 
-interface Test {
-  name: string;
-  weight: string;
-  impact: string;
-  duration: string;
-}
-interface Candidate {
-  name: string;
-  score: number;
-  hired: boolean;
-}
-interface Question {
-  text: string;
-  type: string;
-  duration: string;
-}
 
-const CandidateAssessmentDashboard = () => {
+const AssessmentDetailPage = () => {
   const [showWeights, setShowWeights] = useState(false);
   const globalState = useGlobalState();
+  const params = useParams();
+  const assessment_id = params?.assessment_id || null;
+
+  const get_specific_assessment_candidate_name = useFrappeGetCall(
+    "scrutin.api.assessment_data.get_specific_assessment_candidate_name",
+    {
+      assessment_name: assessment_id,
+    }
+  );
+  const get_custom_questions_for_assessment = useFrappeGetCall(
+    "scrutin.api.assessment_data.get_custom_questions_for_assessment",
+    {
+      assessment_name: assessment_id,
+    }
+  );
+
+  const get_tests_for_assessment = useFrappeGetCall(
+    "scrutin.api.assessment_data.get_tests_for_assessment",
+    {
+      assessment_name: assessment_id,
+    }
+  );
+
+  const custom_questions_for_assessment =
+    get_custom_questions_for_assessment?.data?.message || [];
+  const get_specific_assessment =
+    get_specific_assessment_candidate_name?.data?.message || [];
+  const tests_for_assessment = get_tests_for_assessment?.data?.message || [];
+  console.log(get_specific_assessment, "get_specific_assessment");
+
+  const formatDate = (dateString: string) => {
+    return dayjs(dateString).format("DD-MM-YY hh:mm:ss A");
+  };
+
+  const getPlainText = (html: string) => {
+    return html.replace(/<[^>]*>?/gm, "");
+  };
+
   const candidates: Candidate[] = [
     {
       name: "Abdul Muqeet",
@@ -85,45 +121,73 @@ const CandidateAssessmentDashboard = () => {
       hired: false,
     },
   ];
-  const tests: Test[] = [
-    { name: "Problem Solving", weight: "--", impact: "--", duration: "9'" },
-    { name: "Communication", weight: "--", impact: "--", duration: "8'" },
-    { name: "Time Management", weight: "--", impact: "--", duration: "9'" },
-    { name: "Motivation", weight: "--", impact: "--", duration: "15'" },
-    { name: "Big 5 (OCEAN)", weight: "--", impact: "--", duration: "10'" },
-  ];
-
-  const questions: Question[] = [
-    {
-      text: "Tell us about yourself, what attracts you to this opportunity, and why you are a great candidate for this role. Pro tip: it might be helpful to pretend...",
-      type: "Essay",
-      duration: "5'",
-    },
-    {
-      text: "Describe a time when you identified a personal weakness at work and took steps to improve it. In your response, consider discussing the following: What...",
-      type: "Essay",
-      duration: "5'",
-    },
-    {
-      text: "Describe a time when you worked collaboratively as part of a team to achieve a common goal at work. In your response, consider discussing the following:...",
-      type: "Essay",
-      duration: "5'",
-    },
-    {
-      text: "Please feel welcome to upload your resume/CV or portfolio (if you have one). Leave blank if you do not have one. For this question, you can exit full-screen...",
-      type: "File",
-      duration: "--",
-    },
-    {
-      text: "Please provide a link to your LinkedIn profile. For this question, you can exit full-screen mode. Leave blank if you do not have one.",
-      type: "Essay",
-      duration: "2'",
-    },
-  ];
 
   return (
-    <>
-      <div className="container mx-auto p-6">
+    <><hr />
+      <div className="flex items-center justify-between px-4 py-2 mb-4 border-b">
+      <div className="flex items-center gap-8">
+      <Button variant="ghost" size="icon" className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950">
+
+          <ChevronLeft className="h-4 w-4" />
+          <span className="sr-only">Go back</span>
+        </Button>
+        
+        <div className="flex flex-col gap-1 ">
+          <div className="flex gap-2">
+            <h1 className="text-xl font-semibold">Software Engineer</h1>
+            <Button variant="ghost" size="icon" className="rounded-full h-6 w-6">
+              <Edit2 className="h-4 w-4" />
+              <span className="sr-only">Edit title</span>
+            </Button>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+            <PiNotepadBold />
+              <span>5 tests</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <RxTimer/>
+              <span>68 mins excl. file upload(s)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" className="hidden md:flex items-center gap-2">
+          <Globe className="h-4 w-4" />
+          English
+        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <MoreVertical className="h-4 w-4" />
+              <span className="sr-only">More options</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Help</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Eye className="h-4 w-4" />
+          <span className="sr-only">Change view</span>
+        </Button>
+
+        <Button size="sm" className="bg-[#E31B88] hover:bg-[#C41875] text-white">
+          Invite
+        </Button>
+      </div>
+      </div>
+       
+
+      <Card className="container mx-auto p-6">
+
+
         <Card className="my-6 px-6">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
@@ -171,19 +235,28 @@ const CandidateAssessmentDashboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow className="whitespace-nowrap ">
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          Abdul Muqeet                        
-                        </div>
-                      </TableCell>
-                      <TableCell>11%</TableCell>
-                      <TableCell>0%</TableCell>
-                      <TableCell>32%</TableCell>
-                    </TableRow>
+                    {get_specific_assessment.map((data: AssessmentData) => (
+                      <TableRow className="whitespace-nowrap ">
+                        <TableCell>
+                          <Checkbox />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {data?.applicant_name || "N/A"}
+                          </div>
+                        </TableCell>
+                        <TableCell>{data?.job_applicant}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className="bg-purple-100 text-purple-800"
+                          >
+                            Owner
+                          </Badge>
+                        </TableCell>
+                        <TableCell>Send</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
                 <hr className="my-3" />
@@ -198,8 +271,12 @@ const CandidateAssessmentDashboard = () => {
                   <div className="flex gap-3">
                     <div className="">
                       {" "}
-                      <Button variant="outline" className="flex gap-2"
-                        onClick={() => globalState.openModal("add_team_member", true)}
+                      <Button
+                        variant="outline"
+                        className="flex gap-2"
+                        onClick={() =>
+                          globalState.openModal("add_team_member", true)
+                        }
                       >
                         <MdOutlinePersonAddAlt />
                         Add Team Member
@@ -287,59 +364,61 @@ const CandidateAssessmentDashboard = () => {
                   <DialogHeader>
                     <DialogTitle>Invite team members</DialogTitle>
                     <DialogDescription className="space-y-5">
-                      <p>You can always add and edit team members in the settings.</p>
+                      <p>
+                        You can always add and edit team members in the
+                        settings.
+                      </p>
 
                       <div>
-                      <div className="flex gap-5 p-5 overflow-y-hidden h-[20rem] border border-slate-700 rounded-lg">
-                      <Input placeholder="Teammate’s work email"/>
-                      <div className="flex">
-                      <Select>
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Select Role" />
-                      </SelectTrigger>
-                      <SelectContent>                    
-                        <SelectItem value="51-75">Admin</SelectItem>
-                        <SelectItem value="76-100">Recruiter</SelectItem>
-                        <SelectItem value="76-100">Hiring Manager</SelectItem>
-                      </SelectContent>
-                    </Select>
-                      <TrashIcon className="h-6 mt-2 w-10 cursor-pointer"/>
-                      </div>
-                      </div>
-                      
-                      </div>
-                      {/* <div className="h-[20rem] border border-slate-700 rounded-lg">
-                      </div> */}
-
-                      {/* <hr /> */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex  ">
-                              <div className="flex items-center justify-between gap-2">
-                                <IoPersonAddSharp />
-                                <label htmlFor="no-hire" className="text-sm">
-                                  Add another
-                                </label>
-                              </div>
-                            </div>
-
-                            <DialogFooter className="">
-                              <DialogClose asChild>
-                                <div className="flex gap-2">
-                                  <Button type="button" variant="secondary">
-                                    Cancel
-                                  </Button>
-                                  <Button disabled> Invite</Button>
-                                </div>
-                              </DialogClose>
-                            </DialogFooter>
+                        <div className="flex gap-5 p-5 overflow-y-hidden h-[20rem] border border-slate-700 rounded-lg">
+                          <Input placeholder="Teammate’s work email" />
+                          <div className="flex">
+                            <Select>
+                              <SelectTrigger className="w-[200px]">
+                                <SelectValue placeholder="Select Role" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="51-75">Admin</SelectItem>
+                                <SelectItem value="76-100">
+                                  Recruiter
+                                </SelectItem>
+                                <SelectItem value="76-100">
+                                  Hiring Manager
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <TrashIcon className="h-6 mt-2 w-10 cursor-pointer" />
                           </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex  ">
+                          <div className="flex items-center justify-between gap-2">
+                            <IoPersonAddSharp />
+                            <label htmlFor="no-hire" className="text-sm">
+                              Add another
+                            </label>
+                          </div>
+                        </div>
+
+                        <DialogFooter className="">
+                          <DialogClose asChild>
+                            <div className="flex gap-2">
+                              <Button type="button" variant="secondary">
+                                Cancel
+                              </Button>
+                              <Button disabled> Invite</Button>
+                            </div>
+                          </DialogClose>
+                        </DialogFooter>
+                      </div>
                     </DialogDescription>
                   </DialogHeader>
                 </DialogContent>
               </Dialog>
 
               <Dialog
-                open={globalState.modals.set_test_weights.open}
+                open={globalState?.modals?.set_test_weights.open}
                 onOpenChange={(open) =>
                   globalState.openModal("set_test_weights", open)
                 }
@@ -354,7 +433,7 @@ const CandidateAssessmentDashboard = () => {
                 </DialogContent>
               </Dialog>
               <Dialog
-                open={globalState.modals.feed_back.open}
+                open={globalState?.modals?.feed_back?.open}
                 onOpenChange={(open) =>
                   globalState.openModal("feed_back", open)
                 }
@@ -397,10 +476,10 @@ const CandidateAssessmentDashboard = () => {
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {candidates.map((candidate) => (
-                                    <TableRow key={candidate.name}>
-                                      <TableCell>{candidate.name}</TableCell>
-                                      <TableCell>{candidate.score}</TableCell>
+                                  {candidates?.map((candidate) => (
+                                    <TableRow key={candidate?.name}>
+                                      <TableCell>{candidate?.name}</TableCell>
+                                      <TableCell>{candidate?.score}</TableCell>
                                       <TableCell>
                                         <Checkbox
                                         // checked={candidate.hired}
@@ -460,16 +539,15 @@ const CandidateAssessmentDashboard = () => {
             <div className="border rounded-lg">
               <Table>
                 <TableHeader>
-                  <TableRow className="whitespace-nowrap">
+                  <TableRow className="">
                     <TableHead className="w-12">
                       <Checkbox />
                     </TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Overall</TableHead>
-                    <TableHead>Problem Solving</TableHead>
-                    <TableHead>Communication</TableHead>
-                    <TableHead>Time Management</TableHead>
-                    <TableHead>Motivation</TableHead>
+                    {tests_for_assessment.map((test: Test, index: number) => (
+          <TableHead key={index}>{test.title}</TableHead>
+        ))}
                     <TableHead>Hiring stage</TableHead>
 
                     <TableHead>Status</TableHead>
@@ -478,45 +556,92 @@ const CandidateAssessmentDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow className="whitespace-nowrap ">
-                    <TableCell>
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        Abdul Muqeet
+                  {get_specific_assessment.map((data: AssessmentData) => (
+                    <TableRow className="whitespace-nowrap ">
+                      <TableCell>
+                        <Checkbox />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {data?.applicant_name || "N/A"}
+                          <Badge
+                            variant="secondary"
+                            className="bg-purple-100 text-purple-800"
+                          >
+                            Owner
+                          </Badge>
+                        </div>
+                      </TableCell>                    
+                       <TableCell>{data.overall || "N/A"}</TableCell>
+          {tests_for_assessment.map((test: Test, index: number) => (
+            <TableCell key={index}>
+              {data?.test_scores?.[test.title] || "0%"}
+            </TableCell>
+          ))}
+                      <TableCell>
+                        <Select>
+                          <SelectTrigger className="w-[200px]">
+                            <SelectValue placeholder="Not yet evaluated" />
+                          </SelectTrigger>
+
+                          <SelectContent>
+                            {/* <SelectGroup> */}
+
+                            <SelectItem value="2"> Evaluated</SelectItem>
+                            <SelectItem value="3">
+                              {" "}
+                              Invited for interview
+                            </SelectItem>
+                            <SelectItem value="4"> Interviewed</SelectItem>
+                            <SelectItem value="5">
+                              {" "}
+                              Invited for take-home test
+                            </SelectItem>
+                            <SelectItem value="6">
+                              {" "}
+                              Take-home test completed
+                            </SelectItem>
+                            <SelectItem value="7">
+                              {" "}
+                              References checked
+                            </SelectItem>
+                            <SelectItem value="8"> Offer sent</SelectItem>
+                            <SelectItem value="9"> Offer declined</SelectItem>
+                            <SelectItem value="10">
+                              {" "}
+                              Candidate withdrew
+                            </SelectItem>
+                            <SelectItem value="11">
+                              {" "}
+                              Candidate unresponsive
+                            </SelectItem>
+                            <SelectItem value="12"> Rejected</SelectItem>
+                            <SelectItem value="13"> Hired 🎉</SelectItem>
+                            {/* </SelectGroup> */}
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
                         <Badge
                           variant="secondary"
-                          className="bg-purple-100 text-purple-800"
+                          // className="bg-purple-100 text-purple-800"
                         >
-                          Owner
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell>11%</TableCell>
-                    <TableCell>0%</TableCell>
-                    <TableCell>32%</TableCell>
-                    <TableCell>0%</TableCell>
-                    <TableCell>-</TableCell>
-                    <TableCell>
-                      <Select>
-                        <SelectTrigger className="w-[200px]">
-                          <SelectValue placeholder="Not yet evaluated" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="not-evaluated">
-                            Not yet evaluated
-                          </SelectItem>
-                          <SelectItem value="screening">Screening</SelectItem>
-                          <SelectItem value="interview">Interview</SelectItem>
-                          <SelectItem value="offer">Offer</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </TableCell>
-                    <TableCell>-</TableCell>
-                    <TableCell>-</TableCell>
-                    <TableCell>-</TableCell>
-                  </TableRow>
+                          {data?.status}
+                        </Badge>{" "}
+                      </TableCell>
+                      <TableCell>{(formatDate(data?.invited_on ))}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <StarIcon
+                              key={i}
+                              className={"w-4 h-4 text-gray-300"}
+                            />
+                          ))}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>
@@ -584,23 +709,31 @@ const CandidateAssessmentDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="rounded-lg border">
-                  <div className="grid grid-cols-4 gap-4 p-4 font-medium text-sm border-b">
+                  <div className="text-center grid grid-cols-4 gap-4 p-4 font-medium text-sm border-b">
                     <div>Test</div>
                     <div>Weight</div>
                     <div>Impact</div>
                     <div>Duration</div>
                   </div>
-                  {tests.map((test, index) => (
+                  {tests_for_assessment?.map((data: Test, index: number) => (
                     <div
                       key={index}
-                      className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
+                      className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
                     >
-                      <div>{test.name}</div>
-                      <div>{test.weight}</div>
-                      <div>{test.impact}</div>
+                      <div>{data?.title}</div>
+                      <div>{data?.weight || "--"}</div>Weight
+                      <div>{data?.impact || "--"}</div>
                       <div className="flex items-center">
                         <Clock className="mr-2 h-4 w-4" />
-                        {test.duration}
+                        {data?.duration < 60
+                          ? data.duration > 0
+                            ? `${data.duration} seconds`
+                            : ""
+                          : `${Math.floor(data.duration / 60)} min${
+                              data.duration % 60 > 0
+                                ? ` ${data.duration % 60} sec`
+                                : ""
+                            }`}
                       </div>
                     </div>
                   ))}
@@ -624,30 +757,30 @@ const CandidateAssessmentDashboard = () => {
                       <div>Duration</div>
                     </div>
                   </div>
-                  {questions.map((question, index) => (
-                    <div
-                      key={index}
-                      className="overflow-y-hidden grid grid-cols-3 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
-                    >
-                      <div className="col-span-2">{question.text}</div>
-                      <div className="grid grid-cols-2">
-                        <div className="flex items-center">
-                          {question.type === "File" ? (
-                            <Upload className="mr-2 h-4 w-4" />
-                          ) : (
-                            <MessageSquare className="mr-2 h-4 w-4" />
-                          )}
-                          {question.type}
+                  {custom_questions_for_assessment.map(
+                    (question: AssessmentData, index: number) => (
+                      <div
+                        key={index}
+                        className="overflow-y-hidden grid grid-cols-3 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
+                      >
+                        <div className="col-span-2">
+                          {getPlainText(question?.question)}
                         </div>
-                        <div className="flex items-center">
-                          {question.duration !== "--" && (
+                        <div className="grid grid-cols-2">
+                          <div className="flex items-center">
+                            <MessageSquare className="mr-2 h-4 w-4" />
+                            {question?.type}
+                          </div>
+                          <div className="flex items-center">
+                            {/* {question.duration !== "--" && ( */}
                             <Clock className="mr-2 h-4 w-4" />
-                          )}
-                          {question.duration}
+                            {/* )} */}
+                            {question?.duration || "5'"}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -771,9 +904,9 @@ const CandidateAssessmentDashboard = () => {
             </AccordionItem>
           </Accordion>
         </Card>
-      </div>
+      </Card>
     </>
   );
 };
 
-export default CandidateAssessmentDashboard;
+export default AssessmentDetailPage;
