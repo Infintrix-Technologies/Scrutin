@@ -19,9 +19,6 @@ console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
 // console.log(update_applicant);
 
 
-const get_specific_assessments = useFrappeGetCall("scrutin.api.assessment_data.get_specific_assessments")
-console.log(get_specific_assessments, "get_specific_assessments");
-
 
 //this api give job_title of specific Job Applicant
 const get_applicant_jobtitle = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_jobtitle")
@@ -43,16 +40,16 @@ const get_questions_for_test_and_total_duration = useFrappePostCall("scrutin.api
 const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_assessment_data")
 
 
+const get_candidate_for_one_time = useFrappeGetCall("scrutin.api.assessment_data.get_candidate_for_one_time")
+console.log(get_candidate_for_one_time, "get_candidate_for_one_time");
 
-//this api will give the candidate assesment based on the job_applicant email
-const get_candidate_details = useFrappePostCall("scrutin.api.assessment_data.get_candidate_details")
 
-
-const get_candidate_webcam_snapshots = useFrappePostCall("scrutin.api.assessment_data.get_candidate_webcam_snapshots")
-
+const get_candidate_location = useFrappePostCall("scrutin.api.assessment_data.get_candidate_location")
 
 
 
+
+//this api will give the candidate detail based on the job_applicant email
 const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot")
 
 
@@ -87,18 +84,11 @@ const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.a
       </Button>
 
       <Button onClick={() => {
-        get_candidate_details.call({
-          email: 'qandeelhaider@gmail.com',
-        });
-      }}>
-        Candidate Details
-      </Button>
-      <Button onClick={() => {
-        get_candidate_webcam_snapshots.call({
+        get_candidate_location.call({
           candidate: 'k3jas5g82l',
         });
       }}>
-        Candidate SnapShots
+        Candidate Location
       </Button>
 
 

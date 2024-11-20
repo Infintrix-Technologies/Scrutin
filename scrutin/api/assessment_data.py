@@ -2,24 +2,6 @@ import frappe
 from frappe.query_builder import DocType
 from frappe.query_builder import functions as fn
 
-@frappe.whitelist()
-def get_specific_assessments():
-    ScrutinAssessment = DocType("Scrutin Assessment")
-    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
-
-    query = (
-        frappe.qb.from_(ScrutinAssessmentTest)
-        .inner_join(ScrutinAssessment)
-        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
-        .select(
-            ScrutinAssessment.name,
-            ScrutinAssessment.assessment_name,            
-            ScrutinAssessmentTest.test,        
-            ScrutinAssessmentTest.weight
-        )
-    )
-    results = query.run(as_dict=True)
-    return results
 
 #This API provide the Job_title for Job_applicant
 @frappe.whitelist()
@@ -238,136 +220,7 @@ def get_assessment_data(assessment_name):
     }
 
 
-# This api provide the specific candidate all assessment and their tests and custom questions
-@frappe.whitelist()
-def get_candidate_details(email):
-    ScrutinCandidate = DocType("Scrutin Candidate")
-    ScrutinAssessment = DocType("Scrutin Assessment")
-    JobApplicant = DocType("Job Applicant")
-    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
-    ScrutinTest = DocType("Scrutin Test")
-    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
-    ScrutinQuestion = DocType("Scrutin Question")
-
-    # Query to get the assessments and candidate details for the specific job applicant email
-    assessment_query = (
-        frappe.qb.from_(ScrutinAssessment)
-        .left_join(ScrutinCandidate)
-        .on(ScrutinCandidate.assessment == ScrutinAssessment.name)
-        .left_join(JobApplicant)
-        .on(JobApplicant.name == ScrutinCandidate.job_applicant)
-        .select(
-            ScrutinAssessment.name.as_("assessment_name"),
-            ScrutinAssessment.assessment_name.as_("assessment_title"),
-            ScrutinCandidate.job_applicant,
-            ScrutinCandidate.name.as_("candidate_id"),
-            JobApplicant.applicant_name.as_("candidate_name"),
-            ScrutinCandidate.status,
-            ScrutinCandidate.invited_on,
-            ScrutinCandidate.filled_out_only_once_from_ip_address,
-            ScrutinCandidate.web_cam_enabled,
-            ScrutinCandidate.full_screen_mode_always_active,
-            ScrutinCandidate.mouse_always_in_assessment_window,
-        )
-        .where(JobApplicant.name == email)  # Corrected to use email field
-    )
-    candidate_assessments = assessment_query.run(as_dict=True)
-
-    # If no assessments are found, return an empty result
-    if not candidate_assessments:
-        return {'candidate_assessment': [], 'tests': [], 'questions': []}
-
-    assessment_names = [assessment['assessment_name'] for assessment in candidate_assessments]
-
-    # Query to get the tests for each assessment
-    tests_query = (
-        frappe.qb.from_(ScrutinAssessmentTest)
-        .inner_join(ScrutinAssessment)
-        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
-        .inner_join(ScrutinTest)
-        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
-        .select(
-            ScrutinAssessment.name.as_("assessment_name"),
-            ScrutinAssessmentTest.test,
-            ScrutinAssessmentTest.weight,
-            ScrutinTest.title,
-        )
-        .where(ScrutinAssessment.name.isin(assessment_names))
-    )
-    tests = tests_query.run(as_dict=True)
-
-    # Query to get the questions for each assessment
-    questions_query = (
-        frappe.qb.from_(ScrutinAssessmentQuestion)
-        .inner_join(ScrutinAssessment)
-        .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
-        .inner_join(ScrutinQuestion)
-        .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
-        .select(
-            ScrutinAssessment.name.as_("assessment_name"),
-            ScrutinAssessmentQuestion.question,
-            ScrutinQuestion.question,
-        )
-        .where(ScrutinAssessment.name.isin(assessment_names))
-    )
-    questions = questions_query.run(as_dict=True)
-
-    # Group tests and questions under their respective assessments
-    assessment_dict = {assessment['assessment_name']: assessment for assessment in candidate_assessments}
-    for test in tests:
-        assessment_name = test['assessment_name']
-        if 'tests' not in assessment_dict[assessment_name]:
-            assessment_dict[assessment_name]['tests'] = []
-        assessment_dict[assessment_name]['tests'].append({
-            'test': test['test'],
-            'weight': test['weight'],
-            'title': test['title'],
-        })
-
-    for question in questions:
-        assessment_name = question['assessment_name']
-        if 'questions' not in assessment_dict[assessment_name]:
-            assessment_dict[assessment_name]['questions'] = []
-        assessment_dict[assessment_name]['questions'].append({
-            'question': question['question'],
-            'question_text': question['question'],
-        })
-
-    # Convert the assessments back to a list
-    result_assessments = list(assessment_dict.values())
-
-    return {
-        'candidate_assessment': result_assessments,
-    }
-
-
-
-@frappe.whitelist()
-def get_candidate_webcam_snapshots(candidate):
-    ScrutinCandidate = DocType("Scrutin Candidate")
-    ScrutinWebcam = DocType("Scrutin Webcam Snapshot")
-
-    candidate_query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .left_join(ScrutinWebcam)
-        .on(ScrutinWebcam.parent == ScrutinCandidate.name)
-        .select(
-            ScrutinCandidate.name,
-            ScrutinCandidate.job_applicant,
-            ScrutinWebcam.image,
-        )
-        .where(ScrutinCandidate.name == candidate)
-    )
-    return candidate_query.run(as_dict=True)
-
-
-
-
-
-
-
-
-
+#This api provides all details about Specific candidate based on the email (Not by name or ID)
 @frappe.whitelist()
 def get_combined_candidate_detail_with_snapshot(email):
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -492,3 +345,41 @@ def get_combined_candidate_detail_with_snapshot(email):
     return {
         'candidate_assessment': result_assessments,
     }
+
+
+
+
+@frappe.whitelist()
+def get_candidate_location(candidate):
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinWebcam = DocType("Scrutin Webcam Snapshot")
+
+    candidate_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .left_join(ScrutinWebcam)
+        .on(ScrutinWebcam.parent == ScrutinCandidate.name)
+        .select(
+            ScrutinCandidate.name,
+            ScrutinCandidate.location,
+            ScrutinCandidate.job_applicant,
+            ScrutinWebcam.image,
+        )
+        .where(ScrutinCandidate.name == candidate)
+    )
+    return candidate_query.run(as_dict=True)
+
+
+
+@frappe.whitelist()
+def get_candidate_for_one_time():
+    ScrutinCandidate = DocType("Scrutin Candidate")
+
+    candidate_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.job_applicant, fn.Count(ScrutinCandidate.job_applicant).as_("count"))
+        .groupby(ScrutinCandidate.job_applicant)
+        # .having(fn.Count(ScrutinCandidate.job_applicant) == 1)
+    )
+
+    candidates = candidate_query.run(as_dict=True)
+    return candidates

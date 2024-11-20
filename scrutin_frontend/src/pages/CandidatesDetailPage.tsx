@@ -925,10 +925,15 @@ const CandidatesDetailPage: React.FC = () => {
                         {assessment.webcam_snapshots.length > 0 ? (
                           <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
                             <div className="flex h-full items-center justify-center">
-                              <img
-                                src={assessment.webcam_snapshots[sliderValue]}
-                                alt="Snapshot"
-                              />
+                              {assessment.webcam_snapshots[sliderValue] ? (
+                                <img
+                                  src={assessment.webcam_snapshots[sliderValue]}
+                                  alt="Snapshot"
+                                  className="h-[230px] w-[410px] rounded-lg"
+                                />
+                              ) : (
+                                <FaLock className="h-8 w-8 text-muted-foreground" />
+                              )}
                             </div>
                           </div>
                         ) : (
