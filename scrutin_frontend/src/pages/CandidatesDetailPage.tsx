@@ -98,10 +98,10 @@ import { BsChevronDown } from "react-icons/bs";
 import { useFrappeGetCall } from "frappe-react-sdk";
 // import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 
-interface Question {
-  text: string;
-  rating: number;
-}
+// interface Question {
+//   text: string;
+//   rating: number;
+// }
 interface SkillData {
   skill: string;
   correct: number;
@@ -135,40 +135,25 @@ const skillsData: SkillData[] = [
   },
 ];
 
-const questions: Question[] = [
-  {
-    text: "Tell us about yourself, what attracts you to this opportunity, and why you are a great candidate for this role. Pro tip: It might be helpful to pretend you are writing this to a new friend and just be yourself. We want to get to know you better....",
-    rating: 3,
-  },
-  {
-    text: "Describe a time when you identified a personal weakness at work and took steps to improve it. In your response, consider discussing the following: What was the personal weakness you identified? How did you identify this weakness? What steps...",
-    rating: 0,
-  },
-  {
-    text: "Describe a time when you worked collaboratively as part of a team to achieve a common goal at work. In your response, consider discussing the following: What was the goal of the team? What were the challenges you faced as a team? How did you...",
-    rating: 0,
-  },
-  {
-    text: "Please provide a link to your LinkedIn profile. For this question, you can exit full-screen mode. Leave blank if you do not have one.",
-    rating: 0,
-  },
-];
-
 const CandidatesDetailPage: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
   const globalState = useGlobalState();
   const params = useParams();
   const email = params?.email || null;
+  const [sliderValue, setSliderValue] = React.useState(0);
+  const handleSliderChange = (value: number) => {
+    setSliderValue(value);
+  };
 
-  console.log(email);
-
+  //API that provide all details about Candidates based on Email
   const get_candidate_details = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_candidate_details",
+    "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
     {
       email: email,
     }
   );
-  const candidate_assessments =
+
+  const candidate_details =
     get_candidate_details?.data?.message?.candidate_assessment || [];
 
   const handleRatingChange = (index: number) => {
@@ -179,9 +164,9 @@ const CandidatesDetailPage: React.FC = () => {
   const totalWidth = 400;
   return (
     <div className="px-14">
-      {candidate_assessments.map((assessment:any, i:number) => {
+      {candidate_details.map((assessment: any, i: number) => {
         return (
-          <div key={isFinite}>
+          <div key={i}>
             <header className="flex  justify-between px-4 py-3 border-b">
               <div className="flex items-center gap-3">
                 <Button
@@ -453,7 +438,7 @@ const CandidatesDetailPage: React.FC = () => {
                         </div>
                       </div>
 
-                      {assessment.tests.map((test:any, index:number) => {
+                      {assessment.tests.map((test: any, index: number) => {
                         return (
                           <Accordion key={index} type="single" collapsible>
                             <AccordionItem value={String(index)}>
@@ -842,7 +827,12 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
+                            className={`${
+                              assessment.filled_out_only_once_from_ip_address ===
+                              0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -850,7 +840,10 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            Yes
+                            {assessment.filled_out_only_once_from_ip_address ===
+                            0
+                              ? "No"
+                              : "Yes"}
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between">
@@ -860,7 +853,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
+                            className={`${
+                              assessment.web_cam_enabled === 0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -868,7 +865,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            Yes
+                            {assessment.web_cam_enabled === 0 ? "No" : "Yes"}
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between">
@@ -880,7 +877,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
+                            className={`${
+                              assessment.full_screen_mode_always_active === 0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -888,7 +889,9 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            No
+                            {assessment.full_screen_mode_always_active === 0
+                              ? "No"
+                              : "Yes"}
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between">
@@ -900,7 +903,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
+                            className={`${
+                              assessment.mouse_always_in_assessment_window === 0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -908,16 +915,37 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            No
+                            {assessment.mouse_always_in_assessment_window === 0
+                              ? "No"
+                              : "Yes"}
                           </Badge>
                         </div>
                       </div>
-                      <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
-                        <div className="flex h-full items-center justify-center">
-                          <FaLock className="h-8 w-8 text-muted-foreground" />
-                        </div>
-                      </div>
-                      <Slider defaultValue={[33]} max={100} step={1} />
+                      <>
+                        {assessment.webcam_snapshots.length > 0 ? (
+                          <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
+                            <div className="flex h-full items-center justify-center">
+                              <img
+                                src={assessment.webcam_snapshots[sliderValue]}
+                                alt="Snapshot"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex h-full items-center justify-center">
+                            <FaLock className="h-8 w-8 text-muted-foreground" />
+                          </div>
+                        )}
+                        <Slider
+                          defaultValue={[0]}
+                          max={assessment.webcam_snapshots.length - 1}
+                          step={1}
+                          value={[sliderValue]}
+                          onValueChange={(value) =>
+                            handleSliderChange(value[0])
+                          }
+                        />
+                      </>
                     </CardContent>
                   </Card>
                 </div>
@@ -941,46 +969,52 @@ const CandidatesDetailPage: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody className="">
-                    {questions.map((question, index) => (
-                      <TableRow key={index}>
-                        {/* Question Column */}
+                    {assessment.questions.map(
+                      (question: any, index: number) => (
+                        <TableRow key={index}>
+                          {/* Question Column */}
 
-                        <TableCell className="p-4 flex items-center">
-                          <p className="">{question.text}</p>
-                        </TableCell>
+                          <TableCell className="p-4 flex items-center">
+                            <p className="">
+                              {question.question
+                                .replace(/<\/?[^>]+(>|$)/g, "")
+                                .replace(/&amp;/g, "&")}
+                            </p>
+                          </TableCell>
 
-                        {/* View Answer Column */}
-                        <TableCell>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex items-center gap-2 cursor-pointer"
-                            onClick={() =>
-                              globalState.openModal("review_answer", true)
-                            }
-                          >
-                            <Eye className="w-4 h-4" />
-                            Read
-                          </Button>
-                        </TableCell>
+                          {/* View Answer Column */}
+                          <TableCell>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex items-center gap-2 cursor-pointer"
+                              onClick={() =>
+                                globalState.openModal("review_answer", true)
+                              }
+                            >
+                              <Eye className="w-4 h-4" />
+                              Read
+                            </Button>
+                          </TableCell>
 
-                        {/* Rating Column */}
-                        <TableCell>
-                          <div className="flex justify-center gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <StarIcon
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < question.rating
-                                    ? "text-yellow-400 fill-yellow-400"
-                                    : "text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          {/* Rating Column */}
+                          <TableCell>
+                            <div className="flex justify-center gap-1">
+                              {[...Array(5)].map((_, i) => (
+                                <StarIcon
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < question.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
                   </TableBody>
                 </Table>
                 <hr className="mt-10" />

@@ -48,7 +48,13 @@ const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_a
 const get_candidate_details = useFrappePostCall("scrutin.api.assessment_data.get_candidate_details")
 
 
-const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail")
+const get_candidate_webcam_snapshots = useFrappePostCall("scrutin.api.assessment_data.get_candidate_webcam_snapshots")
+
+
+
+
+const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot")
+
 
 
   return (
@@ -82,17 +88,26 @@ const get_candidate_detail = useFrappePostCall("scrutin.api.assessment_data.get_
 
       <Button onClick={() => {
         get_candidate_details.call({
-          email: 'muhammadsaad123@gmail.com',
+          email: 'qandeelhaider@gmail.com',
         });
       }}>
-        Candidate Assessment
+        Candidate Details
       </Button>
       <Button onClick={() => {
-        get_candidate_detail.call({
+        get_candidate_webcam_snapshots.call({
           candidate: 'k3jas5g82l',
         });
       }}>
-        Candidate Detail
+        Candidate SnapShots
+      </Button>
+
+
+      <Button onClick={() => {
+        get_combined_candidate_detail_with_snapshot.call({
+          email: 'muhammadsaad123@gmail.com',
+        });
+      }}>
+        Candidate Details & SnapShots
       </Button>
 
     </div>
