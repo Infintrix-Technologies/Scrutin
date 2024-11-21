@@ -40,17 +40,14 @@ const get_questions_for_test_and_total_duration = useFrappePostCall("scrutin.api
 const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_assessment_data")
 
 
-const get_candidate_for_one_time = useFrappeGetCall("scrutin.api.assessment_data.get_candidate_for_one_time")
-console.log(get_candidate_for_one_time, "get_candidate_for_one_time");
-
-
-const get_candidate_location = useFrappePostCall("scrutin.api.assessment_data.get_candidate_location")
-
-
-
 
 //this api will give the candidate detail based on the job_applicant email
 const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot")
+
+
+
+const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options")
+
 
 
 
@@ -83,14 +80,6 @@ const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.a
         Assessment Detail
       </Button>
 
-      <Button onClick={() => {
-        get_candidate_location.call({
-          candidate: 'k3jas5g82l',
-        });
-      }}>
-        Candidate Location
-      </Button>
-
 
       <Button onClick={() => {
         get_combined_candidate_detail_with_snapshot.call({
@@ -98,6 +87,14 @@ const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.a
         });
       }}>
         Candidate Details & SnapShots
+      </Button>
+
+      <Button onClick={() => {
+        get_assessment_test_and_question_with_options.call({
+          assessment_name: 'ju7mgf9ceg',
+        });
+      }}>
+        Test Question Options
       </Button>
 
     </div>
