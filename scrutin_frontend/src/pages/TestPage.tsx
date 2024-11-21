@@ -9,16 +9,16 @@ import {
 } from "@/components/ui/table";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function TestPage() {
   return (
     <div className="flex justify-center items-center">
       <Card className="w-full max-w-7xl mx-auto">
-        {/* <CardHeader>
-        <CardTitle>Question</CardTitle>
-      </CardHeader> */}
+      
         <CardContent className="space-y-6">
-          <div className="flex space-x-4 my-6">
+        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
+            
             <div className="flex-1 p-4">
             <h3 className="text-lg font-semibold mb-2">Question</h3>
               <p>The following is the schedule of Nathan, Sarah, and Violet:</p>
@@ -60,7 +60,8 @@ export default function TestPage() {
                 Joy can work on any day either Sarah or Violet are scheduled.
               </p>
             </div>
-            <div className="flex-1 p-4">
+            
+            <div className="flex-1 py-5 px-10 space-y-3">
               <h3 className="text-lg font-semibold mb-2">Select Answer</h3>
               <RadioGroup className="space-y-2">
                 <div className="flex items-center space-x-2">
@@ -80,6 +81,13 @@ export default function TestPage() {
                   <Label htmlFor="no-one">No one</Label>
                 </div>
               </RadioGroup>
+
+             
+            </div>
+            <div className="flex items-end">
+          <Button >
+            Submit
+          </Button>
             </div>
           </div>
         </CardContent>

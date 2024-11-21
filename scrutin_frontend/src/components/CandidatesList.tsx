@@ -88,10 +88,10 @@ const applicantMap = applicants.reduce((map, applicant) => {
         <TableBody>
           {candidates.map((candidate) => (
         <>   
-         {console.log(candidate,"candidate")}
+         {/* {console.log(candidate,"candidate")} */}
             <TableRow key={candidate.email}>
               {/* <TableCell className="font-medium">{candidate.name}</TableCell> */}
-              <TableCell onClick={() => {handleNavigate(candidate.job_applicant)}}>{applicantMap[candidate.job_applicant] || 'N/A'}</TableCell>
+              <TableCell className="cursor-pointer" onClick={() => {handleNavigate(candidate.job_applicant)}}>{applicantMap[candidate.job_applicant] || 'N/A'}</TableCell>
               <TableCell>{candidate.job_applicant}</TableCell>
               {/* <TableCell>{candidate.assessment}</TableCell> */}
               <TableCell>{assessmentMap[candidate.assessment] || 'N/A'}</TableCell>
