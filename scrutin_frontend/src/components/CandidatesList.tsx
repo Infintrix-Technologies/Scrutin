@@ -8,16 +8,22 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-import { useFrappeGetDocList } from "frappe-react-sdk";
+import { useFrappeGetCall, useFrappeGetDocList } from "frappe-react-sdk";
 import { CandidateActions } from "./CandidateActions";
-import { Badge } from "./ui/badge";
+// import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
+import { CandidateList } from "./Interfaces/Interface";
 
   export const CandidatesList = () => {
-    const candidates_query =  useFrappeGetDocList(
-      'Scrutin Candidate',
+ 
+    const candidates_query = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate")
+    const candidates = candidates_query?.data?.message || []
+    console.log(candidates, "get_candidate_details");
+
+    const applicant_query =  useFrappeGetDocList(
+      'Job Applicant',
       {
-        fields: ['*'],
+        fields: ['email_id', 'applicant_name'],
         orderBy: {
           field: 'creation',
           order: 'desc',
@@ -25,41 +31,10 @@ import { useNavigate } from "react-router-dom";
         asDict: true,
       },
     );
-const candidates = candidates_query?.data || []
-
-const assessment_query =  useFrappeGetDocList(
-  'Scrutin Assessment',
-  {
-    fields: ['name', 'assessment_name'],
-    orderBy: {
-      field: 'creation',
-      order: 'desc',
-    },
-    asDict: true,
-  },
-);
-const assessments = assessment_query?.data || []
-const assessmentMap = assessments.reduce((map, assessment) => {
-  map[assessment.name] = assessment.assessment_name;
-  return map;
-}, {});
-
-const applicant_query =  useFrappeGetDocList(
-  'Job Applicant',
-  {
-    fields: ['email_id', 'applicant_name'],
-    orderBy: {
-      field: 'creation',
-      order: 'desc',
-    },
-    asDict: true,
-  },
-);
 
 const navigate = useNavigate()
 
 const handleNavigate = (candidateEmail: string) => {
-  // Navigate to the candidate details page
   
   console.log('Navigate to candidate details page');
   navigate(`/candidates/${candidateEmail}`)
@@ -80,26 +55,20 @@ const applicantMap = applicants.reduce((map, applicant) => {
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Assessments</TableHead>
-            {/* <TableHead>User</TableHead> */}
-            <TableHead>Status</TableHead>
+            <TableHead>invited_on</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {candidates.map((candidate) => (
+          {candidates.map((candidate:CandidateList) => (
         <>   
-         {/* {console.log(candidate,"candidate")} */}
             <TableRow key={candidate.email}>
-              {/* <TableCell className="font-medium">{candidate.name}</TableCell> */}
               <TableCell className="cursor-pointer" onClick={() => {handleNavigate(candidate.job_applicant)}}>{applicantMap[candidate.job_applicant] || 'N/A'}</TableCell>
               <TableCell>{candidate.job_applicant}</TableCell>
-              {/* <TableCell>{candidate.assessment}</TableCell> */}
-              <TableCell>{assessmentMap[candidate.assessment] || 'N/A'}</TableCell>
-              {/* <TableCell>{candidate.user}</TableCell> */}
-              {/* <TableCell>{candidate.status}</TableCell> */}
+              <TableCell>{candidate?.Assessments}</TableCell>
               <TableCell>
-              <div className="flex items-center gap-2">
-                {/* <span className="w-16 text-sm text-muted-foreground">Status</span> */}
+              {candidate?.invited_on}
+              {/* <div className="flex items-center gap-2">
                 {candidate.status === 'Open' ? (
                   <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-100">
                     Open
@@ -109,7 +78,7 @@ const applicantMap = applicants.reduce((map, applicant) => {
                     Accepted
                   </Badge>
                 )}
-              </div>
+              </div> */}
             </TableCell>
               <TableCell><CandidateActions candidate={candidate}/></TableCell>
             </TableRow>

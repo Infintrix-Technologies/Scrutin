@@ -1,18 +1,11 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AssessmentsList } from "@/pages/AssessmentsList";
 import CreateAssessment from "@/components/CreateAssessment";
-// import { CreateAssessment } from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "react-router-dom";
 
-type Props = {};
 
-
-
-
-const Assessments = (props: Props) => {
+const Assessments = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // const delete_api = useFrappeDeleteDoc()

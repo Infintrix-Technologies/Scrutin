@@ -35,7 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { RainbowButton } from "./ui/rainbow-button";
+// import { RainbowButton } from "./ui/rainbow-button";
 
 type ScrutinAssessment = {
   assessment_name: string;
@@ -58,10 +58,14 @@ const CreateAssessment = () => {
       }}
     >
       <DialogTrigger asChild>
-        <RainbowButton>
+        {/* <RainbowButton>
         <FaPlus />
         Create Assessment
-        </RainbowButton>
+        </RainbowButton> */}
+        <Button>
+          <FaPlus />
+          Create Assessment
+        </Button>
         {/* <Button variant="default">
           <FaPlus />
           Create Assessment

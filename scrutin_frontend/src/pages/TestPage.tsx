@@ -12,6 +12,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 export default function TestPage() {
+
+  // const getCandidatesOfSpecificUser = useFrappeGetCall("scrutin.api.user.get_assessment_test_and_question_with_options");
+
+  // console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
+  
+
+  
   return (
     <div className="flex justify-center items-center">
       <Card className="w-full max-w-7xl mx-auto">

@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
     const assessments_query = useAssessmentsListQuery()
     
     const assessments = assessments_query?.data || []
-    console.log(assessments,"assessments111");
+    // console.log(assessments,"assessments111");
     
     return (
       <Table>
