@@ -66,7 +66,8 @@ def get_questions_for_test_and_total_duration(test_name):
         .select(ScrutinTestQuestion.question, 
                 ScrutinQuestion.question.as_("question_text"),
                 ScrutinQuestion.type,
-                ScrutinQuestion.duration)
+                ScrutinQuestion.duration.as_("question_duration"),
+                )
         .where(ScrutinTest.name == test_name)
     )
     tests = question_query.run(as_dict=True)
@@ -78,16 +79,16 @@ def get_questions_for_test_and_total_duration(test_name):
         .on(ScrutinTest.name == ScrutinTestQuestion.parent)
         .inner_join(ScrutinQuestion)
         .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-        .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+        .select(fn.Sum(ScrutinQuestion.duration).as_("test_total_duration"))
         .where(ScrutinTest.name == test_name)
     )
     duration_result = duration_query.run(as_dict=True)
-    total_duration = duration_result[0]['total_duration'] if duration_result else 0
+    total_duration = duration_result[0]['test_total_duration'] if duration_result else 0
 
     # Add total duration to the response
     return {
         'questions': tests,
-        'total_duration': total_duration
+        'test_total_duration': total_duration
     }
 
 
@@ -354,35 +355,167 @@ def get_combined_candidate_detail_with_snapshot(email):
 
 
 @frappe.whitelist()
-def get_candidate_location(candidate):
-    ScrutinCandidate = DocType("Scrutin Candidate")
-    ScrutinWebcam = DocType("Scrutin Webcam Snapshot")
 
-    candidate_query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .left_join(ScrutinWebcam)
-        .on(ScrutinWebcam.parent == ScrutinCandidate.name)
+def get_test_questions_options(test_id):
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+
+    option_query = (
+        frappe.qb.from_(ScrutinQuestion)
+        .left_join(ScrutinQuestionOption)
+        .on(ScrutinQuestion.name == ScrutinQuestionOption.parent)
         .select(
-            ScrutinCandidate.name,
-            ScrutinCandidate.location,
-            ScrutinCandidate.job_applicant,
-            ScrutinWebcam.image,
+            ScrutinQuestionOption.value,
+            ScrutinQuestionOption.label,
+            ScrutinQuestion.question,
         )
-        .where(ScrutinCandidate.name == candidate)
+        .where(ScrutinQuestion.name == test_id)
     )
-    return candidate_query.run(as_dict=True)
+    options = option_query.run(as_dict=True)
+    return options
 
 
 
+
+#This API give the all question of Test and also give the 
+# @frappe.whitelist()
+# def get_test_details_with_options(test_name):
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    
+    # Query to get questions for the given test
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question, 
+                ScrutinQuestion.question.as_("question_text"),
+                ScrutinQuestion.type,
+                ScrutinTest.title,
+                ScrutinQuestion.duration.as_("question_duration"))
+        .where(ScrutinTest.name == test_name)
+    )
+    questions = question_query.run(as_dict=True)
+    
+    # Query to calculate the total duration for the test
+    duration_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(fn.Sum(ScrutinQuestion.duration).as_("test_total_duration"))
+        .where(ScrutinTest.name == test_name)
+    )
+    duration_result = duration_query.run(as_dict=True)
+    total_duration = duration_result[0]['test_total_duration'] if duration_result else 0
+    
+    # Add options for each question
+    for question in questions:
+        option_query = (
+            frappe.qb.from_(ScrutinQuestionOption)
+            .select(
+                ScrutinQuestionOption.value,
+                ScrutinQuestionOption.label
+            )
+            .where(ScrutinQuestionOption.parent == question['question'])
+        )
+        options = option_query.run(as_dict=True)
+        question['options'] = options
+    
+    # Add total duration to the response
+    return {
+        'questions': questions,
+        'test_total_duration': total_duration
+    }
+
+
+#This API give me the specific assessment all tests and their questions with options
 @frappe.whitelist()
-def get_candidate_for_one_time():
-    ScrutinCandidate = DocType("Scrutin Candidate")
-
-    candidate_query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .select(ScrutinCandidate.job_applicant, fn.Count(ScrutinCandidate.job_applicant).as_("count"))
-        .groupby(ScrutinCandidate.job_applicant)
+def get_assessment_test_and_question_with_options(assessment_name):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+    
+    # Query to get tests for the given assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinAssessmentTest.weight,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
     )
+    tests = tests_query.run(as_dict=True)
 
-    candidates = candidate_query.run(as_dict=True)
-    return candidates
+    # Initialize the final response
+    response = []
+
+    for test in tests:
+        test_name = test['test']
+        
+        # Query to get questions for the given test
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(ScrutinTestQuestion.question, 
+                    ScrutinQuestion.question.as_("question_text"),
+                    ScrutinQuestion.type,
+                    ScrutinQuestion.duration.as_("question_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        questions = question_query.run(as_dict=True)
+        
+        # Query to calculate the total duration for the test
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("test_total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        total_duration = duration_result[0]['test_total_duration'] if duration_result else 0
+        
+        # Add options for each question
+        for question in questions:
+            option_query = (
+                frappe.qb.from_(ScrutinQuestionOption)
+                .select(
+                    ScrutinQuestionOption.value,
+                    ScrutinQuestionOption.label
+                )
+                .where(ScrutinQuestionOption.parent == question['question'])
+            )
+            options = option_query.run(as_dict=True)
+            question['options'] = options
+        
+        # Add the test details to the response
+        response.append({
+            'test': test_name,
+            'title': test['title'],
+            'weight': test['weight'],
+            'questions': questions,
+            'test_total_duration': total_duration
+        })
+    
+    return response

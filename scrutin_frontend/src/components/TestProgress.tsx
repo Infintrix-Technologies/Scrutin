@@ -3,7 +3,8 @@ import { Progress } from "@/components/ui/progress"
 import { Timer, HelpCircle } from "lucide-react"
 
 export default function TestProgress() {
-  const [timeLeft, setTimeLeft] = useState(464) // 7:44 in seconds
+  const initial_time = 1800
+  const [timeLeft, setTimeLeft] = useState(initial_time) // 7:44 in seconds
   const [currentQuestion] = useState(1)
   const totalQuestions = 16
 
@@ -22,7 +23,7 @@ export default function TestProgress() {
   }
 
   // Calculate time progress based on time left (so it decreases)
-  const timeProgress = (timeLeft / 464) * 100
+  const timeProgress = (timeLeft / initial_time) * 100
   const questionProgress = (currentQuestion / totalQuestions) * 100
 
   return (
