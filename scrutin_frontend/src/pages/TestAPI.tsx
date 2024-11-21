@@ -49,6 +49,7 @@ const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.a
 const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options")
 
 
+const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_tests")
 
 
   return (
@@ -91,10 +92,18 @@ const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin
 
       <Button onClick={() => {
         get_assessment_test_and_question_with_options.call({
-          assessment_name: 'ju7mgf9ceg',
+          assessment_name: 'jvecvcvl4o',
         });
       }}>
         Test Question Options
+      </Button>
+
+      <Button onClick={() => {
+        get_specific_assessment_tests.call({
+          assessment_name: 'juocinh9un',
+        });
+      }}>
+        Specific Assessment Tests
       </Button>
 
     </div>
