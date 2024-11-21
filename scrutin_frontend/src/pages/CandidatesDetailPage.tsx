@@ -47,7 +47,7 @@ import {
   FaChevronRight,
 } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   FaDesktop,
   FaGlobe,
@@ -92,15 +92,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { FaChevronLeft } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
+import { useFrappeGetCall } from "frappe-react-sdk";
 // import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 
-interface Question {
-  text: string;
-  rating: number;
-}
+// interface Question {
+//   text: string;
+//   rating: number;
+// }
 interface SkillData {
   skill: string;
   correct: number;
@@ -134,1205 +135,923 @@ const skillsData: SkillData[] = [
   },
 ];
 
-const questions: Question[] = [
-  {
-    text: "Tell us about yourself, what attracts you to this opportunity, and why you are a great candidate for this role. Pro tip: It might be helpful to pretend you are writing this to a new friend and just be yourself. We want to get to know you better....",
-    rating: 3,
-  },
-  {
-    text: "Describe a time when you identified a personal weakness at work and took steps to improve it. In your response, consider discussing the following: What was the personal weakness you identified? How did you identify this weakness? What steps...",
-    rating: 0,
-  },
-  {
-    text: "Describe a time when you worked collaboratively as part of a team to achieve a common goal at work. In your response, consider discussing the following: What was the goal of the team? What were the challenges you faced as a team? How did you...",
-    rating: 0,
-  },
-  {
-    text: "Please provide a link to your LinkedIn profile. For this question, you can exit full-screen mode. Leave blank if you do not have one.",
-    rating: 0,
-  },
-];
-
 const CandidatesDetailPage: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
   const globalState = useGlobalState();
+  const params = useParams();
+  const email = params?.email || null;
+  const [sliderValue, setSliderValue] = React.useState(0);
+  const handleSliderChange = (value: number) => {
+    setSliderValue(value);
+  };
+
+  //API that provide all details about Candidates based on Email
+  const get_candidate_details = useFrappeGetCall(
+    "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
+    {
+      email: email,
+    }
+  );
+
+  const candidate_details =
+    get_candidate_details?.data?.message?.candidate_assessment || [];
 
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
   };
-  const totalWidth = 400; 
+  const totalWidth = 400;
   return (
-    <>
+    <div className="px-14">
+      {candidate_details.map((assessment: any, i: number) => {
+        return (
+          <div key={i}>
+            <header className="flex  justify-between px-4 py-3 border-b">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
+                >
+                  <FaChevronLeft className="h-4 w-4" />
+                  <span className="sr-only">Go back</span>
+                </Button>
 
-<header className="flex  justify-between px-4 py-3 border-b">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950">
-          <FaChevronLeft className="h-4 w-4" />
-          <span className="sr-only">Go back</span>
-        </Button>
-        
-        <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
-          <h1 className="text-base font-semibold">Abdul Muqeet</h1>
-          <Link 
-            // to="mailto:muqeet@infintrotech.com"
-            to='#' 
-            className="text-sm text-muted-foreground hover:underline"
-          >
-            muqeet@infintrotech.com
-          </Link>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2">
-              Invite for an assessment
-              <BsChevronDown className="h-4 w-4 opacity-50" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Technical Assessment</DropdownMenuItem>
-            <DropdownMenuItem>Coding Challenge</DropdownMenuItem>
-            <DropdownMenuItem>System Design</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Button size="sm" className="bg-[#E31B88] hover:bg-[#C41875] text-white">
-          Invite
-        </Button>
-
-        <div className="hidden sm:flex items-center gap-2 ml-2 text-sm text-muted-foreground">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <FaChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Previous</span>
-          </Button>
-          <span>1/1</span>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <FaChevronRight className="h-4 w-4" />
-            <span className="sr-only">Next</span>
-          </Button>
-        </div>
-      </div>
-    </header>
-
-
-      <Card className="container m-auto p-5 mt-4">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center">
-              <h2 className="font-bold text-lg">Assessment</h2>
-              <span className="ml-2">Software Engineer</span>
-            </div>
-            <div className="flex justify-start items-start gap-2">
-              {ratings.map((rating, index) => (
-                <FaStar
-                  key={index}
-                  className={`cursor-pointer ${
-                    rating === 1 ? "text-yellow-500" : "text-gray-400"
-                  }`}
-                  onClick={() => handleRatingChange(index)}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="flex space-x-4">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    className="rounded-full border p-2 hover:bg-green-800"
-                    onClick={() =>
-                      globalState.openModal("interpret_results", true)
-                    }
+                <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
+                  <h1 className="text-base font-semibold">
+                    {assessment.candidate_name}
+                  </h1>
+                  <Link
+                    // to="mailto:muqeet@infintrotech.com"
+                    to="#"
+                    className="text-sm text-muted-foreground hover:underline"
                   >
-                    <FaQuestionCircle />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Learn more</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="rounded-full border p-2 hover:bg-green-800">
-                    <FaDownload />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Download results</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="rounded-full border p-2 hover:bg-green-800">
-                    <FaEnvelope />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Send results to candidate</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="rounded-full border p-2 hover:bg-green-800">
-                    <FaUserTimes />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Reject</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
-      </Card>
-      <div className="container mx-auto pt-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
-          <div className="col-span-1">
-            <div className="p-4 border rounded-md">
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Invited</h3>
-                <p className="text-gray-600">October 6th, 2024</p>
-              </div>
-
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Completed</h3>
-                <p className="text-gray-600">October 6th, 2024</p>
-              </div>
-
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Extra time breakdown</h3>
-                <p className="text-gray-600">
-                  No extra time was granted to this candidate
-                </p>
-              </div>
-
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Source</h3>
-                <p className="text-gray-600">General public link</p>
-              </div>
-
-              <p className="font-bold text-lg py-5"> Hiring stage </p>
-
-              <div className="mb-2">
-                <Select>
-                  <SelectTrigger className="w-[220px]">
-                    <SelectValue placeholder="Not yet evaluated" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* <SelectGroup> */}
-
-                    <SelectItem value="2"> Evaluated</SelectItem>
-                    <SelectItem value="3"> Invited for interview</SelectItem>
-                    <SelectItem value="4"> Interviewed</SelectItem>
-                    <SelectItem value="5">
-                      {" "}
-                      Invited for take-home test
-                    </SelectItem>
-                    <SelectItem value="6"> Take-home test completed</SelectItem>
-                    <SelectItem value="7"> References checked</SelectItem>
-                    <SelectItem value="8"> Offer sent</SelectItem>
-                    <SelectItem value="9"> Offer declined</SelectItem>
-                    <SelectItem value="10"> Candidate withdrew</SelectItem>
-                    <SelectItem value="11"> Candidate unresponsive</SelectItem>
-                    <SelectItem value="12"> Rejected</SelectItem>
-                    <SelectItem value="13"> Hired 🎉</SelectItem>
-                    {/* </SelectGroup> */}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <div className="col-span-1">
-            <Card className="container ">
-              <CardHeader>
-                <div className="flex justify-between">
-                  <div>
-                    <Badge variant="outline">Test User</Badge>
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold">15%</h1>
-                    <p className="text-sm text-gray-500">Average score</p>
-                  </div>
+                    {assessment.job_applicant}
+                  </Link>
                 </div>
-                <Progress className="mt-4" value={15} max={100} />
-                <p
-                  className="py-2 text-blue-600 cursor-pointer"
-                  onClick={() =>
-                    globalState.openModal("interpret_results", true)
-                  }
-                >
-                  How to interpret results
-                </p>
-              </CardHeader>
-            </Card>
-            <Card className="container mt-4">
-              <CardHeader>
-                <div className="max-w-2xl space-y-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <h2 className="text-sm font-medium text-muted-foreground">
-                        Scoring method
-                      </h2>
-                      <p className="text-lg font-semibold">
-                        Percentage of correct answers
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="flex justify-between items-center gap-2 rounded-full border"
-                      onClick={() =>
-                        globalState.openModal("choose_scoring_method", true)
-                      }
-                    >
-                      <Pencil1Icon className="h-4 w-4" />
-                      Change
-                    </Button>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium">
-                      Tests included in overall assessment score
-                    </h3>
-                  </div>
-                </div>
+              </div>
 
-                <Accordion key="1" type="single" collapsible>
-                  <AccordionItem value={"1"}>
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Problem Solving</span>
-                      <span className="ml-[250px] "> 0% </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex justify-between items-center">
-                        <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />
-                          intermediate
-                        </p>
-                        <p className="flex gap-2 items-center">
-                          <RxTimer />
-                          Finished in 00:09:00 out of 00:09:00{" "}
-                        </p>
-                      </div>
-
-                      <Card className="w-full max-w-2xl my-3">
-                        <CardHeader>
-                          <CardTitle className="text-lg font-semibold">
-                            Communication Skills Assessment
-                          </CardTitle>
-                          <hr />
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-6">
-                            {skillsData.map((item, index) => (
-                              <li key={index} className="space-y-2">
-                                <p className="text-sm">{item.skill}</p>
-                                <div className="flex h-6 w-full">
-                                  <div
-                                    className="bg-green-400  text-black font-bold text-center"
-                                    style={{
-                                      width: `${
-                                        (item.correct /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                  <div
-                                    className={`${
-                                      item.incorrect === 5
-                                        ? "bg-[#9e9e9e]"
-                                        : "bg-red-300"
-                                    } text-black font-bold text-center`}
-                                    style={{
-                                      width: `${
-                                        (item.incorrect /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                              <span>Correct</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                              <span>Incorrect</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                              <span>Not answered</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <hr />
-                        <CardFooter>
-                          <Button
-                            variant="link"
-                            className="text-pink-500 p-0"
-                            onClick={() =>
-                              globalState.openModal(
-                                "communication_skills_assessment",
-                                true
-                              )
-                            }
-                          >
-                            Learn more
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-
-                <Accordion key="2" type="single" collapsible>
-                  <AccordionItem value={"2"}>
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Communication</span>
-                      <span className="ml-[250px] "> 67% </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex justify-between items-center">
-                        <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />
-                          intermediate
-                        </p>
-                        <p className="flex gap-2 items-center">
-                          <RxTimer />
-                          Finished in 00:09:00 out of 00:09:00{" "}
-                        </p>
-                      </div>
-
-                      <Card className="w-full max-w-2xl my-3">
-                        <CardHeader>
-                          <CardTitle className="text-lg font-semibold">
-                            Communication Skills Assessment
-                          </CardTitle>
-                          <hr />
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-6">
-                            {skillsData.map((item, index) => (
-                              <li key={index} className="space-y-2">
-                                <p className="text-sm">{item.skill}</p>
-                                <div className="flex h-6 w-full">
-                                  <div
-                                    className="bg-green-400  text-black font-bold text-center"
-                                    style={{
-                                      width: `${
-                                        (item.correct /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                  <div
-                                    className={`${
-                                      item.incorrect === 5
-                                        ? "bg-[#9e9e9e]"
-                                        : "bg-red-300"
-                                    } text-black font-bold text-center`}
-                                    style={{
-                                      width: `${
-                                        (item.incorrect /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                              <span>Correct</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                              <span>Incorrect</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                              <span>Not answered</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <hr />
-                        <CardFooter>
-                          <Button
-                            variant="link"
-                            className="text-pink-500 p-0"
-                            onClick={() =>
-                              globalState.openModal(
-                                "communication_skills_assessment",
-                                true
-                              )
-                            }
-                          >
-                            Learn more
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-
-                <Accordion key="3" type="single" collapsible>
-                  <AccordionItem value="3">
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Time Management</span>
-                      <span className="ml-[250px] "> 7% </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex justify-between items-center">
-                        <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />
-                          Basic
-                        </p>
-                        <p className="flex gap-2 items-center">
-                          <RxTimer />
-                          Finished in 00:07:35 out of 00:08:00{" "}
-                        </p>
-                      </div>
-
-                      <Card className="w-full max-w-2xl my-3">
-                        <CardHeader>
-                          <CardTitle className="text-lg font-semibold">
-                            Communication Skills Assessment
-                          </CardTitle>
-                          <hr />
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-6">
-                            {skillsData.map((item, index) => (
-                              <li key={index} className="space-y-2">
-                                <p className="text-sm">{item.skill}</p>
-                                <div className="flex h-6 w-full">
-                                  <div
-                                    className="bg-green-400  text-black font-bold text-center"
-                                    style={{
-                                      width: `${
-                                        (item.correct /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                  <div
-                                    className={`${
-                                      item.incorrect === 5
-                                        ? "bg-[#9e9e9e]"
-                                        : "bg-red-300"
-                                    } text-black font-bold text-center`}
-                                    style={{
-                                      width: `${
-                                        (item.incorrect /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                              <span>Correct</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                              <span>Incorrect</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                              <span>Not answered</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <hr />
-                        <CardFooter>
-                          <Button
-                            variant="link"
-                            className="text-pink-500 p-0"
-                            onClick={() =>
-                              globalState.openModal(
-                                "communication_skills_assessment",
-                                true
-                              )
-                            }
-                          >
-                            Learn more
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-
-                <Accordion key="4" type="single" collapsible>
-                  <AccordionItem value="4">
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Motivation</span>
-                      <span className="ml-[250px] "> Survey Needed </span>
-                    </AccordionTrigger>
-                  </AccordionItem>
-                </Accordion>
-                <p className="font-bold py-3">
-                  Tests not included in overall assessment score
-                </p>
-
-                <Accordion key="4" type="single" collapsible>
-                  <AccordionItem value="4">
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Big 5 (OCEAN)</span>
-                      <span className="ml-[250px] "> Unavailable </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex justify-between items-center">
-                        <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />
-                          Basic
-                        </p>
-                        <p className="flex gap-2 items-center">
-                          The candidate did not answer all of the questions.{" "}
-                        </p>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </CardHeader>
-            </Card>
-          </div>
-          <div className="col-span-1">
-            <Card className="w-full max-w-2xl mx-auto ">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-xl font-semibold">
-                  Anti-cheating monitor
-                </CardTitle>
-                <Link
-                  onClick={() =>
-                    globalState.openModal("anti_cheating_measures", true)
-                  }
-                  className="text-primary hover:underline text-sm font-medium"
-                  to="#"
-                >
-                  Learn more
-                </Link>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaDesktop className="h-4 w-4" />
-                      <span className="text-sm">Device used</span>
-                    </div>
-                    <span className="text-sm font-bold">Desktop</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaMapPin className="h-4 w-4" />
-                      <span className="text-sm">Location</span>
-                    </div>
-                    <span className="text-sm font-bold">Lahore (PB), PK</span>
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaGlobe className="h-4 w-4" />
-                      <span className="text-sm">
-                        Filled out only once from IP address?
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      Yes
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaVideo className="h-4 w-4" />
-                      <span className="text-sm">Webcam enabled?</span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      Yes
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaExpand className="h-4 w-4" />
-                      <span className="text-sm">
-                        Full-screen mode always active?
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      No
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaMousePointer className="h-4 w-4" />
-                      <span className="text-sm">
-                        Mouse always in assessment window?
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      No
-                    </Badge>
-                  </div>
-                </div>
-                <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
-                  <div className="flex h-full items-center justify-center">
-                    <FaLock className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                </div>
-                <Slider defaultValue={[33]} max={100} step={1} />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto p-6 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Custom questions</CardTitle>
-          </CardHeader>
-          <hr />
-          <Table className="mx-2">
-            <TableHeader>
-              <TableRow className="whitespace-nowrap">
-                <TableHead className="font-bold">Question</TableHead>
-                <TableHead className="font-bold">View Answer</TableHead>
-                <TableHead className="font-bold">Average Rating</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="">
-              {questions.map((question, index) => (
-                <TableRow key={index}>
-                  {/* Question Column */}
-
-                  <TableCell className="p-4 flex items-center">
-                    <p className="">{question.text}</p>
-                  </TableCell>
-
-                  {/* View Answer Column */}
-                  <TableCell>
+              <div className="flex items-center gap-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex items-center gap-2 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("review_answer", true)
-                      }
+                      className="hidden sm:flex items-center gap-2"
                     >
-                      <Eye className="w-4 h-4" />
-                      Read
+                      Invite for an assessment
+                      <BsChevronDown className="h-4 w-4 opacity-50" />
                     </Button>
-                  </TableCell>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Technical Assessment</DropdownMenuItem>
+                    <DropdownMenuItem>Coding Challenge</DropdownMenuItem>
+                    <DropdownMenuItem>System Design</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
-                  {/* Rating Column */}
-                  <TableCell>
-                    <div className="flex justify-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < question.rating
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <hr className="mt-10" />
-          <div className="flex flex-col lg:flex-row mt-6 justify-between space-y-4 lg:space-y-0 lg:space-x-4">
-            <CardHeader className="flex-1">
-              <CardTitle>Your rating</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Give your personal overall rating of this candidate based on
-                your impressions and interactions with him or her.
-              </p>
-              <div className="flex items-center gap-1 mt-2">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className="w-6 h-6 text-gray-300" />
-                ))}
+                <Button
+                  size="sm"
+                  className="bg-[#E31B88] hover:bg-[#C41875] text-white"
+                >
+                  Invite
+                </Button>
+
+                <div className="hidden sm:flex items-center gap-2 ml-2 text-sm text-muted-foreground">
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <FaChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Previous</span>
+                  </Button>
+                  <span>1/1</span>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <FaChevronRight className="h-4 w-4" />
+                    <span className="sr-only">Next</span>
+                  </Button>
+                </div>
               </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="space-y-4">
-                <Textarea
-                  placeholder="Add your private notes here (auto-saved)..."
-                  className="min-h-[100px] w-full lg:w-[30rem] resize-none"
-                />
-              </div>
-            </CardContent>
-          </div>
-        </Card>
-        
-        
-<Card>
-        <div className="container m-auto p-5 mt-4">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center">
-              <h2 className="font-bold text-lg">Assessment</h2>
-              <span className="ml-2">Software Engineer - Pakistan - On/Site </span>
-            </div>
-            <div className="flex justify-start items-start gap-2">
-              {ratings.map((rating, index) => (
-                <FaStar
-                  key={index}
-                  className={`cursor-pointer ${
-                    rating === 1 ? "text-yellow-500" : "text-gray-400"
-                  }`}
-                  onClick={() => handleRatingChange(index)}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="flex space-x-4">
-          
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="rounded-full border p-2 hover:bg-green-800">
-                    <FaUserTimes />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Reject</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </div>
-      </div>
-      <div className="container mx-auto pt-4 px-3">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
-          <div className="col-span-1">
-            <div className="p-4 border rounded-md">
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Invited</h3>
-                <p className="text-gray-600">October 6th, 2024</p>
-              </div>
+            </header>
 
-              {/* <div className="mb-2">
-                <h3 className="font-bold text-lg">Completed</h3>
-                <p className="text-gray-600">October 6th, 2024</p>
-              </div> */}
-
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Extra time breakdown</h3>
-                <p className="text-gray-600">
-                  No extra time was granted to this candidate
-                </p>
-              </div>
-
-              <div className="mb-2">
-                <h3 className="font-bold text-lg">Source</h3>
-                <p className="text-gray-600">Invitation by email</p>
-              </div>
-
-              <p className="font-bold text-lg py-5"> Hiring stage </p>
-
-              <div className="mb-2">
-                <Select>
-                  <SelectTrigger className="w-[220px]">
-                    <SelectValue placeholder="Not yet evaluated" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* <SelectGroup> */}
-
-                    <SelectItem value="2"> Evaluated</SelectItem>
-                    <SelectItem value="3"> Invited for interview</SelectItem>
-                    <SelectItem value="4"> Interviewed</SelectItem>
-                    <SelectItem value="5">
-                      {" "}
-                      Invited for take-home test
-                    </SelectItem>
-                    <SelectItem value="6"> Take-home test completed</SelectItem>
-                    <SelectItem value="7"> References checked</SelectItem>
-                    <SelectItem value="8"> Offer sent</SelectItem>
-                    <SelectItem value="9"> Offer declined</SelectItem>
-                    <SelectItem value="10"> Candidate withdrew</SelectItem>
-                    <SelectItem value="11"> Candidate unresponsive</SelectItem>
-                    <SelectItem value="12"> Rejected</SelectItem>
-                    <SelectItem value="13"> Hired 🎉</SelectItem>
-                    {/* </SelectGroup> */}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <div className="col-span-1">
-            <Card className="container ">
-              <CardHeader>
-                <div className="flex justify-between">
-                  <div>
-                    <Badge variant="outline">Test User</Badge>
+            <Card className="container m-auto p-5 mt-4">
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col justify-center">
+                  <div className="flex items-center">
+                    <h2 className="font-bold text-lg">Assessment</h2>
+                    <span className="ml-2">{assessment.assessment_title}</span>
                   </div>
-                  <div>
-                    <h1 className="text-2xl font-bold">15%</h1>
-                    <p className="text-sm text-gray-500">Average score</p>
+                  <div className="flex justify-start items-start gap-2">
+                    {ratings.map((rating, index) => (
+                      <FaStar
+                        key={index}
+                        className={`cursor-pointer ${
+                          rating === 1 ? "text-yellow-500" : "text-gray-400"
+                        }`}
+                        onClick={() => handleRatingChange(index)}
+                      />
+                    ))}
                   </div>
                 </div>
-                <Progress className="mt-4" value={15} max={100} />
-                <p
-                  className="py-2 text-blue-600 cursor-pointer"
-                  onClick={() =>
-                    globalState.openModal("interpret_results", true)
-                  }
-                >
-                  How to interpret results
-                </p>
-              </CardHeader>
+                <div className="flex space-x-4">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          className="rounded-full border p-2 hover:bg-green-800"
+                          onClick={() =>
+                            globalState.openModal("interpret_results", true)
+                          }
+                        >
+                          <FaQuestionCircle />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Learn more</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button className="rounded-full border p-2 hover:bg-green-800">
+                          <FaDownload />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Download results</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button className="rounded-full border p-2 hover:bg-green-800">
+                          <FaEnvelope />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Send results to candidate</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button className="rounded-full border p-2 hover:bg-green-800">
+                          <FaUserTimes />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Reject</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
             </Card>
-            <Card className="container mt-4">
-              <CardHeader>
-                <div className="max-w-2xl space-y-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <h2 className="text-sm font-medium text-muted-foreground">
-                        Scoring method
-                      </h2>
-                      <p className="text-lg font-semibold">
-                        Percentage of correct answers
+            <div className="container mx-auto pt-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
+                <div className="col-span-1">
+                  <div className="p-4 border rounded-md">
+                    <div className="mb-2">
+                      <h3 className="font-bold text-lg">Invited</h3>
+                      <p className="text-gray-600">{assessment.invited_on}</p>
+                    </div>
+
+                    <div className="mb-2">
+                      <h3 className="font-bold text-lg">Completed</h3>
+                      <p className="text-gray-600">October 6th, 2024</p>
+                    </div>
+
+                    <div className="mb-2">
+                      <h3 className="font-bold text-lg">
+                        Extra time breakdown
+                      </h3>
+                      <p className="text-gray-600">
+                        No extra time was granted to this candidate
                       </p>
                     </div>
-                    <Button
-                      variant="outline"
-                      className="flex justify-between items-center gap-2 rounded-full border"
-                      onClick={() =>
-                        globalState.openModal("choose_scoring_method", true)
-                      }
-                    >
-                      <Pencil1Icon className="h-4 w-4" />
-                      Change
-                    </Button>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium">
-                      Tests included in overall assessment score
-                    </h3>
+
+                    <div className="mb-2">
+                      <h3 className="font-bold text-lg">Source</h3>
+                      <p className="text-gray-600">General public link</p>
+                    </div>
+
+                    <p className="font-bold text-lg py-5"> Hiring stage </p>
+
+                    <div className="mb-2">
+                      <Select>
+                        <SelectTrigger className="w-[220px]">
+                          <SelectValue placeholder="Not yet evaluated" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {/* <SelectGroup> */}
+
+                          <SelectItem value="2"> Evaluated</SelectItem>
+                          <SelectItem value="3">
+                            {" "}
+                            Invited for interview
+                          </SelectItem>
+                          <SelectItem value="4"> Interviewed</SelectItem>
+                          <SelectItem value="5">
+                            {" "}
+                            Invited for take-home test
+                          </SelectItem>
+                          <SelectItem value="6">
+                            {" "}
+                            Take-home test completed
+                          </SelectItem>
+                          <SelectItem value="7"> References checked</SelectItem>
+                          <SelectItem value="8"> Offer sent</SelectItem>
+                          <SelectItem value="9"> Offer declined</SelectItem>
+                          <SelectItem value="10">
+                            {" "}
+                            Candidate withdrew
+                          </SelectItem>
+                          <SelectItem value="11">
+                            {" "}
+                            Candidate unresponsive
+                          </SelectItem>
+                          <SelectItem value="12"> Rejected</SelectItem>
+                          <SelectItem value="13"> Hired 🎉</SelectItem>
+                          {/* </SelectGroup> */}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
-
-                <Accordion key="1" type="single" collapsible>
-                  <AccordionItem value={"1"}>
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Problem Solving</span>
-                      <span className="ml-[250px] "> 0% </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex justify-between items-center">
-                        <p className="flex gap-2 items-center">
-                          <AiOutlineBarChart />
-                          intermediate
-                        </p>
-                        <p className="flex gap-2 items-center">
-                          <RxTimer />
-                          Finished in 00:09:00 out of 00:09:00{" "}
-                        </p>
+                <div className="col-span-1">
+                  <Card className="container ">
+                    <CardHeader>
+                      <div className="flex justify-between">
+                        <div>
+                          <Badge variant="outline">Test User</Badge>
+                        </div>
+                        <div>
+                          <h1 className="text-2xl font-bold">15%</h1>
+                          <p className="text-sm text-gray-500">Average score</p>
+                        </div>
                       </div>
-
-                      <Card className="w-full max-w-2xl my-3">
-                        <CardHeader>
-                          <CardTitle className="text-lg font-semibold">
-                            Communication Skills Assessment
-                          </CardTitle>
-                          <hr />
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-6">
-                            {skillsData.map((item, index) => (
-                              <li key={index} className="space-y-2">
-                                <p className="text-sm">{item.skill}</p>
-                                <div className="flex h-6 w-full">
-                                  <div
-                                    className="bg-green-400  text-black font-bold text-center"
-                                    style={{
-                                      width: `${
-                                        (item.correct /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                  <div
-                                    className={`${
-                                      item.incorrect === 5
-                                        ? "bg-[#9e9e9e]"
-                                        : "bg-red-300"
-                                    } text-black font-bold text-center`}
-                                    style={{
-                                      width: `${
-                                        (item.incorrect /
-                                          (item.correct + item.incorrect)) *
-                                        totalWidth
-                                      }px`,
-                                    }}
-                                  >
-                                    {item?.correct}
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                              <span>Correct</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                              <span>Incorrect</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                              <span>Not answered</span>
-                            </div>
+                      <Progress className="mt-4" value={15} max={100} />
+                      <p
+                        className="py-2 text-blue-600 cursor-pointer"
+                        onClick={() =>
+                          globalState.openModal("interpret_results", true)
+                        }
+                      >
+                        How to interpret results
+                      </p>
+                    </CardHeader>
+                  </Card>
+                  <Card className="container mt-4">
+                    <CardHeader>
+                      <div className="max-w-2xl space-y-6">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <h2 className="text-sm font-medium text-muted-foreground">
+                              Scoring method
+                            </h2>
+                            <p className="text-lg font-semibold">
+                              Percentage of correct answers
+                            </p>
                           </div>
-                        </CardContent>
-                        <hr />
-                        <CardFooter>
                           <Button
-                            variant="link"
-                            className="text-pink-500 p-0"
+                            variant="outline"
+                            className="flex justify-between items-center gap-2 rounded-full border"
                             onClick={() =>
                               globalState.openModal(
-                                "communication_skills_assessment",
+                                "choose_scoring_method",
                                 true
                               )
                             }
                           >
-                            Learn more
+                            <Pencil1Icon className="h-4 w-4" />
+                            Change
                           </Button>
-                        </CardFooter>
-                      </Card>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium">
+                            Tests included in overall assessment score
+                          </h3>
+                        </div>
+                      </div>
 
-                <p className="font-bold py-3">
-                  Tests not included in overall assessment score
-                </p>
+                      {assessment.tests.map((test: any, index: number) => {
+                        return (
+                          <Accordion key={index} type="single" collapsible>
+                            <AccordionItem value={String(index)}>
+                              <AccordionTrigger className="flex justify-between ">
+                                <span>{test.title}</span>
+                                <span className="ml-[250px] "> 0% </span>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="flex justify-between items-center">
+                                  <p className="flex gap-2 items-center">
+                                    <AiOutlineBarChart />
+                                    intermediate
+                                  </p>
+                                  <p className="flex gap-2 items-center">
+                                    <RxTimer />
+                                    Finished in 00:09:00 out of 00:09:00{" "}
+                                  </p>
+                                </div>
 
-                <Accordion key="4" type="single" collapsible>
-                  <AccordionItem value="4">
-                    <AccordionTrigger className="flex justify-between ">
-                      <span>Big 5 (OCEAN)</span>
-                      <span className="ml-[250px] "> Not Started </span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                     
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </CardHeader>
-            </Card>
-          </div>
-          <div className="col-span-1">
-            <Card className="w-full max-w-2xl mx-auto ">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-xl font-semibold">
-                  Anti-cheating monitor
-                </CardTitle>
-                <Link
-                  onClick={() =>
-                    globalState.openModal("anti_cheating_measures", true)
-                  }
-                  className="text-primary hover:underline text-sm font-medium"
-                  to="#"
-                >
-                  Learn more
-                </Link>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaDesktop className="h-4 w-4" />
-                      <span className="text-sm">Device used</span>
-                    </div>
-                    <span className="text-sm font-bold">Desktop</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaMapPin className="h-4 w-4" />
-                      <span className="text-sm">Location</span>
-                    </div>
-                    <span className="text-sm font-bold">Lahore (PB), PK</span>
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaGlobe className="h-4 w-4" />
-                      <span className="text-sm">
-                        Filled out only once from IP address?
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      Yes
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaVideo className="h-4 w-4" />
-                      <span className="text-sm">Webcam enabled?</span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-100 text-green-700 hover:bg-green-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      Yes
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaExpand className="h-4 w-4" />
-                      <span className="text-sm">
-                        Full-screen mode always active?
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      No
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FaMousePointer className="h-4 w-4" />
-                      <span className="text-sm">
-                        Mouse always in assessment window?
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-red-100 text-red-700 hover:bg-red-100 cursor-pointer"
-                      onClick={() =>
-                        globalState.openModal("anti_cheating_measures", true)
-                      }
-                    >
-                      No
-                    </Badge>
-                  </div>
-                </div>               
-              </CardContent>
-            </Card>
+                                <Card className="w-full max-w-2xl my-3">
+                                  <CardHeader>
+                                    <CardTitle className="text-lg font-semibold">
+                                      Communication Skills Assessment
+                                    </CardTitle>
+                                    <hr />
+                                  </CardHeader>
+                                  <CardContent>
+                                    <ul className="space-y-6">
+                                      {skillsData.map((item, index) => (
+                                        <li key={index} className="space-y-2">
+                                          <p className="text-sm">
+                                            {item.skill}
+                                          </p>
+                                          <div className="flex h-6 w-full">
+                                            <div
+                                              className="bg-green-400  text-black font-bold text-center"
+                                              style={{
+                                                width: `${
+                                                  (item.correct /
+                                                    (item.correct +
+                                                      item.incorrect)) *
+                                                  totalWidth
+                                                }px`,
+                                              }}
+                                            >
+                                              {item?.correct}
+                                            </div>
+                                            <div
+                                              className={`${
+                                                item.incorrect === 5
+                                                  ? "bg-[#9e9e9e]"
+                                                  : "bg-red-300"
+                                              } text-black font-bold text-center`}
+                                              style={{
+                                                width: `${
+                                                  (item.incorrect /
+                                                    (item.correct +
+                                                      item.incorrect)) *
+                                                  totalWidth
+                                                }px`,
+                                              }}
+                                            >
+                                              {item?.correct}
+                                            </div>
+                                          </div>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                    <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                                      <div className="flex items-center">
+                                        <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                                        <span>Correct</span>
+                                      </div>
+                                      <div className="flex items-center">
+                                        <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                                        <span>Incorrect</span>
+                                      </div>
+                                      <div className="flex items-center">
+                                        <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                                        <span>Not answered</span>
+                                      </div>
+                                    </div>
+                                  </CardContent>
+                                  <hr />
+                                  <CardFooter>
+                                    <Button
+                                      variant="link"
+                                      className="text-pink-500 p-0"
+                                      onClick={() =>
+                                        globalState.openModal(
+                                          "communication_skills_assessment",
+                                          true
+                                        )
+                                      }
+                                    >
+                                      Learn more
+                                    </Button>
+                                  </CardFooter>
+                                </Card>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        );
+                      })}
 
-            
-          </div>
-        </div>
+                      {/* <Accordion key="2" type="single" collapsible>
+                        <AccordionItem value={"2"}>
+                          <AccordionTrigger className="flex justify-between ">
+                            <span>
+                              {assessment.tests[1].title}
+                            </span>
+                            <span className="ml-[250px] "> 67% </span>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="flex justify-between items-center">
+                              <p className="flex gap-2 items-center">
+                                <AiOutlineBarChart />
+                                intermediate
+                              </p>
+                              <p className="flex gap-2 items-center">
+                                <RxTimer />
+                                Finished in 00:09:00 out of 00:09:00{" "}
+                              </p>
+                            </div>
 
+                            <Card className="w-full max-w-2xl my-3">
+                              <CardHeader>
+                                <CardTitle className="text-lg font-semibold">
+                                  Communication Skills Assessment
+                                </CardTitle>
+                                <hr />
+                              </CardHeader>
+                              <CardContent>
+                                <ul className="space-y-6">
+                                  {skillsData.map((item, index) => (
+                                    <li key={index} className="space-y-2">
+                                      <p className="text-sm">{item.skill}</p>
+                                      <div className="flex h-6 w-full">
+                                        <div
+                                          className="bg-green-400  text-black font-bold text-center"
+                                          style={{
+                                            width: `${
+                                              (item.correct /
+                                                (item.correct +
+                                                  item.incorrect)) *
+                                              totalWidth
+                                            }px`,
+                                          }}
+                                        >
+                                          {item?.correct}
+                                        </div>
+                                        <div
+                                          className={`${
+                                            item.incorrect === 5
+                                              ? "bg-[#9e9e9e]"
+                                              : "bg-red-300"
+                                          } text-black font-bold text-center`}
+                                          style={{
+                                            width: `${
+                                              (item.incorrect /
+                                                (item.correct +
+                                                  item.incorrect)) *
+                                              totalWidth
+                                            }px`,
+                                          }}
+                                        >
+                                          {item?.correct}
+                                        </div>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
+                                <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                                    <span>Correct</span>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                                    <span>Incorrect</span>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                                    <span>Not answered</span>
+                                  </div>
+                                </div>
+                              </CardContent>
+                              <hr />
+                              <CardFooter>
+                                <Button
+                                  variant="link"
+                                  className="text-pink-500 p-0"
+                                  onClick={() =>
+                                    globalState.openModal(
+                                      "communication_skills_assessment",
+                                      true
+                                    )
+                                  }
+                                >
+                                  Learn more
+                                </Button>
+                              </CardFooter>
+                            </Card>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
 
-        <hr className="mt-10" />
-          <div className="flex flex-col lg:flex-row mt-6 justify-between space-y-4 lg:space-y-0 lg:space-x-4">
-            <CardHeader className="flex-1">
-              <CardTitle>Your rating</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Give your personal overall rating of this candidate based on
-                your impressions and interactions with him or her.
-              </p>
-              <div className="flex items-center gap-1 mt-2">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className="w-6 h-6 text-gray-300" />
-                ))}
+                      <Accordion key="3" type="single" collapsible>
+                        <AccordionItem value="3">
+                          <AccordionTrigger className="flex justify-between ">
+                            <span>
+                              {assessment.tests[2].title}
+                            </span>
+                            <span className="ml-[250px] "> 7% </span>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="flex justify-between items-center">
+                              <p className="flex gap-2 items-center">
+                                <AiOutlineBarChart />
+                                Basic
+                              </p>
+                              <p className="flex gap-2 items-center">
+                                <RxTimer />
+                                Finished in 00:07:35 out of 00:08:00{" "}
+                              </p>
+                            </div>
+
+                            <Card className="w-full max-w-2xl my-3">
+                              <CardHeader>
+                                <CardTitle className="text-lg font-semibold">
+                                  Communication Skills Assessment
+                                </CardTitle>
+                                <hr />
+                              </CardHeader>
+                              <CardContent>
+                                <ul className="space-y-6">
+                                  {skillsData.map((item, index) => (
+                                    <li key={index} className="space-y-2">
+                                      <p className="text-sm">{item.skill}</p>
+                                      <div className="flex h-6 w-full">
+                                        <div
+                                          className="bg-green-400  text-black font-bold text-center"
+                                          style={{
+                                            width: `${
+                                              (item.correct /
+                                                (item.correct +
+                                                  item.incorrect)) *
+                                              totalWidth
+                                            }px`,
+                                          }}
+                                        >
+                                          {item?.correct}
+                                        </div>
+                                        <div
+                                          className={`${
+                                            item.incorrect === 5
+                                              ? "bg-[#9e9e9e]"
+                                              : "bg-red-300"
+                                          } text-black font-bold text-center`}
+                                          style={{
+                                            width: `${
+                                              (item.incorrect /
+                                                (item.correct +
+                                                  item.incorrect)) *
+                                              totalWidth
+                                            }px`,
+                                          }}
+                                        >
+                                          {item?.correct}
+                                        </div>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
+                                <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                                    <span>Correct</span>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                                    <span>Incorrect</span>
+                                  </div>
+                                  <div className="flex items-center">
+                                    <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                                    <span>Not answered</span>
+                                  </div>
+                                </div>
+                              </CardContent>
+                              <hr />
+                              <CardFooter>
+                                <Button
+                                  variant="link"
+                                  className="text-pink-500 p-0"
+                                  onClick={() =>
+                                    globalState.openModal(
+                                      "communication_skills_assessment",
+                                      true
+                                    )
+                                  }
+                                >
+                                  Learn more
+                                </Button>
+                              </CardFooter>
+                            </Card>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+
+                      <Accordion key="4" type="single" collapsible>
+                        <AccordionItem value="4">
+                          <AccordionTrigger className="flex justify-between ">
+                            <span>Motivation</span>
+                            <span className="ml-[250px] "> Survey Needed </span>
+                          </AccordionTrigger>
+                        </AccordionItem>
+                      </Accordion>
+                      <p className="font-bold py-3">
+                        Tests not included in overall assessment score
+                      </p>
+
+                      <Accordion key="4" type="single" collapsible>
+                        <AccordionItem value="4">
+                          <AccordionTrigger className="flex justify-between ">
+                            <span>Big 5 (OCEAN)</span>
+                            <span className="ml-[250px] "> Unavailable </span>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="flex justify-between items-center">
+                              <p className="flex gap-2 items-center">
+                                <AiOutlineBarChart />
+                                Basic
+                              </p>
+                              <p className="flex gap-2 items-center">
+                                The candidate did not answer all of the
+                                questions.{" "}
+                              </p>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion> */}
+                    </CardHeader>
+                  </Card>
+                </div>
+                <div className="col-span-1">
+                  <Card className="w-full max-w-2xl mx-auto ">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <CardTitle className="text-xl font-semibold">
+                        Anti-cheating monitor
+                      </CardTitle>
+                      <Link
+                        onClick={() =>
+                          globalState.openModal("anti_cheating_measures", true)
+                        }
+                        className="text-primary hover:underline text-sm font-medium"
+                        to="#"
+                      >
+                        Learn more
+                      </Link>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <FaDesktop className="h-4 w-4" />
+                            <span className="text-sm">Device used</span>
+                          </div>
+                          <span className="text-sm font-bold">Desktop</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <FaMapPin className="h-4 w-4" />
+                            <span className="text-sm">Location</span>
+                          </div>
+                          <span className="text-sm font-bold">
+                            Lahore (PB), PK
+                          </span>
+                        </div>
+                        <Separator />
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <FaGlobe className="h-4 w-4" />
+                            <span className="text-sm">
+                              Filled out only once from IP address?
+                            </span>
+                          </div>
+                          <Badge
+                            variant="secondary"
+                            className={`${
+                              assessment.filled_out_only_once_from_ip_address ===
+                              0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
+                            onClick={() =>
+                              globalState.openModal(
+                                "anti_cheating_measures",
+                                true
+                              )
+                            }
+                          >
+                            {assessment.filled_out_only_once_from_ip_address ===
+                            0
+                              ? "No"
+                              : "Yes"}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <FaVideo className="h-4 w-4" />
+                            <span className="text-sm">Webcam enabled?</span>
+                          </div>
+                          <Badge
+                            variant="secondary"
+                            className={`${
+                              assessment.web_cam_enabled === 0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
+                            onClick={() =>
+                              globalState.openModal(
+                                "anti_cheating_measures",
+                                true
+                              )
+                            }
+                          >
+                            {assessment.web_cam_enabled === 0 ? "No" : "Yes"}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <FaExpand className="h-4 w-4" />
+                            <span className="text-sm">
+                              Full-screen mode always active?
+                            </span>
+                          </div>
+                          <Badge
+                            variant="secondary"
+                            className={`${
+                              assessment.full_screen_mode_always_active === 0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
+                            onClick={() =>
+                              globalState.openModal(
+                                "anti_cheating_measures",
+                                true
+                              )
+                            }
+                          >
+                            {assessment.full_screen_mode_always_active === 0
+                              ? "No"
+                              : "Yes"}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <FaMousePointer className="h-4 w-4" />
+                            <span className="text-sm">
+                              Mouse always in assessment window?
+                            </span>
+                          </div>
+                          <Badge
+                            variant="secondary"
+                            className={`${
+                              assessment.mouse_always_in_assessment_window === 0
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer`}
+                            onClick={() =>
+                              globalState.openModal(
+                                "anti_cheating_measures",
+                                true
+                              )
+                            }
+                          >
+                            {assessment.mouse_always_in_assessment_window === 0
+                              ? "No"
+                              : "Yes"}
+                          </Badge>
+                        </div>
+                      </div>
+                      <>
+                        {assessment.webcam_snapshots.length > 0 ? (
+                          <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
+                            <div className="flex h-full items-center justify-center">
+                              {assessment.webcam_snapshots[sliderValue] ? (
+                                <img
+                                  src={assessment.webcam_snapshots[sliderValue]}
+                                  alt="Snapshot"
+                                  className="h-[230px] w-[410px] rounded-lg"
+                                />
+                              ) : (
+                                <FaLock className="h-8 w-8 text-muted-foreground" />
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex h-full items-center justify-center">
+                            <FaLock className="h-8 w-8 text-muted-foreground" />
+                          </div>
+                        )}
+                        <Slider
+                          defaultValue={[0]}
+                          max={assessment.webcam_snapshots.length - 1}
+                          step={1}
+                          value={[sliderValue]}
+                          onValueChange={(value) =>
+                            handleSliderChange(value[0])
+                          }
+                        />
+                      </>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="space-y-4">
-                <Textarea
-                  placeholder="Add your private notes here (auto-saved)..."
-                  className="min-h-[100px] w-full lg:w-[30rem] resize-none"
-                />
-              </div>
-            </CardContent>
+            </div>
+
+            <div className="container mx-auto p-6 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Custom questions</CardTitle>
+                </CardHeader>
+                <hr />
+                <Table className="mx-2">
+                  <TableHeader>
+                    <TableRow className="whitespace-nowrap">
+                      <TableHead className="font-bold">Question</TableHead>
+                      <TableHead className="font-bold">View Answer</TableHead>
+                      <TableHead className="font-bold">
+                        Average Rating
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="">
+                    {assessment.questions.map(
+                      (question: any, index: number) => (
+                        <TableRow key={index}>
+                          {/* Question Column */}
+
+                          <TableCell className="p-4 flex items-center">
+                            <p className="">
+                              {question.question
+                                .replace(/<\/?[^>]+(>|$)/g, "")
+                                .replace(/&amp;/g, "&")}
+                            </p>
+                          </TableCell>
+
+                          {/* View Answer Column */}
+                          <TableCell>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex items-center gap-2 cursor-pointer"
+                              onClick={() =>
+                                globalState.openModal("review_answer", true)
+                              }
+                            >
+                              <Eye className="w-4 h-4" />
+                              Read
+                            </Button>
+                          </TableCell>
+
+                          {/* Rating Column */}
+                          <TableCell>
+                            <div className="flex justify-center gap-1">
+                              {[...Array(5)].map((_, i) => (
+                                <StarIcon
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < question.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
+                  </TableBody>
+                </Table>
+                <hr className="mt-10" />
+                <div className="flex flex-col lg:flex-row mt-6 justify-between space-y-4 lg:space-y-0 lg:space-x-4">
+                  <CardHeader className="flex-1">
+                    <CardTitle>Your rating</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      Give your personal overall rating of this candidate based
+                      on your impressions and interactions with him or her.
+                    </p>
+                    <div className="flex items-center gap-1 mt-2">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon key={i} className="w-6 h-6 text-gray-300" />
+                      ))}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex-1">
+                    <div className="space-y-4">
+                      <Textarea
+                        placeholder="Add your private notes here (auto-saved)..."
+                        className="min-h-[100px] w-full lg:w-[30rem] resize-none"
+                      />
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+
+              {/* card end heree */}
+            </div>
           </div>
-      </div>
-      </Card>
-
-
-      {/* card end heree */}
-
-
-      </div>
+        );
+      })}
 
       {/* Modals */}
 
@@ -1989,7 +1708,7 @@ const CandidatesDetailPage: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
