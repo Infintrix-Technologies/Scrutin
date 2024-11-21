@@ -21,7 +21,7 @@ import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import CandidateDashboard from "./pages/TestAPI";
 import JobApplicants from "./pages/JobApplicants";
-import AssessmentDashboard from "./pages/CandidatesDetailPage";
+import CandidateDetailPage from "./pages/CandidatesDetailPage";
 import AssessmentDetailPage from "./pages/AssessmentDetailPage";
 import TestAPI from "./pages/TestAPI";
 
@@ -72,7 +72,7 @@ export const router = createBrowserRouter(
             },
             {
               path: ":email",
-              element: <AssessmentDashboard />,
+              element: <CandidateDetailPage />,
             },
           ],
         },
@@ -115,8 +115,8 @@ export const router = createBrowserRouter(
           ]
         },
         {
-          path: "assessment-dashboard",
-          element: <AssessmentDashboard />,
+          path: "candidate-dashboard",
+          element: <CandidateDetailPage />,
           children : [
             {
               path: "",

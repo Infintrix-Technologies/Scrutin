@@ -39,9 +39,9 @@ const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const renderStars = (rating: number) => {
     let stars = [];
-    const fullStar = <FaStar />;
-    const halfStar = <FaStarHalfAlt />;
-    const emptyStar = <FaRegStar />;
+    const fullStar = <FaStar className="text-yellow-300"/>;
+    const halfStar = <FaStarHalfAlt className="text-yellow-300"/>;
+    const emptyStar = <FaRegStar className="text-yellow-300"/>;
   
     switch (rating) {
       case 1:

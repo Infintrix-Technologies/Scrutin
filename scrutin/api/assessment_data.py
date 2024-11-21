@@ -36,10 +36,14 @@ def get_applicant_name_assessment_name_for_candidate():
         .left_join(JobApplicant)
         .on(JobApplicant.name == ScrutinCandidate.job_applicant)
         .select(
-            ScrutinCandidate.name.as_("candidate_name"),
+            ScrutinCandidate.name.as_("candidate_id"),
             ScrutinAssessment.assessment_name,
             JobApplicant.applicant_name,
+            ScrutinCandidate.job_applicant,
+            fn.Count(ScrutinCandidate.job_applicant).as_("Assessments"),
+            ScrutinCandidate.invited_on,
         )
+        .groupby(ScrutinCandidate.job_applicant)
     ).run(as_dict=True)
 
     return candidate_detail
@@ -378,7 +382,6 @@ def get_candidate_for_one_time():
         frappe.qb.from_(ScrutinCandidate)
         .select(ScrutinCandidate.job_applicant, fn.Count(ScrutinCandidate.job_applicant).as_("count"))
         .groupby(ScrutinCandidate.job_applicant)
-        # .having(fn.Count(ScrutinCandidate.job_applicant) == 1)
     )
 
     candidates = candidate_query.run(as_dict=True)
