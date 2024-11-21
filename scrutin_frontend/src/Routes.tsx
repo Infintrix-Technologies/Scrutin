@@ -19,7 +19,6 @@ import ApiTestPage from "./pages/ApiTestPage";
 import CandidateDetail from "./pages/ScrutinCandidate";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
-import CandidateDashboard from "./pages/TestAPI";
 import JobApplicants from "./pages/JobApplicants";
 import CandidateDetailPage from "./pages/CandidatesDetailPage";
 import AssessmentDetailPage from "./pages/AssessmentDetailPage";
@@ -76,6 +75,7 @@ export const router = createBrowserRouter(
             },
           ],
         },
+        //This Show the Jobs Page 
         {
           path: "jobs",
           element: <AdminLayout />,
@@ -94,6 +94,7 @@ export const router = createBrowserRouter(
             },
           ],
         },
+        //This is the Job Applicants List Page
         {
           path: "applicants",
           element: <AdminLayout />,
@@ -114,43 +115,28 @@ export const router = createBrowserRouter(
             },
           ]
         },
-        {
-          path: "candidate-dashboard",
-          element: <CandidateDetailPage />,
-          children : [
-            {
-              path: "",
-              element: <CandidateDashboard />,
-            },
-          ]
-        },
-        // {
-        //   path: "candidate-assessment-dashboard",
-        //   element: <CandidateAssessmentDashboard />,
-        //   children : [
-        //     {
-        //       path: "",
-        //       element: <CandidateDashboard />,
-        //     },
-        //   ]
-        // },
+        //This will show the  Candidacy Details to perform the test
         {
           path: "candidacy",
           element: <CandidatacyLayout />,
           children : [
-            {
-              path: ":candidate_id",
-              element: <ApiTestPage />,
-              // element: <Navigate to={`/assessments`} />,
-            },
+            //this show the specific candidate detail based on candidate_id get from URL using Prams
+
+            // {
+            //   path: ":candidate_id",
+            //   element: <ApiTestPage />,
+            //   // element: <Navigate to={`/assessments`} />,
+            // },
+
+            //This page show the Specific candidate Detail page
             {
               path: "candidate_detail",
               element: <CandidateDetail />,
             },
-            {
-              path: ":assessment_id/intro",
-              element: <Intro />,
-            },
+            // {
+            //   path: ":assessment_id/intro",
+            //   element: <Intro />,
+            // },
             {
               path: ":assessment_id/overview",
               element: <AssessmentOverview />,
