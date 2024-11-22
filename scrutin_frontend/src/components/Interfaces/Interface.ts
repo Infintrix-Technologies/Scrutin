@@ -8,6 +8,14 @@ export interface Candidate {
   score: number;
   hired: boolean;
 }
+export interface CandidateList {
+email:string;
+job_applicant:string;
+Assessments:number;
+status:string;
+invited_on:string
+
+}
 export interface Test {
   duration: number;
   weight: string;

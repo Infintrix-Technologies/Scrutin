@@ -53,7 +53,7 @@ interface Props {
 export const AssessmentActions = ({assessment}:Props )=> {
   const delete_api = useFrappeDeleteDoc();
 
-  console.log(assessment,"0000000000004")
+  // console.log(assessment,"0000000000004")
 
   const handleDelete = (name: string) => {
     console.log(name,"name");
