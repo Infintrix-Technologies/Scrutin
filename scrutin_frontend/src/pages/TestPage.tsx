@@ -1,101 +1,84 @@
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useFrappeGetCall } from "frappe-react-sdk";
+import { Option } from "@/components/Interfaces/Interface";
+// import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function TestPage() {
+  const get_assessment_test_and_question_with_options = useFrappeGetCall(
+    "scrutin.api.assessment_data.get_assessment_test_and_question_with_options",
+    { assessment_name: "0b1bdsk5tu" }
+  );
+  const assessment_test_and_question_with_options =
+    get_assessment_test_and_question_with_options?.data?.message?.tests || [];
 
-  // const getCandidatesOfSpecificUser = useFrappeGetCall("scrutin.api.user.get_assessment_test_and_question_with_options");
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
-  
+  const questionParam = parseInt(searchParams.get("question") as string, 10) - 1 || 0;
 
-  
+  const handleNext = () => {
+    setSearchParams({ question: `${questionParam + 2}` });
+  };
+
+  const handleBack = () => {
+    setSearchParams({ question: `${questionParam }` });
+  };
+
+  // Return early if no data is available
+  if (assessment_test_and_question_with_options.length === 0) {
+    return <div>Loading...</div>;
+  }
+
+  const currentQuestion =
+    assessment_test_and_question_with_options[questionParam]?.questions[0];
+
   return (
     <div className="flex justify-center items-center">
-      <Card className="w-full max-w-7xl mx-auto">
-      
+      <Card className="w-full max-w-full md:min-w-[750px] lg:min-w-[800px] mx-auto">
         <CardContent className="space-y-6">
-        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
-            
+          <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
             <div className="flex-1 p-4">
-            <h3 className="text-lg font-semibold mb-2">Question</h3>
-              <p>The following is the schedule of Nathan, Sarah, and Violet:</p>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Sun</TableHead>
-                    <TableHead>Mon</TableHead>
-                    <TableHead>Tue</TableHead>
-                    <TableHead>Wed</TableHead>
-                    <TableHead>Thu</TableHead>
-                    <TableHead>Fri</TableHead>
-                    <TableHead>Sat</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Sarah</TableCell>
-                    <TableCell>Violet</TableCell>
-                    <TableCell>Sarah</TableCell>
-                    <TableCell>Violet</TableCell>
-                    <TableCell>Sarah</TableCell>
-                    <TableCell>Nathan</TableCell>
-                    <TableCell>Sarah</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell>Nathan</TableCell>
-                    <TableCell>Violet</TableCell>
-                    <TableCell>Nathan</TableCell>
-                    <TableCell>Violet</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-              <p>
-                Nancy can work on any day either Nathan or Joy are scheduled.
-                Joy can work on any day either Sarah or Violet are scheduled.
-              </p>
+              <h3 className="text-lg font-semibold mb-2">
+                Question {questionParam + 1}
+              </h3>
+              <div
+                className="ql-editor read-mode [&_ol]:list-decimal [&_ul]:list-disc [&_li]:mb-2 [&_li]:ml-4"
+                // className="ql-editor read-mode"
+                dangerouslySetInnerHTML={{__html: currentQuestion?.question_text}}
+              ></div>
             </div>
-            
+
             <div className="flex-1 py-5 px-10 space-y-3">
               <h3 className="text-lg font-semibold mb-2">Select Answer</h3>
-              <RadioGroup className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="joy-and-nancy" id="joy-and-nancy" />
-                  <Label htmlFor="joy-and-nancy">Joy and Nancy</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="joy" id="joy" />
-                  <Label htmlFor="joy">Joy</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="nancy" id="nancy" />
-                  <Label htmlFor="nancy">Nancy</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="no-one" id="no-one" />
-                  <Label htmlFor="no-one">No one</Label>
-                </div>
+              <RadioGroup
+                className="space-y-2"
+                name={`question-${questionParam}`}
+              >
+                {currentQuestion?.options?.map((option: Option) => (
+                  <div
+                    className="flex items-center space-x-2"
+                    key={option.value}
+                  >
+                    <RadioGroupItem value={option.value} id={option.value} />
+                    <Label htmlFor={option.value}>{option.label}</Label>
+                  </div>
+                ))}
               </RadioGroup>
+            </div>
+          </div>
 
-             
-            </div>
-            <div className="flex items-end">
-          <Button >
-            Submit
-          </Button>
-            </div>
+          <div className="flex justify-between ">
+            
+            <Button onClick={handleBack} disabled={questionParam === 0}>
+              Back
+            </Button>
+              <Button              
+              onClick={handleNext}
+              disabled={questionParam === assessment_test_and_question_with_options.length - 1}              
+              >Submit</Button>
           </div>
         </CardContent>
       </Card>

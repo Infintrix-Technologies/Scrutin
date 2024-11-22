@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 
@@ -50,6 +49,7 @@ const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin
 
 
 const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_tests")
+console.log(get_specific_assessment_tests,"get_specific_assessment_tests");
 
 
   return (
@@ -92,7 +92,7 @@ const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_
 
       <Button onClick={() => {
         get_assessment_test_and_question_with_options.call({
-          assessment_name: 'jvecvcvl4o',
+          assessment_name: '0b1bdsk5tu',
         });
       }}>
         Test Question Options
@@ -100,7 +100,7 @@ const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_
 
       <Button onClick={() => {
         get_specific_assessment_tests.call({
-          assessment_name: 'juocinh9un',
+          assessment_name: '0b1bdsk5tu',
         });
       }}>
         Specific Assessment Tests
