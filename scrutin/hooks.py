@@ -152,7 +152,11 @@ fixtures = [
 # 		"on_trash": "method"
 # 	}
 # }
-
+# doc_events = {
+#     "*": {
+#         "after_insert": "scrutin.api.upload_webcam_snapshots.upload_image"
+#     }
+# }
 # Scheduled Tasks
 # ---------------
 

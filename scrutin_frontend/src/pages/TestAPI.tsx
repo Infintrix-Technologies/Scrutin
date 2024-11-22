@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
-
+// import LogImg from "../../../scrutin/public/images/bike12.png"
+// import { Image } from "@radix-ui/react-avatar";
+//  assets/scrutin/images/bike12.png
 
 const TestAPI = () => {
 
 const getCandidatesOfSpecificUser = useFrappeGetCall("scrutin.api.user.get_user_candidates");
 console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
+// console.log(LogImg,"vvvvvvvvvvvvvvvv");
 
 
 // const session_user = useFrappeGetCall("scrutin.api.user.get_logged_user");
@@ -50,6 +53,19 @@ const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin
 
 
 const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_tests")
+
+
+const get_candidate_responses = useFrappePostCall("scrutin.api.assessment_data.get_candidate_responses")
+
+
+const get_candidate_response_questions_answer = useFrappePostCall("scrutin.api.assessment_data.get_candidate_response_questions_answer")
+
+
+const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data.get_specific_test_details")
+
+
+
+// const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
 
 
   return (
@@ -100,77 +116,52 @@ const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_
 
       <Button onClick={() => {
         get_specific_assessment_tests.call({
-          assessment_name: 'juocinh9un',
+          assessment_name: 'c2ms1le5va',
         });
       }}>
         Specific Assessment Tests
       </Button>
 
+
+      <Button onClick={() => {
+        get_candidate_responses.call({
+          email: 'abdulmuneeb123@gmail.com',
+        });
+      }}>
+        Candidate Test Responses
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_response_questions_answer.call({
+          email: 'abdulmuneeb123@gmail.com',
+        });
+      }}>
+        Candidate Question/Answer Responses
+      </Button>
+
+
+      <Button onClick={() => {
+        get_specific_test_details.call({
+          test_id: '36se65gll1',
+        });
+      }}>
+        Specific Test Duration & no_of_q
+      </Button>
+
+
+      {/* <Button onClick={() => {
+        upload_image.call({
+          candidate_name : "37hc0ipka2",
+          image_file : {LogImg} 
+        });
+      }}>
+        Upload Images in Candidate
+      </Button> */}
+{/* <img src={LogImg} alt="img"/> */}
     </div>
     
   )
 }
 
 export default TestAPI
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const CandidatesDetailPage: React.FC = () => {
-//   const params = useParams();
-//   const email = params?.email || null;
-
-//   const get_candidate_details = useFrappeGetCall(
-//     "scrutin.api.assessment_data.get_candidate_details",
-//     {
-//       email: email,
-//     }
-//   );
-
-//   console.log('i am email', email);
-
-//   const get_specific_assessment = get_candidate_details?.data?.message?.candidate_assessment || [];
-
-//   console.log(get_specific_assessment, 'i am assessment details');
-
-//   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
-//   const globalState = useGlobalState();
-
-//   const handleRatingChange = (index: number) => {
-//     const updatedRatings = [...ratings];
-//     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
-//     setRatings(updatedRatings);
-//   };
-
-//   const totalWidth = 400; 
-
-//   return (
-//     <>
-//       <header className="flex justify-between px-4 py-3 border-b">
-//         <div className="flex items-center gap-3">
-//           <Button variant="ghost" size="icon" className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950">
-//             <FaChevronLeft className="h-4 w-4" />
-//             <span className="sr-only">Go back</span>
-//           </Button>
-
-//             <>
-              
-//                 <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
-//                   <h1 className="text-base font-semibold">{get_specific_assessment[0].candidate_name}</h1>
-//                   <Link to="#" className="text-sm text-muted-foreground hover:underline">
-//                     {get_specific_assessment[0].job_applicant}
-//                   </Link>
-//                 </div>
-              
-//             </>
-        
-//       </div>
