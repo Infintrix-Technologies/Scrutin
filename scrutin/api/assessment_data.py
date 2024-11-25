@@ -926,9 +926,9 @@ def add_test_progress(email, test_name, started_at=None, completed_at=None):
 
 
 
-
+# This API will be used to show the test & question of test of assessment for specific candidate
 @frappe.whitelist()
-def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
+def get_candidate_detail_based_on_candidate_id(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
@@ -936,7 +936,7 @@ def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
     ScrutinTest = DocType("Scrutin Test")
     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
     ScrutinQuestion = DocType("Scrutin Question")
-    ScrutinWebcam = DocType("Scrutin Webcam Snapshot")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
 
     # Query to get the assessments and candidate details for the specific job applicant email
     assessment_query = (
@@ -951,12 +951,6 @@ def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
             ScrutinCandidate.job_applicant,
             ScrutinCandidate.name.as_("candidate_id"),
             JobApplicant.applicant_name.as_("candidate_name"),
-            # ScrutinCandidate.status,
-            # ScrutinCandidate.invited_on,
-            # ScrutinCandidate.filled_out_only_once_from_ip_address,
-            # ScrutinCandidate.web_cam_enabled,
-            # ScrutinCandidate.full_screen_mode_always_active,
-            # ScrutinCandidate.mouse_always_in_assessment_window,
         )
         .where(ScrutinCandidate.name == candidate_id)  # Ensure email field matches
     )
@@ -964,7 +958,7 @@ def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
 
     # If no assessments are found, return an empty result
     if not candidate_assessments:
-        return {'candidate_assessment': [], 'tests': [], 'questions': []}
+        return {'candidate_assessment': [], 'tests': [], 'custom_questions': []}
 
     assessment_names = [assessment['assessment_name'] for assessment in candidate_assessments]
 
@@ -985,6 +979,22 @@ def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
     )
     tests = tests_query.run(as_dict=True)
 
+    # Query to get the test questions for each assessment
+    test_question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTestQuestion.parent == ScrutinTest.name)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinQuestion.name == ScrutinTestQuestion.question)
+        .select(
+            ScrutinTestQuestion.parent.as_("test_name"),
+            ScrutinTestQuestion.question,
+            ScrutinQuestion.question,
+        )
+        .where(ScrutinTest.name.isin([test['test'] for test in tests]))
+    )
+    test_questions = test_question_query.run(as_dict=True)
+
     # Query to get the questions for each assessment
     questions_query = (
         frappe.qb.from_(ScrutinAssessmentQuestion)
@@ -1001,21 +1011,6 @@ def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
     )
     questions = questions_query.run(as_dict=True)
 
-    # Query to get the webcam snapshots for the candidate(s)
-    # candidate_ids = [assessment['candidate_id'] for assessment in candidate_assessments]
-    # webcam_query = (
-    #     frappe.qb.from_(ScrutinCandidate)
-    #     .left_join(ScrutinWebcam)
-    #     .on(ScrutinWebcam.parent == ScrutinCandidate.name)
-    #     .select(
-    #         ScrutinCandidate.name.as_("candidate_id"),
-    #         ScrutinWebcam.image,
-    #     )
-    #     .where(ScrutinCandidate.name.isin(candidate_ids))
-    # )
-    # webcam_snapshots = webcam_query.run(as_dict=True)
-
-    # Group tests and questions under their respective assessments
     assessment_dict = {assessment['assessment_name']: assessment for assessment in candidate_assessments}
     for test in tests:
         assessment_name = test['assessment_name']
@@ -1025,31 +1020,32 @@ def get_candidate_detail_with_snapshot_on_candidate_id(candidate_id):
             'test': test['test'],
             'weight': test['weight'],
             'title': test['title'],
+            'questions': []
         })
 
     for question in questions:
         assessment_name = question['assessment_name']
-        if 'questions' not in assessment_dict[assessment_name]:
-            assessment_dict[assessment_name]['questions'] = []
-        assessment_dict[assessment_name]['questions'].append({
+        if 'custom_questions' not in assessment_dict[assessment_name]:
+            assessment_dict[assessment_name]['custom_questions'] = []
+        assessment_dict[assessment_name]['custom_questions'].append({
             # 'question': question['question'],
             'question_text': question['question'],
         })
 
-    # Combine webcam snapshots with candidate assessments
-    # for snapshot in webcam_snapshots:
-    #     candidate_id = snapshot['candidate_id']
-    #     for assessment in candidate_assessments:
-    #         if assessment['candidate_id'] == candidate_id:
-    #             if 'webcam_snapshots' not in assessment:
-    #                 assessment['webcam_snapshots'] = []
-    #             assessment['webcam_snapshots'].append(snapshot['image'])
+    for tq in test_questions:
+        test_name = tq['test_name']
+        for assessment in assessment_dict.values():
+            for test in assessment.get('tests', []):
+                if test['test'] == test_name:
+                    test['questions'].append(tq['question'])
+
 
     # Convert the assessments back to a list
     result_assessments = list(assessment_dict.values())
 
     return {
         'candidate_assessment': result_assessments,
+        # 'test_questions': test_questions
     }
 
 
@@ -1083,3 +1079,208 @@ def get_candidate_detail_for_intro(candidate_id):
     )
     candidate_detail = query.run(as_dict=True)
     return candidate_detail
+
+
+
+
+# This API is used to show data about specific candidate on OVERVIEW PAGE by candidate_id
+@frappe.whitelist()
+def get_specific_assessment_tests_by_candidate_id(candidate_id):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_assessments = query.run(as_dict=True) 
+    if candidate_assessments:
+        assessment_id = candidate_assessments[0].get('assessment')
+    else:
+        assessment_id = None
+
+    # Fetch candidate details
+    # candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+    # if not candidate:
+    #     return {"error": "Candidate not found"}
+
+    # assessment_id = candidate.assessment
+
+    # Query to get the total number of Custom questions for the candidate's assessment
+    custom_question_count_query = (
+        frappe.qb.from_(ScrutinAssessmentQuestion)
+        .select(fn.Count(ScrutinAssessmentQuestion.question).as_("total_custom_questions"))
+        .where(ScrutinAssessmentQuestion.parent == assessment_id)
+    )
+    custom_question_count_result = custom_question_count_query.run(as_dict=True)
+    total_custom_questions = custom_question_count_result[0]['total_custom_questions'] if custom_question_count_result else 0
+
+    # Query to get tests for the candidate's assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinAssessmentTest.test)
+        .select(
+            ScrutinAssessment.assessment_name,
+            ScrutinTest.name,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    for test in tests:
+        test_name = test['name']
+        
+        # Query to get total duration of the test
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        total_duration = duration_result[0]['total_duration'] if duration_result else 0
+        
+        # Query to get total number of questions in the test
+        question_count_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .select(fn.Count(ScrutinTestQuestion.question).as_("total_questions"))
+            .where(ScrutinTest.name == test_name)
+        )
+        question_count_result = question_count_query.run(as_dict=True)
+        total_questions = question_count_result[0]['total_questions'] if question_count_result else 0
+        
+        test['total_duration'] = total_duration
+        test['total_questions'] = total_questions
+
+    return {
+        "tests": tests,
+        "custom_questions": total_custom_questions,
+    }
+
+
+
+
+#this api will works on the candidate id and will provide the question of test with  options for TEST PAGE
+@frappe.whitelist()
+def get_assessment_test_and_question_with_options_with_candidate_id(candidate_id):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_assessments = query.run(as_dict=True) 
+    if candidate_assessments:
+        assessment_name = candidate_assessments[0].get('assessment')
+    else:
+        assessment_name = None
+    
+    # candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+    # if not candidate:
+    #     return {"error": "Candidate not found"}
+
+    # assessment_name = candidate.assessment
+
+    # Query to get tests for the given assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinAssessmentTest.weight,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    # Initialize the final response and total assessment duration
+    response = []
+    total_assessment_duration = 0
+
+    for test in tests:
+        test_name = test['test']
+        
+        # Query to get questions for the given test
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(ScrutinTestQuestion.question, 
+                    ScrutinQuestion.question.as_("question_text"),
+                    ScrutinQuestion.type,
+                    ScrutinQuestion.duration.as_("question_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        questions = question_query.run(as_dict=True)
+        
+        # Query to calculate the total duration for the test
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("test_total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        test_total_duration = duration_result[0]['test_total_duration'] if duration_result else 0
+        
+        # Add options for each question
+        for question in questions:
+            option_query = (
+                frappe.qb.from_(ScrutinQuestionOption)
+                .select(
+                    ScrutinQuestionOption.value,
+                    ScrutinQuestionOption.label
+                )
+                .where(ScrutinQuestionOption.parent == question['question'])
+            )
+            options = option_query.run(as_dict=True)
+            question['options'] = options
+        
+        # Add the test details to the response
+        response.append({
+            'test': test_name,
+            'title': test['title'],
+            'weight': test['weight'],
+            'questions': questions,
+            'test_total_duration': test_total_duration
+        })
+        
+        # Add the test total duration to the total assessment duration
+        total_assessment_duration += test_total_duration
+    
+    # Add total assessment duration to the response
+    return {
+        'tests': response,
+        'total_assessment_duration': total_assessment_duration
+    }
