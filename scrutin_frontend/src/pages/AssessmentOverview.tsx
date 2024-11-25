@@ -14,7 +14,7 @@ export default function AssessmentOverview() {
     { assessment_name: candidate_id }
   );
   const specific_assessment_tests = get_specific_assessment_tests?.data?.message || [];
-  console.log(specific_assessment_tests, "specific_assessment_tests");
+  // console.log(specific_assessment_tests, "specific_assessment_tests");
 
   return (
     <div className="px-4 sm:px-8 lg:px-32 xl:px-64">

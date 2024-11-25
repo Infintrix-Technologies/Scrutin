@@ -22,25 +22,32 @@ const TestPage = () => {
 
   const questionParam = parseInt(searchParams.get("question") as string, 10) - 1 || 0;
  
-  // const testParam = searchParams.get("test:id");
 
   const handleNext = () => {
-    const currentTest = assessment_test_and_question_with_options[questionParam];
-    const testId = currentTest?.test || ""; 
-    setSearchParams({ 
-      "": testId, 
-      question: `${questionParam + 2}`
-    });
+    setSearchParams({ question: `${questionParam + 2}` });
   };
 
   const handleBack = () => {
-    const currentTest = assessment_test_and_question_with_options[questionParam - 1];
-    const testId = currentTest?.test || ""; 
-    setSearchParams({ 
-      "": testId,
-      question: `${questionParam}`,
-    });
+    setSearchParams({ question: `${questionParam }` });
   };
+  
+  // const handleNext = () => {
+  //   const currentTest = assessment_test_and_question_with_options[questionParam];
+  //   const testId = currentTest?.test || ""; 
+  //   setSearchParams({ 
+  //     "": testId, 
+  //     question: `${questionParam + 2}`
+  //   });
+  // };
+
+  // const handleBack = () => {
+  //   const currentTest = assessment_test_and_question_with_options[questionParam - 1];
+  //   const testId = currentTest?.test || ""; 
+  //   setSearchParams({ 
+  //     "": testId,
+  //     question: `${questionParam}`,
+  //   });
+  // };
 
   // Return early if no data is available
   if (assessment_test_and_question_with_options.length === 0) {

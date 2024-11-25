@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useParams } from "react-router-dom";
 
-export default function Setup() {
 
+  const Setup = () => {
   const params = useParams();
   const candidate_id = params?.candidate_id || null;
 
@@ -40,7 +40,7 @@ export default function Setup() {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
-      setCameraError(null); // Clear any error message
+      setCameraError(null); 
     } catch (error) {
       setCameraError(
         "Unable to access the camera. Please check your settings."
@@ -181,10 +181,6 @@ export default function Setup() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        {/* <Button>
-          Next
-          <ChevronRight className="ml-2 h-4 w-4" />
-        </Button> */}
         <Link to={`/candidacy/${candidate_id}/test/:test_id`}>
               <Button className="text-end flex items-center">
                 Start Test
@@ -197,3 +193,5 @@ export default function Setup() {
     </div>
   );
 }
+
+export default Setup
