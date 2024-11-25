@@ -65,6 +65,37 @@ const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data
 
 
 
+const get_applicant_name_assessment_name_for_specific_candidate = useFrappePostCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_specific_candidate")
+
+
+
+const update_test_Completed_time = useFrappePostCall("scrutin.api.assessment_data.update_test_start_time")
+
+
+
+const get_candidate_test_progress = useFrappePostCall("scrutin.api.assessment_data.get_candidate_test_progress")
+
+
+
+const add_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_test_progress")
+
+
+
+
+const get_candidate_detail_with_snapshot_on_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_with_snapshot_on_candidate_id")
+
+
+
+const get_candidate_detail_for_intro = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_for_intro")
+
+
+
+
+
+
+
+
+
 // const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
 
 
@@ -133,6 +164,15 @@ const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data
 
 
       <Button onClick={() => {
+        get_candidate_test_progress.call({
+          email: 'abdulmuneeb123@gmail.com',
+        });
+      }}>
+        get_candidate_test_progress
+      </Button>
+
+
+      <Button onClick={() => {
         get_candidate_response_questions_answer.call({
           email: 'abdulmuneeb123@gmail.com',
         });
@@ -142,11 +182,57 @@ const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data
 
 
       <Button onClick={() => {
+        add_test_progress.call({
+          email: 'abdulmuneeb123@gmail.com',
+          test_name: 'k8krlm90s7'
+        });
+      }}>
+        Add Test in the Candidate Test Progress
+      </Button>
+
+
+      <Button onClick={() => {
         get_specific_test_details.call({
           test_id: '36se65gll1',
         });
       }}>
         Specific Test Duration & no_of_q
+      </Button>
+
+
+      <Button onClick={() => {
+        get_applicant_name_assessment_name_for_specific_candidate.call({
+          candidate_id: 'k265ossobt',
+        });
+      }}>
+        get_specific_candidate_details
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_detail_for_intro.call({
+          candidate_id: 'k265ossobt',
+        });
+      }}>
+        get_specific_candidate_details_for_intro_page
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_detail_with_snapshot_on_candidate_id.call({
+          candidate_id: 'k39k9ek7i1',
+        });
+      }}>
+        get_candidate_detail_with_snapshot_on_candidate_id
+      </Button>
+
+
+      <Button onClick={() => {
+        update_test_Completed_time.call({
+          test_id: '36se65gll1',
+        });
+      }}>
+        update_test_Completed_time
       </Button>
 
 
