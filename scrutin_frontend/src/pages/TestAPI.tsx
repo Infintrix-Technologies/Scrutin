@@ -82,11 +82,21 @@ const add_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_tes
 
 
 
-const get_candidate_detail_with_snapshot_on_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_with_snapshot_on_candidate_id")
+const get_candidate_detail_based_on_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_based_on_candidate_id")
 
 
 
 const get_candidate_detail_for_intro = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_for_intro")
+
+
+
+const get_specific_assessment_tests_by_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id")
+
+
+
+const get_assessment_test_and_question_with_options_with_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options_with_candidate_id")
+
+
 
 
 
@@ -219,11 +229,29 @@ const get_candidate_detail_for_intro = useFrappePostCall("scrutin.api.assessment
 
 
       <Button onClick={() => {
-        get_candidate_detail_with_snapshot_on_candidate_id.call({
+        get_candidate_detail_based_on_candidate_id.call({
           candidate_id: 'k39k9ek7i1',
         });
       }}>
-        get_candidate_detail_with_snapshot_on_candidate_id
+        get_candidate_detail_based_on_candidate_id
+      </Button>
+
+
+      <Button onClick={() => {
+        get_assessment_test_and_question_with_options_with_candidate_id.call({
+          candidate_id: 'k39k9ek7i1',
+        });
+      }}>
+        Test Question With Options With Candidate ID
+      </Button>
+
+
+      <Button onClick={() => {
+        get_specific_assessment_tests_by_candidate_id.call({
+          candidate_id: 'k39k9ek7i1',
+        });
+      }}>
+        get_specific_assessment_tests_by_candidate_id
       </Button>
 
 
