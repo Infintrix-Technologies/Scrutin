@@ -45,3 +45,19 @@ ul > a.active {
 .read-the-docs {
   color: #888;
 } */
+
+.ql-editor.read-mode ol {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding-left: 0;
+}
+
+.ql-editor.read-mode ul {
+  list-style-type: disc; 
+  margin-left: 20px;
+  padding-left: 0;
+}
+
+.ql-editor.read-mode li {
+  margin-bottom: 5px; 
+}
