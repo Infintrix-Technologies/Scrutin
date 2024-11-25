@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useEffect, useRef, useState } from "react";
@@ -10,15 +11,20 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { MoreVertical, Video, ChevronRight } from "lucide-react";
+import { MoreVertical, Video, ChevronRightIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link, useParams } from "react-router-dom";
 
 export default function Setup() {
+
+  const params = useParams();
+  const candidate_id = params?.candidate_id || null;
+
   // const [videoHeight] = useState(100);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
@@ -143,7 +149,8 @@ export default function Setup() {
                 <li>
                   Ensure you are using a{" "}
                   <a
-                    href="https://candidates.testgorilla.com/hc/en-us/articles/19091812295323-Tools-for-taking-an-assessment"
+                    // href="https://candidates.testgorilla.com/hc/en-us/articles/19091812295323-Tools-for-taking-an-assessment"
+                    href="#"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-bold text-blue-600 hover:underline"
@@ -174,10 +181,16 @@ export default function Setup() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button>
+        {/* <Button>
           Next
           <ChevronRight className="ml-2 h-4 w-4" />
-        </Button>
+        </Button> */}
+        <Link to={`/candidacy/${candidate_id}/test/:test_id`}>
+              <Button className="text-end flex items-center">
+                Start Test
+                <ChevronRightIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
       </CardFooter>
     </Card>
 

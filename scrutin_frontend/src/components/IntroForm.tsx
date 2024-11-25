@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
+import { Link, useParams } from "react-router-dom"
+import { ChevronRightIcon } from "lucide-react"
 
 // Define a schema using zod
 const formSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  // firstName: z.string().min(1, "First name is required"),
+  // lastName: z.string().min(1, "Last name is required"),
   agreePrivacy : z.string().optional(),
   subscribeNewsletter: z.string().optional(),
 //   agreePrivacy: z.boolean().refine((val) => val === true, {
@@ -22,6 +24,10 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>
 
 export default function IntroForm() {
+
+  const params = useParams();
+  const candidate_id = params?.candidate_id || null;
+
   const {
     register,
     handleSubmit,
@@ -43,15 +49,28 @@ export default function IntroForm() {
         <CardContent className="space-y-4">
           <h2 className="text-xl mb-4">Please confirm who you are</h2>
           <div className="space-y-2">
-            <Label htmlFor="firstName">First name</Label>
+            <Label htmlFor="firstName">Full name</Label>
             <Input
               id="firstName"
-              {...register("firstName")}
-              required
+              defaultValue="Khawar"
+              name="firstName"
+              disabled
+              // {...register("firstName")}
+              // required
             />
-            {errors.firstName && <p className="text-red-600">{errors.firstName.message}</p>}
+            {/* {errors.firstName && <p className="text-red-600">{errors.firstName.message}</p>} */}
           </div>
-          <div className="space-y-2">
+          <div>
+            <p>
+            Assessment Name: 
+            </p>
+          </div>
+          <div>
+            <p>
+              Role Applied for:
+          </p>         
+          </div>
+          {/* <div className="space-y-2">
             <Label htmlFor="lastName">Last name</Label>
             <Input
               id="lastName"
@@ -59,7 +78,7 @@ export default function IntroForm() {
               required
             />
             {errors.lastName && <p className="text-red-600">{errors.lastName.message}</p>}
-          </div>
+          </div> */}
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
             <Checkbox
@@ -68,11 +87,15 @@ export default function IntroForm() {
               />
               <Label htmlFor="agreePrivacy" className="text-sm">
                 I have read and I accept the{' '}
-                <a href="https://www.testgorilla.com/terms/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a href="#"
+                // href="https://www.testgorilla.com/terms/privacy-policy" 
+                target="" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                   privacy policy
                 </a>{' '}
                 and{' '}
-                <a href="https://www.testgorilla.com/candidate-terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a href="#"
+                // href="https://www.testgorilla.com/candidate-terms"  
+                target="" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                   candidate terms
                 </a>
               </Label>
@@ -92,7 +115,13 @@ export default function IntroForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">Submit</Button>
+          {/* <Button type="submit" className="w-full">Submit</Button> */}
+          <Link to={`/candidacy/${candidate_id}/overview`} className="w-full">
+              <Button type="submit" className="w-full">
+                Next
+                <ChevronRightIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
         </CardFooter>
       </form>
     </Card>

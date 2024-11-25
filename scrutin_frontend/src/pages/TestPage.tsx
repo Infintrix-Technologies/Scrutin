@@ -4,13 +4,16 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import { Option } from "@/components/Interfaces/Interface";
-// import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
-export default function TestPage() {
+const TestPage = () => {
+
+  const params = useParams();
+  const candidate_id = params?.candidate_id || null;
+
   const get_assessment_test_and_question_with_options = useFrappeGetCall(
     "scrutin.api.assessment_data.get_assessment_test_and_question_with_options",
-    { assessment_name: "0b1bdsk5tu" }
+    { assessment_name: candidate_id }
   );
   const assessment_test_and_question_with_options =
     get_assessment_test_and_question_with_options?.data?.message?.tests || [];
@@ -18,13 +21,25 @@ export default function TestPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const questionParam = parseInt(searchParams.get("question") as string, 10) - 1 || 0;
+ 
+  // const testParam = searchParams.get("test:id");
 
   const handleNext = () => {
-    setSearchParams({ question: `${questionParam + 2}` });
+    const currentTest = assessment_test_and_question_with_options[questionParam];
+    const testId = currentTest?.test || ""; 
+    setSearchParams({ 
+      "": testId, 
+      question: `${questionParam + 2}`
+    });
   };
 
   const handleBack = () => {
-    setSearchParams({ question: `${questionParam }` });
+    const currentTest = assessment_test_and_question_with_options[questionParam - 1];
+    const testId = currentTest?.test || ""; 
+    setSearchParams({ 
+      "": testId,
+      question: `${questionParam}`,
+    });
   };
 
   // Return early if no data is available
@@ -85,3 +100,5 @@ export default function TestPage() {
     </div>
   );
 }
+
+export default TestPage
