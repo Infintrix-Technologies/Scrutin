@@ -98,6 +98,11 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
 
 
 
+const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.assessment_data.show_one_question_at_a_time_on_test_page")
+
+
+
+
 
 
 
@@ -216,6 +221,14 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
         });
       }}>
         get_specific_candidate_details
+      </Button>
+
+      <Button onClick={() => {
+        show_one_question_at_a_time_on_test_page.call({
+          candidate_id: 'k265ossobt',
+        });
+      }}>
+        show_one_question_at_a_time_on_test_page
       </Button>
 
 
