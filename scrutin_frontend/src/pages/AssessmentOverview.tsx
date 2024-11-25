@@ -10,11 +10,10 @@ export default function AssessmentOverview() {
   const params = useParams();
   const candidate_id = params?.candidate_id || null;
 
-  const get_specific_assessment_tests = useFrappeGetCall( "scrutin.api.assessment_data.get_specific_assessment_tests",
-    { assessment_name: candidate_id }
+  const get_specific_assessment_tests = useFrappeGetCall( "scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id",
+    { candidate_id: candidate_id }
   );
   const specific_assessment_tests = get_specific_assessment_tests?.data?.message || [];
-  // console.log(specific_assessment_tests, "specific_assessment_tests");
 
   return (
     <div className="px-4 sm:px-8 lg:px-32 xl:px-64">

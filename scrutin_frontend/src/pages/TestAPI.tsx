@@ -124,7 +124,7 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
 
       <Button onClick={() => {
         get_questions_for_test_and_total_duration.call({
-          test_name: 'k9a5emvdd6',
+          test_name: 'gh76ldgot2',
         });
       }}>
         Test Questions & Total Duration
@@ -203,7 +203,7 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
 
       <Button onClick={() => {
         get_specific_test_details.call({
-          test_id: '36se65gll1',
+          test_id: 'Backend Development',
         });
       }}>
         Specific Test Duration & no_of_q
@@ -248,7 +248,7 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
 
       <Button onClick={() => {
         get_specific_assessment_tests_by_candidate_id.call({
-          candidate_id: 'k39k9ek7i1',
+          candidate_id: 'u3qafmr9qo',
         });
       }}>
         get_specific_assessment_tests_by_candidate_id
