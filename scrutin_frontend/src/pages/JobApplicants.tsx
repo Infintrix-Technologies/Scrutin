@@ -148,7 +148,7 @@ const JobApplicants = () => {
   };
 
   return (
-    <div className="px-32">
+    <div className="px-8 md:px-32">
       {/* Invite Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
@@ -250,7 +250,7 @@ const JobApplicants = () => {
             <>
             <TableRow key={applicant.name}>
               <TableCell>{applicant.applicant_name}</TableCell>
-              <TableCell className="flex">{renderStars(applicant.applicant_rating)}</TableCell>
+              <TableCell className="flex py-10">{renderStars(applicant.applicant_rating)}</TableCell>
               {/* <TableCell>{applicant.job_title}</TableCell> */}
               <TableCell>{job_openingMap[applicant.job_title] || 'N/A'}</TableCell>
 
