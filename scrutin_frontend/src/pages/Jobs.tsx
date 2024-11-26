@@ -59,8 +59,8 @@ const jobs = [
 
 export default function Component() {
   return (
-    <div className="container mx-auto px-32">
-       <div className="flex justify-between mt-10">
+    <div className="container mx-auto px-8 lg:px-32">
+       <div className="flex justify-between my-6">
         <h1 className="text-3xl font-bold">Jobs</h1>
         <Link to="/jobs/post">
         <Button>
@@ -69,7 +69,7 @@ export default function Component() {
         </Button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 pb-6 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
           <Card key={job.id} className="flex flex-col">
             <CardHeader>
