@@ -151,7 +151,6 @@ import { Link, useParams } from "react-router-dom";
                   <a
                     // href="https://candidates.testgorilla.com/hc/en-us/articles/19091812295323-Tools-for-taking-an-assessment"
                     href="#"
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="font-bold text-blue-600 hover:underline"
                   >
@@ -181,7 +180,7 @@ import { Link, useParams } from "react-router-dom";
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Link to={`/candidacy/${candidate_id}/test/:test_id`}>
+        <Link to={`/candidacy/${candidate_id}/test/`}>
               <Button className="text-end flex items-center">
                 Start Test
                 <ChevronRightIcon className="ml-2 h-4 w-4" />

@@ -147,7 +147,7 @@ export const router = createBrowserRouter(
               element: <Setup />,
             },
             {
-              path: ":candidate_id/test/:test_id",
+              path: ":candidate_id/test/",
               element: <TestPage />,
               
             },

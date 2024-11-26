@@ -32,7 +32,7 @@ const TestPage = () => {
     let newIndex = questionIndex;
 
     // Calculate the next or previous index
-    if (direction === "next" && newIndex < tests.length - 1) {
+    if (direction === "next" && newIndex < tests?.length - 1) {
       newIndex += 1;
     } else if (direction === "back" && newIndex > 0) {
       newIndex -= 1;
@@ -84,7 +84,7 @@ const TestPage = () => {
                 onClick={() => handleNavigation("next")}
                 disabled={questionIndex === tests.length - 1}
               >
-                Next
+                Submit
               </Button>
             </div>
           </CardContent>
