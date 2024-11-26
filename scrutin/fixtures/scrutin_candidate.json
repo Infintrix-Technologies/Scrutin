@@ -165,51 +165,12 @@
   "invited_on": "2024-11-22 11:49:10",
   "job_applicant": "abdulmuneeb123@gmail.com",
   "location": null,
-  "modified": "2024-11-22 19:41:52.530850",
+  "modified": "2024-11-26 12:31:03.102775",
   "mouse_always_in_assessment_window": 0,
   "name": "37hc0ipka2",
-  "question_answers": [
-   {
-    "answer": "1",
-    "parent": "37hc0ipka2",
-    "parentfield": "question_answers",
-    "parenttype": "Scrutin Candidate",
-    "question": "3libomlodf"
-   },
-   {
-    "answer": "2",
-    "parent": "37hc0ipka2",
-    "parentfield": "question_answers",
-    "parenttype": "Scrutin Candidate",
-    "question": "3mhqm798c5"
-   },
-   {
-    "answer": "3",
-    "parent": "37hc0ipka2",
-    "parentfield": "question_answers",
-    "parenttype": "Scrutin Candidate",
-    "question": "c7kg0nr1du"
-   }
-  ],
+  "question_answers": [],
   "status": "Open",
-  "test_progress": [
-   {
-    "completed_at": null,
-    "parent": "37hc0ipka2",
-    "parentfield": "test_progress",
-    "parenttype": "Scrutin Candidate",
-    "started_at": null,
-    "test": "k8krlm90s7"
-   },
-   {
-    "completed_at": "2024-11-30 19:36:54",
-    "parent": "37hc0ipka2",
-    "parentfield": "test_progress",
-    "parenttype": "Scrutin Candidate",
-    "started_at": "2024-11-06 19:36:54",
-    "test": "36se65gll1"
-   }
-  ],
+  "test_progress": [],
   "user": null,
   "web_cam_enabled": 1,
   "web_cam_snapshots": [
