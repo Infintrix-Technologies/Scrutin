@@ -101,6 +101,10 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
 const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.assessment_data.show_one_question_at_a_time_on_test_page")
 
 
+const get_question_data = useFrappePostCall("scrutin.api.assessment_data.get_question_data")
+
+
+
 
 
 
@@ -115,9 +119,14 @@ const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.
 
 
   return (
-    <div>TestAPI
-
-
+    <div style={{display:"flex",
+      justifyContent:"start",
+      alignItems:"start",
+      width: "500px",
+      height: "auto",
+      flexDirection: "column",
+      gap: "12px",
+    }}>TestAPI
 <Button onClick={() => {
         specific_assessment_candidates.call({
           assessmnt: 'Python Developer',
@@ -274,6 +283,14 @@ const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.
         });
       }}>
         update_test_Completed_time
+      </Button>
+
+      <Button onClick={() => {
+        get_question_data.call({
+          question_id: 'dd6dd2hpd7',
+        });
+      }}>
+        Question Data
       </Button>
 
 

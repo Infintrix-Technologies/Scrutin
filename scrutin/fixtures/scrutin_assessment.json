@@ -23,19 +23,19 @@
     "parent": "ju7mgf9ceg",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "c7kg0nr1du"
+    "question": "dc2f0jf51l"
    },
    {
     "parent": "ju7mgf9ceg",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "g1j0lvkc26"
+    "question": "dckt9g0mv7"
    }
   ],
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
   "language": "en",
-  "modified": "2024-11-15 20:37:05.959048",
+  "modified": "2024-11-26 12:28:55.028053",
   "name": "ju7mgf9ceg"
  },
  {
@@ -69,19 +69,19 @@
     "parent": "juocinh9un",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "c7kg0nr1du"
+    "question": "dc2f0jf51l"
    },
    {
     "parent": "juocinh9un",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "3mhqm798c5"
+    "question": "dd6dd2hpd7"
    }
   ],
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
   "language": "en",
-  "modified": "2024-11-15 20:37:25.061322",
+  "modified": "2024-11-26 12:28:24.946403",
   "name": "juocinh9un"
  },
  {
@@ -115,31 +115,25 @@
     "parent": "jvecvcvl4o",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "3libomlodf"
+    "question": "dc2f0jf51l"
    },
    {
     "parent": "jvecvcvl4o",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "3mhqm798c5"
+    "question": "dckt9g0mv7"
    },
    {
     "parent": "jvecvcvl4o",
     "parentfield": "custom_questions",
     "parenttype": "Scrutin Assessment",
-    "question": "c7kg0nr1du"
-   },
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "g1j0lvkc26"
+    "question": "dd6dd2hpd7"
    }
   ],
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
   "language": "en",
-  "modified": "2024-11-15 20:36:48.526383",
+  "modified": "2024-11-26 12:29:29.320269",
   "name": "jvecvcvl4o"
  },
  {
