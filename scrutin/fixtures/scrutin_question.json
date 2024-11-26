@@ -1,177 +1,322 @@
 [
  {
-  "answer": "{\n\"answer\" : null\n}",
+  "answer": "3",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 20:36:13.040466",
-  "name": "k6biv72md1",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:15:27.401676",
+  "name": "d52hjv6o5h",
   "options": [
    {
-    "label": "In React",
-    "parent": "k6biv72md1",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>How to integrate APIs?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "{\n\"answer\" : null\n}",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 20:36:01.711681",
-  "name": "k73hovk115",
-  "options": [
-   {
-    "label": "Beijing",
-    "parent": "k73hovk115",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is the Capital of China?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "{\n\"answer\" : null\n}",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 20:35:50.711287",
-  "name": "k7t5uipoao",
-  "options": [
-   {
-    "label": "The Pacific Ocean",
-    "parent": "k7t5uipoao",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is the deepest Ocean in the World?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "\n{}",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 16:20:22.374233",
-  "name": "c7kg0nr1du",
-  "options": [
-   {
-    "label": "Representational State Transfer",
-    "parent": "c7kg0nr1du",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "a"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is RESTful API?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "{\n\"answer\" : null\n}",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 16:43:18.410442",
-  "name": "g1j0lvkc26",
-  "options": [
-   {
-    "label": "Nothing",
-    "parent": "g1j0lvkc26",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>Difference b/w Python &amp; Java?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "{}",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 16:20:40.386881",
-  "name": "3mhqm798c5",
-  "options": [
-   {
-    "label": "BBA",
-    "parent": "3mhqm798c5",
+    "label": "Berlin",
+    "parent": "d52hjv6o5h",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "BSCS",
-    "parent": "3mhqm798c5",
+    "label": "Madrid",
+    "parent": "d52hjv6o5h",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "LLB",
-    "parent": "3mhqm798c5",
+    "label": "Paris",
+    "parent": "d52hjv6o5h",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "BSSE",
-    "parent": "3mhqm798c5",
+    "label": "Rome",
+    "parent": "d52hjv6o5h",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is your Degree?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the capital of France?</p></div>",
   "type": "Single Choice"
  },
  {
-  "answer": "{\r\n\"type\" : \"single\",\r\n\"answer\" : []\r\n}",
+  "answer": "2",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "duration": 120.0,
-  "modified": "2024-11-15 15:54:43.430669",
-  "name": "3libomlodf",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:15:18.696391",
+  "name": "d5q2j7mdhd",
   "options": [
    {
-    "label": "12-15",
-    "parent": "3libomlodf",
+    "label": "Elephant",
+    "parent": "d5q2j7mdhd",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "16-18",
-    "parent": "3libomlodf",
+    "label": "Blue Whale",
+    "parent": "d5q2j7mdhd",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "20-25",
-    "parent": "3libomlodf",
+    "label": "Giraffe",
+    "parent": "d5q2j7mdhd",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "30+",
-    "parent": "3libomlodf",
+    "label": "Hippopotamus",
+    "parent": "d5q2j7mdhd",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is your age?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the largest mammal in the world?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "2",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:16:20.246128",
+  "name": "d6daut8s78",
+  "options": [
+   {
+    "label": "Gold",
+    "parent": "d6daut8s78",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "Oxygen",
+    "parent": "d6daut8s78",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "Osmium",
+    "parent": "d6daut8s78",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "Olivine",
+    "parent": "d6daut8s78",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which element has the chemical symbol 'O'?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "4",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:17:40.202514",
+  "name": "d76a87uerl",
+  "options": [
+   {
+    "label": "Earth",
+    "parent": "d76a87uerl",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "Jupiter",
+    "parent": "d76a87uerl",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "Venus",
+    "parent": "d76a87uerl",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "Mars",
+    "parent": "d76a87uerl",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which planet is known as the Red Planet?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "1",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:18:44.291103",
+  "name": "d7qa337fmm",
+  "options": [
+   {
+    "label": "William Shakespeare",
+    "parent": "d7qa337fmm",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "Mark Twain",
+    "parent": "d7qa337fmm",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "Jane Austen",
+    "parent": "d7qa337fmm",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "Charles Dickens",
+    "parent": "d7qa337fmm",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Who wrote the play \"Romeo and Juliet\"?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "2",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:25:59.935120",
+  "name": "dc2f0jf51l",
+  "options": [
+   {
+    "label": "Yuan",
+    "parent": "dc2f0jf51l",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "Yen",
+    "parent": "dc2f0jf51l",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "Won",
+    "parent": "dc2f0jf51l",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "Peso",
+    "parent": "dc2f0jf51l",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the currency of Japan?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "3",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:26:58.900847",
+  "name": "dckt9g0mv7",
+  "options": [
+   {
+    "label": "Vincent van Gogh",
+    "parent": "dckt9g0mv7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "Pablo Picasso",
+    "parent": "dckt9g0mv7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "Leonardo da Vinci",
+    "parent": "dckt9g0mv7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "Claude Monet",
+    "parent": "dckt9g0mv7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Who painted the Mona Lisa?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "4",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-26 12:27:54.898765",
+  "name": "dd6dd2hpd7",
+  "options": [
+   {
+    "label": "Amazon River",
+    "parent": "dd6dd2hpd7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "Yangtze River",
+    "parent": "dd6dd2hpd7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "Mississippi River",
+    "parent": "dd6dd2hpd7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "Nile River",
+    "parent": "dd6dd2hpd7",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which is the longest river in the world?</p></div>",
   "type": "Single Choice"
  }
 ]

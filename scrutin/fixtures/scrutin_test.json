@@ -7,7 +7,7 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-15 20:34:02.404151",
+  "modified": "2024-11-26 12:20:37.346506",
   "name": "k887uj90a1",
   "status": "Draft",
   "test_focus": [],
@@ -17,25 +17,25 @@
     "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3libomlodf"
+    "question": "d52hjv6o5h"
    },
    {
     "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
+    "question": "d5q2j7mdhd"
    },
    {
     "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
+    "question": "d6daut8s78"
    },
    {
     "parent": "k887uj90a1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "k6biv72md1"
+    "question": "d76a87uerl"
    }
   ],
   "title": "Forntend Developer"
@@ -48,7 +48,7 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-15 20:33:48.349667",
+  "modified": "2024-11-26 12:20:01.068883",
   "name": "k8krlm90s7",
   "status": "Draft",
   "test_focus": [],
@@ -58,25 +58,25 @@
     "parent": "k8krlm90s7",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
+    "question": "d7qa337fmm"
    },
    {
     "parent": "k8krlm90s7",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
+    "question": "d52hjv6o5h"
    },
    {
     "parent": "k8krlm90s7",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "k73hovk115"
+    "question": "d5q2j7mdhd"
    },
    {
     "parent": "k8krlm90s7",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "k7t5uipoao"
+    "question": "d6daut8s78"
    }
   ],
   "title": "Backend Developer"
@@ -89,7 +89,7 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-15 20:34:56.553839",
+  "modified": "2024-11-26 12:21:42.999336",
   "name": "k9a5emvdd6",
   "status": "Draft",
   "test_focus": [],
@@ -99,37 +99,31 @@
     "parent": "k9a5emvdd6",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3libomlodf"
+    "question": "d52hjv6o5h"
    },
    {
     "parent": "k9a5emvdd6",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
+    "question": "d5q2j7mdhd"
    },
    {
     "parent": "k9a5emvdd6",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
+    "question": "d6daut8s78"
    },
    {
     "parent": "k9a5emvdd6",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "g1j0lvkc26"
+    "question": "d76a87uerl"
    },
    {
     "parent": "k9a5emvdd6",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "k73hovk115"
-   },
-   {
-    "parent": "k9a5emvdd6",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "k7t5uipoao"
+    "question": "d7qa337fmm"
    }
   ],
   "title": "Full Stack Developer"
@@ -142,7 +136,7 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-15 20:35:41.159744",
+  "modified": "2024-11-26 12:22:43.860094",
   "name": "k9o3uoe1ob",
   "status": "Draft",
   "test_focus": [],
@@ -152,25 +146,25 @@
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
+    "question": "d52hjv6o5h"
    },
    {
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
+    "question": "d5q2j7mdhd"
    },
    {
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "g1j0lvkc26"
+    "question": "d76a87uerl"
    },
    {
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "k6biv72md1"
+    "question": "d7qa337fmm"
    }
   ],
   "title": "Python Developer"
@@ -183,7 +177,7 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-22 11:48:07.796793",
+  "modified": "2024-11-26 12:23:09.310372",
   "name": "36se65gll1",
   "status": "Draft",
   "test_focus": [],
@@ -193,43 +187,13 @@
     "parent": "36se65gll1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3libomlodf"
+    "question": "d5q2j7mdhd"
    },
    {
     "parent": "36se65gll1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
-   },
-   {
-    "parent": "36se65gll1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
-   },
-   {
-    "parent": "36se65gll1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "g1j0lvkc26"
-   },
-   {
-    "parent": "36se65gll1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "k6biv72md1"
-   },
-   {
-    "parent": "36se65gll1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "k73hovk115"
-   },
-   {
-    "parent": "36se65gll1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "k7t5uipoao"
+    "question": "d6daut8s78"
    }
   ],
   "title": "Testing Test"
