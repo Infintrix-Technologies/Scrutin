@@ -125,10 +125,10 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
     <div style={{display:"flex",
       justifyContent:"start",
       alignItems:"start",
-      width: "500px",
-      height: "auto",
-      flexDirection: "column",
-      gap: "12px",
+      width:"500px",
+      height:"auto",
+      flexDirection:"column",
+      gap:"12px",
     }}>TestAPI
 <Button onClick={() => {
         specific_assessment_candidates.call({
