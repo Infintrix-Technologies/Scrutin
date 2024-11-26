@@ -11,7 +11,7 @@ required_apps = ["frappe/hrms"]
 #Add Fixtures of Scrutin Assessment, Test & Question
 
 fixtures = [
-    "Scrutin Assessment", "Scrutin Test", "Scrutin Question", "Job Applicant", "Scrutin Candidate", "Job Opening"
+    "Scrutin Assessment", "Scrutin Test", "Scrutin Question", "Job Applicant", "Scrutin Candidate", "Job Opening",
 ]
 
 

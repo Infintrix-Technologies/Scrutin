@@ -1398,21 +1398,3 @@ def show_one_question_at_a_time_on_test_page(candidate_id, page=1):
         'tests': response,
         'total_assessment_duration': total_assessment_duration
     }
-
-
-
-
-@frappe.whitelist()
-def get_question_data(question_id):
-    ScrutinQuestion = DocType("Scrutin Question")
-
-    query = (
-        frappe.qb.from_(ScrutinQuestion)
-        .select(ScrutinQuestion.question,
-                ScrutinQuestion.answer,
-                ScrutinQuestion.type,
-                ScrutinQuestion.duration)
-        .where(ScrutinQuestion.name == question_id)
-    )
-    question_data = query.run(as_dict=True)
-    return question_data
