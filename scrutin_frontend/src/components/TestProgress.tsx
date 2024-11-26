@@ -9,7 +9,7 @@ export default function TestProgress() {
   const questionIndex = parseInt(searchParams.get("question") || "1", 10);
 
   const { data } = useFrappeGetCall("scrutin.api.assessment_data.get_specific_test_details", {
-    test_id: "k887uj90a1",
+    test_id: "k9a5emvdd6",
   });
 
   const specific_test_details = data?.message || {};
