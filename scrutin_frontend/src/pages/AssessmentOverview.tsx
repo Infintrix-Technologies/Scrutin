@@ -3,14 +3,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useFrappeGetCall} from "frappe-react-sdk"
 import { CheckIcon, ChevronRightIcon, EyeIcon } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 export default function AssessmentOverview() {
-  const get_specific_assessment_tests = useFrappeGetCall( "scrutin.api.assessment_data.get_specific_assessment_tests",
-    { assessment_name: "0b1bdsk5tu" }
+
+  const params = useParams();
+  const candidate_id = params?.candidate_id || null;
+
+  const get_specific_assessment_tests = useFrappeGetCall( "scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id",
+    { candidate_id: candidate_id }
   );
-  const specific_assessment_tests = get_specific_assessment_tests?.data?.message?.tests || [];
-  // console.log(specific_assessment_tests, "specific_assessment_tests");
+  const specific_assessment_tests = get_specific_assessment_tests?.data?.message || [];
 
   return (
     <div className="px-4 sm:px-8 lg:px-32 xl:px-64">
@@ -29,7 +32,7 @@ export default function AssessmentOverview() {
           <div className="mb-6">
             <h3 className="font-semibold mb-2">This assessment includes the following steps:</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 lg:mt-4">
-              {specific_assessment_tests?.map((data: OverViewPage) => (
+              {specific_assessment_tests?.tests?.map((data: OverViewPage) => (
                 <div className="flex flex-col items-center text-center space-y-2" key={data?.id}>
                   <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                     <CheckIcon className="w-5 h-5 text-primary-foreground" />
@@ -42,7 +45,7 @@ export default function AssessmentOverview() {
                         ? `${data.total_duration} seconds`
                         : `${Math?.floor(data?.total_duration / 60)} min${
                             data?.total_duration % 60 > 0 ? ` ${data?.total_duration % 60} sec` : ""
-                          }`}
+                          }`}                          
                     </p>
                   </div>
                 </div>
@@ -54,7 +57,7 @@ export default function AssessmentOverview() {
                 
                 <div>
                   <p className="font-semibold">Custom Questions</p>
-                  <p className="text-sm text-muted-foreground">Test scores</p>
+                  <p className="text-sm text-muted-foreground">{specific_assessment_tests?.custom_questions}</p>
                 </div>
               </div>
               <div className="flex flex-col items-center text-center space-y-2">
@@ -105,9 +108,9 @@ export default function AssessmentOverview() {
           </div>
 
           <div className="flex justify-end mt-6">
-            <Link to={"#"}>
+            <Link to={`/candidacy/${candidate_id}/setup`}>
               <Button className="text-end flex items-center">
-                Continue
+                Next
                 <ChevronRightIcon className="ml-2 h-4 w-4" />
               </Button>
             </Link>

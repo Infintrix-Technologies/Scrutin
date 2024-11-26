@@ -129,7 +129,7 @@ const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.
 
       <Button onClick={() => {
         get_questions_for_test_and_total_duration.call({
-          test_name: 'k9a5emvdd6',
+          test_name: 'gh76ldgot2',
         });
       }}>
         Test Questions & Total Duration
@@ -208,7 +208,7 @@ const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.
 
       <Button onClick={() => {
         get_specific_test_details.call({
-          test_id: '36se65gll1',
+          test_id: 'Backend Development',
         });
       }}>
         Specific Test Duration & no_of_q
@@ -234,7 +234,7 @@ const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.
 
       <Button onClick={() => {
         get_candidate_detail_for_intro.call({
-          candidate_id: 'k265ossobt',
+          candidate_id: 'dkd7c993kk',
         });
       }}>
         get_specific_candidate_details_for_intro_page
@@ -261,7 +261,7 @@ const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.
 
       <Button onClick={() => {
         get_specific_assessment_tests_by_candidate_id.call({
-          candidate_id: 'k39k9ek7i1',
+          candidate_id: 'u3qafmr9qo',
         });
       }}>
         get_specific_assessment_tests_by_candidate_id

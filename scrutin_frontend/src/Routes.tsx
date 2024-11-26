@@ -15,8 +15,8 @@ import Setup from "./pages/Setup";
 import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 import Intro from "./pages/Intro";
-import ApiTestPage from "./pages/ApiTestPage";
-import CandidateDetail from "./pages/ScrutinCandidate";
+// import ApiTestPage from "./pages/ApiTestPage";
+// import CandidateDetail from "./pages/ScrutinCandidate";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import JobApplicants from "./pages/JobApplicants";
@@ -129,24 +129,25 @@ export const router = createBrowserRouter(
             // },
 
             //This page show the Specific candidate Detail page
-            {
-              path: "candidate_detail",
-              element: <CandidateDetail />,
-            },
             // {
-            //   path: ":assessment_id/intro",
-            //   element: <Intro />,
+            //   path: "candidate_detail",
+            //   element: <CandidateDetail />,
             // },
             {
-              path: ":assessment_id/overview",
+              //replace assessment_id to candidate_id 
+              path: ":candidate_id/intro",
+              element: <Intro />,
+            },
+            {
+              path: ":candidate_id/overview",
               element: <AssessmentOverview />,
             },
             {
-              path: ":assessment_id/setup",
+              path: ":candidate_id/setup",
               element: <Setup />,
             },
             {
-              path: ":assessment_id/test/:test_id",
+              path: ":candidate_id/test/:test_id",
               element: <TestPage />,
               
             },

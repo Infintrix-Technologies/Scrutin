@@ -2,12 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { LuSendHorizonal } from "react-icons/lu";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FaSearch,
   FaChevronLeft,
@@ -55,8 +50,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ChevronLeft, Edit2, Eye, Globe, MoreVertical } from 'lucide-react'
+} from "@/components/ui/dropdown-menu";
+import { ChevronLeft, Edit2, Eye, Globe, MoreVertical } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -70,8 +65,11 @@ import "dayjs/locale/en";
 import { useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
-import { AssessmentData, Candidate, Test } from "@/components/Interfaces/Interface";
-
+import {
+  AssessmentData,
+  Candidate,
+  Test,
+} from "@/components/Interfaces/Interface";
 
 const AssessmentDetailPage = () => {
   const [showWeights, setShowWeights] = useState(false);
@@ -110,9 +108,9 @@ const AssessmentDetailPage = () => {
     return dayjs(dateString).format("DD-MM-YY hh:mm:ss A");
   };
 
-  const getPlainText = (html: string) => {
-    return html.replace(/<[^>]*>?/gm, "");
-  };
+  // const getPlainText = (html: string) => {
+  //   return html.replace(/<[^>]*>?/gm, "");
+  // };
 
   const candidates: Candidate[] = [
     {
@@ -123,71 +121,83 @@ const AssessmentDetailPage = () => {
   ];
 
   return (
-    <><hr />
+    <>
+      <hr />
       <div className="flex items-center justify-between px-4 py-2 mb-4 border-b">
-      <div className="flex items-center gap-8">
-      <Button variant="ghost" size="icon" className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950">
+        <div className="flex items-center gap-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only">Go back</span>
+          </Button>
 
-          <ChevronLeft className="h-4 w-4" />
-          <span className="sr-only">Go back</span>
-        </Button>
-        
-        <div className="flex flex-col gap-1 ">
-          <div className="flex gap-2">
-            <h1 className="text-xl font-semibold">Software Engineer</h1>
-            <Button variant="ghost" size="icon" className="rounded-full h-6 w-6">
-              <Edit2 className="h-4 w-4" />
-              <span className="sr-only">Edit title</span>
-            </Button>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-            <PiNotepadBold />
-              <span>5 tests</span>
+          <div className="flex flex-col gap-1 ">
+            <div className="flex gap-2">
+              <h1 className="text-xl font-semibold">Software Engineer</h1>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-6 w-6"
+              >
+                <Edit2 className="h-4 w-4" />
+                <span className="sr-only">Edit title</span>
+              </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <RxTimer/>
-              <span>68 mins excl. file upload(s)</span>
+
+            <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <PiNotepadBold />
+                <span>5 tests</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <RxTimer />
+                <span>68 mins excl. file upload(s)</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="hidden md:flex items-center gap-2">
-          <Globe className="h-4 w-4" />
-          English
-        </Button>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <MoreVertical className="h-4 w-4" />
-              <span className="sr-only">More options</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Help</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden md:flex items-center gap-2"
+          >
+            <Globe className="h-4 w-4" />
+            English
+          </Button>
 
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Eye className="h-4 w-4" />
-          <span className="sr-only">Change view</span>
-        </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <MoreVertical className="h-4 w-4" />
+                <span className="sr-only">More options</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Help</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        <Button size="sm" className="bg-[#E31B88] hover:bg-[#C41875] text-white">
-          Invite
-        </Button>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Eye className="h-4 w-4" />
+            <span className="sr-only">Change view</span>
+          </Button>
+
+          <Button
+            size="sm"
+            className="bg-[#E31B88] hover:bg-[#C41875] text-white"
+          >
+            Invite
+          </Button>
+        </div>
       </div>
-      </div>
-       
 
       <Card className="container mx-auto p-6">
-
-
         <Card className="my-6 px-6">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
@@ -546,8 +556,8 @@ const AssessmentDetailPage = () => {
                     <TableHead>Name</TableHead>
                     <TableHead>Overall</TableHead>
                     {tests_for_assessment.map((test: Test, index: number) => (
-          <TableHead key={index}>{test.title}</TableHead>
-        ))}
+                      <TableHead key={index}>{test.title}</TableHead>
+                    ))}
                     <TableHead>Hiring stage</TableHead>
 
                     <TableHead>Status</TableHead>
@@ -571,13 +581,13 @@ const AssessmentDetailPage = () => {
                             Owner
                           </Badge>
                         </div>
-                      </TableCell>                    
-                       <TableCell>{data.overall || "N/A"}</TableCell>
-          {tests_for_assessment.map((test: Test, index: number) => (
-            <TableCell key={index}>
-              {data?.test_scores?.[test.title] || "0%"}
-            </TableCell>
-          ))}
+                      </TableCell>
+                      <TableCell>{data.overall || "N/A"}</TableCell>
+                      {tests_for_assessment.map((test: Test, index: number) => (
+                        <TableCell key={index}>
+                          {data?.test_scores?.[test.title] || "0%"}
+                        </TableCell>
+                      ))}
                       <TableCell>
                         <Select>
                           <SelectTrigger className="w-[200px]">
@@ -629,7 +639,7 @@ const AssessmentDetailPage = () => {
                           {data?.status}
                         </Badge>{" "}
                       </TableCell>
-                      <TableCell>{(formatDate(data?.invited_on ))}</TableCell>
+                      <TableCell>{formatDate(data?.invited_on)}</TableCell>
                       <TableCell>
                         <div className="flex justify-center gap-1">
                           {[...Array(5)].map((_, i) => (
@@ -763,9 +773,18 @@ const AssessmentDetailPage = () => {
                         key={index}
                         className="overflow-y-hidden grid grid-cols-3 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
                       >
-                        <div className="col-span-2">
+                        {/* <div className="col-span-2">
                           {getPlainText(question?.question)}
-                        </div>
+                        </div> */}
+
+                        <div
+                          className="ql-editor read-mode [&_ol]:list-decimal [&_ul]:list-disc [&_li]:mb-2 [&_li]:ml-4"
+                          // className="ql-editor read-mode"
+                          dangerouslySetInnerHTML={{
+                            __html: question?.question,
+                          }}
+                        ></div>
+
                         <div className="grid grid-cols-2">
                           <div className="flex items-center">
                             <MessageSquare className="mr-2 h-4 w-4" />
