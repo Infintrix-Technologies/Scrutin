@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-11-26 13:06:30.447851",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "candidate_id",
+  "current_test",
+  "current_question"
+ ],
+ "fields": [
+  {
+   "fieldname": "candidate_id",
+   "fieldtype": "Link",
+   "label": "Candidate Id",
+   "options": "Scrutin Candidate"
+  },
+  {
+   "fieldname": "current_test",
+   "fieldtype": "Data",
+   "label": "Current Test"
+  },
+  {
+   "fieldname": "current_question",
+   "fieldtype": "Data",
+   "label": "Current Question"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-11-26 13:11:00.454247",
+ "modified_by": "Administrator",
+ "module": "Scrutin",
+ "name": "Candidate Progress",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

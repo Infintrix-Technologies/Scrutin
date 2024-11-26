@@ -101,8 +101,8 @@ const get_assessment_test_and_question_with_options_with_candidate_id = useFrapp
 const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.assessment_data.show_one_question_at_a_time_on_test_page")
 
 
-const get_question_data = useFrappePostCall("scrutin.api.assessment_data.get_question_data")
-
+// TEST PAGE API
+const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_test.get_question_with_navigation")
 
 
 
@@ -163,7 +163,7 @@ const get_question_data = useFrappePostCall("scrutin.api.assessment_data.get_que
 
       <Button onClick={() => {
         get_assessment_test_and_question_with_options.call({
-          assessment_name: '0b1bdsk5tu',
+          assessment_name: 'jvecvcvl4o',
         });
       }}>
         Test Question Options
@@ -279,18 +279,19 @@ const get_question_data = useFrappePostCall("scrutin.api.assessment_data.get_que
 
       <Button onClick={() => {
         update_test_Completed_time.call({
-          test_id: '36se65gll1',
+          test_id: 'k9o3uoe1ob',
         });
       }}>
         update_test_Completed_time
       </Button>
 
+
       <Button onClick={() => {
-        get_question_data.call({
-          question_id: 'dd6dd2hpd7',
+        get_question_with_navigation.call({
+          candidate_id: '37hc0ipka2',
         });
       }}>
-        Question Data
+        get_question_with_navigation
       </Button>
 
 
