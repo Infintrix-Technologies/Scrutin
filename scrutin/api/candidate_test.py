@@ -5,7 +5,7 @@ from frappe.query_builder import DocType
 
 
 @frappe.whitelist()
-def get_question_with_navigation(candidate_id, current_test_index=0, current_question_index=0):
+def get_question_with_navigation(candidate_id, current_test_index=0, current_question_index=4):
     # Define DocTypes
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
