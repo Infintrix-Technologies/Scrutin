@@ -33,6 +33,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+import {
+  Card,
+
+} from "@/components/ui/card"
+
 const formSchema = z.object({
   job_title: z.string().min(2, {
     message: "Job title must be at least 2 characters.",
@@ -79,11 +84,13 @@ export default function PostJobForm() {
   }
 
   return (
+    <>
+     <Card className="px-5 py-3 mb-4">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Job Details</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="job_title"
@@ -403,5 +410,7 @@ export default function PostJobForm() {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
+    </Card>
+    </>
   )
 }

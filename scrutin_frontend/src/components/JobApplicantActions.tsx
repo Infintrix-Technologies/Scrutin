@@ -14,7 +14,7 @@ interface Props {
   applicant: any;
 }
 
-export const JobApplicantActions = ({applicant}:Props )=> {
+export const JobApplicantActions = ({applicant} )=> {
   const delete_api = useFrappeDeleteDoc();
 
   console.log(applicant,"0000000000004")
