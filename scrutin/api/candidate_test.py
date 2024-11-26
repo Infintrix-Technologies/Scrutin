@@ -5,7 +5,14 @@ from frappe.query_builder import DocType
 
 
 @frappe.whitelist()
-def get_question_with_navigation(candidate_id, current_test_index=0, current_question_index=0):
+def get_question_with_navigation(candidate_id, current_test_index=0, current_question_index=4):
+    
+    try:
+        current_test_index = int(current_test_index)
+        current_question_index = int(current_question_index)
+    except ValueError:
+        frappe.throw("Invalid input: current_test_index and current_question_index must be integers.")
+
     # Define DocTypes
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")

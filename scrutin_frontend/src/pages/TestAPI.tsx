@@ -61,6 +61,9 @@ const get_candidate_responses = useFrappePostCall("scrutin.api.assessment_data.g
 const get_candidate_response_questions_answer = useFrappePostCall("scrutin.api.assessment_data.get_candidate_response_questions_answer")
 
 
+const get_candidate_response_test = useFrappePostCall("scrutin.api.assessment_data.get_candidate_response_test")
+
+
 const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data.get_specific_test_details")
 
 
@@ -97,8 +100,8 @@ const get_specific_assessment_tests_by_candidate_id = useFrappePostCall("scrutin
 const get_assessment_test_and_question_with_options_with_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options_with_candidate_id")
 
 
+const add_scrutin_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_scrutin_test_progress")
 
-const show_one_question_at_a_time_on_test_page = useFrappePostCall("scrutin.api.assessment_data.show_one_question_at_a_time_on_test_page")
 
 
 // TEST PAGE API
@@ -198,10 +201,29 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
 
       <Button onClick={() => {
         get_candidate_response_questions_answer.call({
-          email: 'abdulmuneeb123@gmail.com',
+          candidate_id: '37hc0ipka2',
         });
       }}>
         Candidate Question/Answer Responses
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_response_test.call({
+          candidate_id: '37hc0ipka2',
+        });
+      }}>
+        GET Candidate Test Progress
+      </Button>
+
+
+      <Button onClick={() => {
+        add_scrutin_test_progress.call({
+          candidate_id: '37hc0ipka2',
+          test_id: 'k9o3uoe1ob'
+        });
+      }}>
+        POST Candidate Test Progress
       </Button>
 
 
@@ -230,14 +252,6 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
         });
       }}>
         get_specific_candidate_details
-      </Button>
-
-      <Button onClick={() => {
-        show_one_question_at_a_time_on_test_page.call({
-          candidate_id: 'k265ossobt',
-        });
-      }}>
-        show_one_question_at_a_time_on_test_page
       </Button>
 
 
@@ -288,8 +302,8 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
 
       <Button onClick={() => {
         get_question_with_navigation.call({
-          candidate_id: '37hc0ipka2',
-          // current_question_index : 1
+          candidate_id: 'k2abf6d21j',
+
         });
       }}>
         get_question_with_navigation
