@@ -37,11 +37,9 @@
    "reqd": 1
   },
   {
-   "default": "{\n\"answer\" : null\n}",
    "fieldname": "answer",
    "fieldtype": "JSON",
-   "label": "Answer",
-   "reqd": 1
+   "label": "Answer"
   },
   {
    "fieldname": "duration",
@@ -51,7 +49,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-13 14:33:13.672433",
+ "modified": "2024-11-25 21:49:01.107864",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Question",

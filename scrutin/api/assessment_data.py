@@ -925,7 +925,7 @@ def add_test_progress(email, test_name, started_at=None, completed_at=None):
 
 
 
-
+# Not yet implemented
 # This API will be used to show the test & question of test of assessment for specific candidate
 @frappe.whitelist()
 def get_candidate_detail_based_on_candidate_id(candidate_id):
@@ -1196,14 +1196,7 @@ def get_assessment_test_and_question_with_options_with_candidate_id(candidate_id
         assessment_name = candidate_assessments[0].get('assessment')
     else:
         assessment_name = None
-    
-    # candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
-    # if not candidate:
-    #     return {"error": "Candidate not found"}
 
-    # assessment_name = candidate.assessment
-
-    # Query to get tests for the given assessment
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
         .inner_join(ScrutinAssessment)
@@ -1280,6 +1273,127 @@ def get_assessment_test_and_question_with_options_with_candidate_id(candidate_id
         total_assessment_duration += test_total_duration
     
     # Add total assessment duration to the response
+    return {
+        'tests': response,
+        'total_assessment_duration': total_assessment_duration
+    }
+
+
+
+
+@frappe.whitelist()
+def show_one_question_at_a_time_on_test_page(candidate_id, page=1):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+
+    # Step 1: Get the candidate's assessment name
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_assessments = query.run(as_dict=True)
+    if candidate_assessments:
+        assessment_name = candidate_assessments[0].get('assessment')
+    else:
+        assessment_name = None
+
+    # Step 2: Get tests for the assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinAssessmentTest.weight,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    # Step 3: Initialize response and total duration
+    response = []
+    total_assessment_duration = 0
+
+    current_test_index = 0  # Start with the first test
+    question_offset = (page - 1)  # Offset to find the current question based on page number
+    
+    for test in tests:
+        test_name = test['test']
+        
+        # Query to get questions for the current test
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(ScrutinTestQuestion.question, 
+                    ScrutinQuestion.question.as_("question_text"),
+                    ScrutinQuestion.type,
+                    ScrutinQuestion.duration.as_("question_duration"))
+            .where(ScrutinTest.name == test_name)
+            .limit(1)
+            .offset(question_offset)
+        )
+        questions = question_query.run(as_dict=True)
+        
+        # If there are no questions left in the current test, move to the next test
+        if not questions:
+            continue
+
+        # Query to calculate the total duration for the test
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("test_total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        test_total_duration = duration_result[0]['test_total_duration'] if duration_result else 0
+
+        # Add options for each question
+        for question in questions:
+            option_query = (
+                frappe.qb.from_(ScrutinQuestionOption)
+                .select(
+                    ScrutinQuestionOption.value,
+                    ScrutinQuestionOption.label
+                )
+                .where(ScrutinQuestionOption.parent == question['question'])
+            )
+            options = option_query.run(as_dict=True)
+            question['options'] = options
+        
+        # Add the test details to the response
+        response.append({
+            'test': test_name,
+            'title': test['title'],
+            'weight': test['weight'],
+            'questions': questions,
+            'test_total_duration': test_total_duration
+        })
+        
+        # Add the test total duration to the total assessment duration
+        total_assessment_duration += test_total_duration
+
+        # Increment current_test_index to track the next test
+        current_test_index += 1
+        if current_test_index > len(tests) - 1:
+            break
+    
+    # Step 4: Return the result with total duration and test/question data
     return {
         'tests': response,
         'total_assessment_duration': total_assessment_duration

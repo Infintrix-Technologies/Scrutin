@@ -174,5 +174,64 @@
    }
   ],
   "title": "Python Developer"
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Scrutin Test",
+  "duration": null,
+  "job_role": null,
+  "language": "en",
+  "level": "Beginner",
+  "modified": "2024-11-22 11:48:07.796793",
+  "name": "36se65gll1",
+  "status": "Draft",
+  "test_focus": [],
+  "test_format": "Multiple-choice",
+  "test_questions": [
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "3libomlodf"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "3mhqm798c5"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "c7kg0nr1du"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "g1j0lvkc26"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k6biv72md1"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k73hovk115"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "k7t5uipoao"
+   }
+  ],
+  "title": "Testing Test"
  }
 ]

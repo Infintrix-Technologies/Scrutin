@@ -141,5 +141,24 @@
   "language": "en",
   "modified": "2024-11-15 20:36:48.526383",
   "name": "jvecvcvl4o"
+ },
+ {
+  "assessment_name": "Testing Assessment",
+  "assessment_tests": [
+   {
+    "parent": "c2ms1le5va",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "36se65gll1",
+    "weight": "1"
+   }
+  ],
+  "company": "Infintrix (Demo)",
+  "custom_questions": [],
+  "docstatus": 0,
+  "doctype": "Scrutin Assessment",
+  "language": "en",
+  "modified": "2024-11-22 11:48:58.449267",
+  "name": "c2ms1le5va"
  }
 ]
