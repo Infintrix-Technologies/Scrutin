@@ -100,12 +100,24 @@ const get_specific_assessment_tests_by_candidate_id = useFrappePostCall("scrutin
 const get_assessment_test_and_question_with_options_with_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options_with_candidate_id")
 
 
-const add_scrutin_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_scrutin_test_progress")
+const get_scrutin_question_detail = useFrappePostCall("scrutin.api.assessment_data.get_scrutin_question_detail")
+
+
+
+const add_scrutin_test_progress = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_test_progress")
+
+
+const add_scrutin_question_response = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_question_response")
+
 
 
 
 // TEST PAGE API
 const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_test.get_question_with_navigation")
+
+
+const get_question_with_answer_and_post_in_responses = useFrappePostCall("scrutin.api.candidate_test.get_question_with_answer_and_post_in_responses")
+
 
 
 
@@ -228,6 +240,27 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
 
 
       <Button onClick={() => {
+        add_scrutin_question_response.call({
+          candidate_id: '37hc0ipka2',
+          question_id: 'dc2f0jf51l',
+          answer: '3'
+        });
+      }}>
+        POST Candidate Question Response
+      </Button>
+
+
+      <Button onClick={() => {
+        get_question_with_answer_and_post_in_responses.call({
+          candidate_id: '37hc0ipka2',
+          selected_option: 4
+        });
+      }}>
+        get_question_with_answer_and_post_in_responses
+      </Button>
+
+
+      <Button onClick={() => {
         add_test_progress.call({
           email: 'abdulmuneeb123@gmail.com',
           test_name: 'k8krlm90s7'
@@ -307,6 +340,15 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
         });
       }}>
         get_question_with_navigation
+      </Button>
+
+
+      <Button onClick={() => {
+        get_scrutin_question_detail.call({
+          question_id: 'dd6dd2hpd7',
+        });
+      }}>
+        get_question_details
       </Button>
 
 

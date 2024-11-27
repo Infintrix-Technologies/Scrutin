@@ -1305,39 +1305,22 @@ def get_assessment_test_and_question_with_options_with_candidate_id(candidate_id
 
 
 
-# This API is used to POST data into Scrutin Test Progress child Table
-@frappe.whitelist(allow_guest=True)
-def add_scrutin_test_progress(candidate_id, test_id, started_at=None, completed_at=None):
-    try:
-        # Fetch the Scrutin Candidate document
-        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
-        
-        # Add a new entry in the child table
-        candidate.append("test_progress", {
-            "test": test_id,
-            "started_at": started_at or now(),
-            "completed_at": completed_at or now(),
-        })
+@frappe.whitelist()
+def get_scrutin_question_detail(question_id):
+    ScrutinQuestion = DocType("Scrutin Question")
+    query = (
+        frappe.qb.from_(ScrutinQuestion)
+        .select(ScrutinQuestion.name, 
+                ScrutinQuestion.question, 
+                ScrutinQuestion.type, 
+                ScrutinQuestion.duration,
+                ScrutinQuestion.answer)
+        .where(ScrutinQuestion.name == question_id)
+    )
+    question_detail = query.run(as_dict=True)
 
-        # Save the document to commit the changes
-        candidate.save()
-        frappe.db.commit()
-        return f"Test progress added successfully for candidate {candidate_id}"
-    
-    except Exception as e:
-        frappe.db.rollback()
-        return f"An error occurred: {e}"
-
-
-
-# Example usage
-# candidate_id = "CANDIDATE-0001"  # Replace with the actual candidate ID
-# test_id = "TEST-0001"            # Replace with the actual test ID
-# started_at = "2024-11-26 10:00:00"  # Optional, replace with actual start time
-# completed_at = "2024-11-26 12:00:00"  # Optional, replace with actual completion time
-
-# result = add_scrutin_test_progress(candidate_id, test_id, started_at, completed_at)
-# print(result)
-
-
+    if question_detail:
+        return question_detail[0]
+    else:
+        return None
 

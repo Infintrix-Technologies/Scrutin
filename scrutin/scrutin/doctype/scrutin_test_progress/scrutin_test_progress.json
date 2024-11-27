@@ -22,20 +22,18 @@
   {
    "fieldname": "started_at",
    "fieldtype": "Datetime",
-   "label": "Started At",
-   "reqd": 1
+   "label": "Started At"
   },
   {
    "fieldname": "completed_at",
    "fieldtype": "Datetime",
-   "label": "Completed At",
-   "reqd": 1
+   "label": "Completed At"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-26 19:48:30.148864",
+ "modified": "2024-11-27 13:22:08.226141",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Test Progress",
