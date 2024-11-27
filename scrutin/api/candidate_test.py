@@ -196,9 +196,10 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 
 
 # This API Show Test Question One by One and also POST the Test and Question & Answer 
-# into the candidate Responses
+# into the candidate Responses if we change the answer then it will change the that question answer
+# not make a new entry in the candidate Responses
 @frappe.whitelist()
-def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=0, selected_option=None):
+def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=1, selected_option=None):
     try:
         current_test_index = int(current_test_index)
         current_question_index = int(current_question_index)
@@ -214,7 +215,7 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
     ScrutinQuestionOption = DocType("Scrutin Question Option")
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinTestProgress = DocType("Scrutin Test Progress")
-    ScrutinQuestionResponse = DocType("Scrutin Question Response")
+    ScrutinQuestionResponse = DocType("Scrutin Question Responses")
 
     # Query to get candidate's assessment
     query = (
@@ -314,22 +315,26 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
 
     # If an option is selected, store it in the ScrutinQuestionResponse
     if selected_option:
-        option_query = (
-            frappe.qb.from_(ScrutinQuestionOption)
-            .select(ScrutinQuestionOption.value)
-            .where(ScrutinQuestionOption.parent == current_question['question'])
-            .where(ScrutinQuestionOption.value == selected_option)
-        )
-        option = option_query.run(as_dict=True)
-        if option:
-            # Save the selected answer
-            candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        existing_answer = None
+
+        # Check if the answer for the current question already exists
+        for answer in candidate.question_answers:
+            if answer.question == current_question['question']:
+                existing_answer = answer
+                break
+
+        if existing_answer:
+            # Update the existing answer
+            existing_answer.answer = selected_option
+        else:
+            # Add a new answer
             candidate.append("question_answers", {
                 "question": current_question['question'],
                 "answer": selected_option,
             })
-            candidate.save()
-            frappe.db.commit()
+        candidate.save()
+        frappe.db.commit()
 
     # Add options for the current question
     option_query = (
@@ -351,8 +356,5 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
             'current_question': current_question,
         }
     }
-
-
-
 
 
