@@ -1,33 +1,75 @@
-import { useState,useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useFrappeGetCall } from "frappe-react-sdk";
+import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import { Option } from "@/components/Interfaces/Interface";
 import { useParams } from "react-router-dom";
 
 const TestPage = () => {
   const { candidate_id } = useParams();
-  const [countdown, setCountdown] = useState(3);
+  const [triggerReload, setTriggerReload] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const { data, isLoading } = useFrappeGetCall(
+  const { data, isLoading, error } = useFrappeGetCall(
     "scrutin.api.candidate_test.get_question_with_navigation",
     {
       candidate_id,
       current_test_index: currentTestIndex,
-      current_question_index: currentQuestionIndex
+      current_question_index: currentQuestionIndex,
     },
-    [currentTestIndex, currentQuestionIndex] 
+    [currentTestIndex, currentQuestionIndex, triggerReload]
   );
-  console.log(data,"datadata");
 
-  const test = data?.message?.test;
-  const currentQuestion = test?.current_question;
+  const { call } = useFrappePostCall("scrutin.api.candidate_test.get_question_with_answer_and_post_in_responses");
 
-  
+  const handleNavigation = (direction: "next" | "back") => {
+    const totalTests =  3;
+    const questionsPerTest = 2;
+
+    if (direction === "next") {
+      if (currentQuestionIndex < questionsPerTest - 1) {
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      } else if (currentTestIndex < totalTests - 1) {
+        setCurrentTestIndex((prevIndex) => prevIndex + 1);
+        setCurrentQuestionIndex(0);
+      }
+    } else if (direction === "back") {
+      if (currentQuestionIndex > 0) {
+        setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
+      } else if (currentTestIndex > 0) {
+        setCurrentTestIndex((prevIndex) => prevIndex - 1);
+        setCurrentQuestionIndex(questionsPerTest - 1);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedOption) {
+      alert("Please select an option before submitting.");
+      return;
+    }
+
+    try {
+      await call({
+        candidate_id,
+        current_test_index: currentTestIndex,
+        current_question_index: currentQuestionIndex,
+        selected_option: selectedOption,
+      });
+
+      setSelectedOption(null);
+      handleNavigation("next"); 
+      setTriggerReload((prev) => !prev); 
+    } catch (error) {
+      console.error("Error in post call:", error);
+    }
+  };
+
   useEffect(() => {
     if (countdown <= 0) return;
 
@@ -35,24 +77,11 @@ const TestPage = () => {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  const handleNavigation = (direction: "next" | "back") => {
-    if (direction === "next") {
-      if (currentQuestionIndex + 1 >= (currentQuestion)) {
-        setCurrentTestIndex((prevIndex) => prevIndex + 1);
-        setCurrentQuestionIndex(0);
-      } else {
-        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-      }
-    } else if (direction === "back" && currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
-    }
-  };
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading test data.</p>;
 
-  if (isLoading) return <div>Loading...</div>;
-
-  console.log("Current Test Index:", currentTestIndex);
-  console.log("Current Question Index:", currentQuestionIndex);
-  console.log("Current Question:", currentQuestion);
+  const test = data?.message?.test;
+  const currentQuestion = test?.current_question;
 
   return (
     <div className="flex justify-center items-center h-auto">
@@ -66,8 +95,8 @@ const TestPage = () => {
           <CardContent className="space-y-6">
             <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
               <div className="flex-1 p-4">
-              <h3 className="text-lg font-semibold mb-2">
-                  Test: {currentTestIndex}
+                <h3 className="text-lg font-semibold mb-2">
+                  Test: {currentTestIndex + 1} - {test?.title}
                 </h3>
                 <h3 className="text-lg font-semibold mb-2">
                   Question: {currentQuestionIndex + 1}
@@ -79,7 +108,12 @@ const TestPage = () => {
               </div>
               <div className="flex-1 py-5 px-10 space-y-3">
                 <h3 className="text-lg font-semibold mb-2">Select Answer</h3>
-                <RadioGroup className="space-y-2" name={`question-${currentQuestion?.question}`}>
+                <RadioGroup
+                  className="space-y-2"
+                  name={`question-${currentQuestion?.question}`}
+                  onValueChange={(value) => setSelectedOption(value)}
+                  value={selectedOption || ""}
+                >
                   {currentQuestion?.options?.map((option: Option) => (
                     <div key={option.value} className="flex items-center space-x-2">
                       <RadioGroupItem value={option.value} id={option.value} />
@@ -90,12 +124,17 @@ const TestPage = () => {
               </div>
             </div>
             <div className="flex justify-between">
-              <Button  onClick={() => handleNavigation("back")}>Back</Button>
-              <Button onClick={() => handleNavigation("next")}>Submit</Button>
+              <Button
+                disabled={currentTestIndex === 0 && currentQuestionIndex === 0}
+                onClick={() => handleNavigation("back")}
+              >
+                Back
+              </Button>
+              <Button onClick={handleSubmit}>Submit</Button>
             </div>
           </CardContent>
         </Card>
-      )} 
+      )}
     </div>
   );
 };
