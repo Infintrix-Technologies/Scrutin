@@ -199,7 +199,7 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 # into the candidate Responses if we change the answer then it will change the that question answer
 # not make a new entry in the candidate Responses
 @frappe.whitelist()
-def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=6, selected_option=None):
+def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=0, selected_option=None):
     try:
         current_test_index = int(current_test_index)
         current_question_index = int(current_question_index)
