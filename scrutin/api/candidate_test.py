@@ -199,7 +199,7 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 # into the candidate Responses if we change the answer then it will change the that question answer
 # not make a new entry in the candidate Responses
 @frappe.whitelist()
-def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=1, selected_option=None):
+def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=6, selected_option=None):
     try:
         current_test_index = int(current_test_index)
         current_question_index = int(current_question_index)
@@ -239,7 +239,10 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
         .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
         .inner_join(ScrutinTest)
         .on(ScrutinAssessmentTest.test == ScrutinTest.name)
-        .select(ScrutinAssessmentTest.test, ScrutinAssessmentTest.weight, ScrutinTest.title)
+        .select(ScrutinAssessmentTest.test, 
+                ScrutinAssessmentTest.weight, 
+                ScrutinTest.title
+            )
         .where(ScrutinAssessment.name == assessment_name)
     )
     tests = tests_query.run(as_dict=True)
@@ -251,23 +254,7 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
     current_test = tests[current_test_index]
     test_name = current_test['test']
 
-    # Check if the test has already been logged in the ScrutinTestProgress (store test only once)
-    test_progress_query = (
-        frappe.qb.from_(ScrutinTestProgress)
-        .select(ScrutinTestProgress.test)
-        # .where(ScrutinTestProgress.candidate == candidate_id)
-        .where(ScrutinTestProgress.test == test_name)
-    )
-    test_progress = test_progress_query.run(as_dict=True)
-    if not test_progress:
-        # Add test progress if not already recorded
-        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
-        candidate.append("test_progress", {
-            "test": test_name,
-            "started_at": now(),
-        })
-        candidate.save()
-        frappe.db.commit()
+    
 
     # Query to get questions for the current test
     question_query = (
@@ -313,6 +300,26 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
     # Get the current question
     current_question = questions[current_question_index]
 
+
+    # Check if the test has already been logged in the ScrutinTestProgress (store test only once)
+    test_progress_query = (
+        frappe.qb.from_(ScrutinTestProgress)
+        .select(ScrutinTestProgress.test)
+        # .where(ScrutinTestProgress.candidate == candidate_id)
+        .where(ScrutinTestProgress.test == test_name)
+    )
+    test_progress = test_progress_query.run(as_dict=True)
+    if not test_progress:
+        # Add test progress if not already recorded
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        candidate.append("test_progress", {
+            "test": test_name,
+            "started_at": now(),
+        })
+        candidate.save()
+        frappe.db.commit()
+
+
     # If an option is selected, store it in the ScrutinQuestionResponse
     if selected_option:
         candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
@@ -335,6 +342,7 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
             })
         candidate.save()
         frappe.db.commit()
+
 
     # Add options for the current question
     option_query = (
