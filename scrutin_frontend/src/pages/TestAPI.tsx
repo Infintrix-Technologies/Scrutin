@@ -253,7 +253,7 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
       <Button onClick={() => {
         get_question_with_answer_and_post_in_responses.call({
           candidate_id: '37hc0ipka2',
-          selected_option: 4
+          selected_option: 3
         });
       }}>
         get_question_with_answer_and_post_in_responses
