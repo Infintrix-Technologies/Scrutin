@@ -1,122 +1,42 @@
 [
  {
-  "answer": "3",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 60.0,
-  "modified": "2024-11-26 12:15:27.401676",
-  "name": "d52hjv6o5h",
-  "options": [
-   {
-    "label": "Berlin",
-    "parent": "d52hjv6o5h",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   },
-   {
-    "label": "Madrid",
-    "parent": "d52hjv6o5h",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "2"
-   },
-   {
-    "label": "Paris",
-    "parent": "d52hjv6o5h",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "3"
-   },
-   {
-    "label": "Rome",
-    "parent": "d52hjv6o5h",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "4"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is the capital of France?</p></div>",
-  "type": "Single Choice"
- },
- {
   "answer": "2",
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "duration": 60.0,
-  "modified": "2024-11-26 12:15:18.696391",
-  "name": "d5q2j7mdhd",
+  "modified": "2024-11-28 12:06:10.664752",
+  "name": "1nuqjb313j",
   "options": [
    {
-    "label": "Elephant",
-    "parent": "d5q2j7mdhd",
+    "label": "print(typeof(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "Blue Whale",
-    "parent": "d5q2j7mdhd",
+    "label": "print(type(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "Giraffe",
-    "parent": "d5q2j7mdhd",
+    "label": "print(class(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "Hippopotamus",
-    "parent": "d5q2j7mdhd",
+    "label": "print(var(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is the largest mammal in the world?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "2",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 60.0,
-  "modified": "2024-11-26 12:16:20.246128",
-  "name": "d6daut8s78",
-  "options": [
-   {
-    "label": "Gold",
-    "parent": "d6daut8s78",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   },
-   {
-    "label": "Oxygen",
-    "parent": "d6daut8s78",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "2"
-   },
-   {
-    "label": "Osmium",
-    "parent": "d6daut8s78",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "3"
-   },
-   {
-    "label": "Olivine",
-    "parent": "d6daut8s78",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "4"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>Which element has the chemical symbol 'O'?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the correct syntax to output the type of a variable or object in Python?</p></div>",
   "type": "Single Choice"
  },
  {
@@ -124,39 +44,199 @@
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "duration": 60.0,
-  "modified": "2024-11-26 12:17:40.202514",
-  "name": "d76a87uerl",
+  "modified": "2024-11-28 12:08:10.084040",
+  "name": "1p44dmohkp",
   "options": [
    {
-    "label": "Earth",
-    "parent": "d76a87uerl",
+    "label": "/* This is a comment */",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "Jupiter",
-    "parent": "d76a87uerl",
+    "label": "... This is a comment ...",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "Venus",
-    "parent": "d76a87uerl",
+    "label": "// This is a comment",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "Mars",
-    "parent": "d76a87uerl",
+    "label": "# This is a comment",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>Which planet is known as the Red Planet?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you start a comment in Python?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "2",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:09:17.785163",
+  "name": "1pp98pd64f",
+  "options": [
+   {
+    "label": "func",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "def",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "function",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "define",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which keyword is used to create a function in Python?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "2",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:10:22.942017",
+  "name": "1qdl8clsbn",
+  "options": [
+   {
+    "label": "variable x;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "var x;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "v x;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "x variable;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you declare a JavaScript variable?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "3",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:11:28.298621",
+  "name": "1r23648a1j",
+  "options": [
+   {
+    "label": "var colors = \"red\", \"green\", \"blue\";",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "var colors = (1:\"red\", 2:\"green\", 3:\"blue\");",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "var colors = [\"red\", \"green\", \"blue\"];",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "var colors = 1 = (\"red\"), 2 = (\"green\"), 3 = (\"blue\");",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which of the following is a correct way to create an array in JavaScript?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "4",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:12:27.927326",
+  "name": "1rkncvbr6i",
+  "options": [
+   {
+    "label": "msg(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "alertBox(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "msgBox(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "alert(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you write \"Hello World\" in an alert box?</p></div>",
   "type": "Single Choice"
  },
  {
@@ -164,39 +244,39 @@
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "duration": 60.0,
-  "modified": "2024-11-26 12:18:44.291103",
-  "name": "d7qa337fmm",
+  "modified": "2024-11-28 12:13:27.581544",
+  "name": "1s7burote5",
   "options": [
    {
-    "label": "William Shakespeare",
-    "parent": "d7qa337fmm",
+    "label": "background-color: red;",
+    "parent": "1s7burote5",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "Mark Twain",
-    "parent": "d7qa337fmm",
+    "label": "bgcolor: red;",
+    "parent": "1s7burote5",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "Jane Austen",
-    "parent": "d7qa337fmm",
+    "label": "background: red;",
+    "parent": "1s7burote5",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "Charles Dickens",
-    "parent": "d7qa337fmm",
+    "label": "color: red;",
+    "parent": "1s7burote5",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>Who wrote the play \"Romeo and Juliet\"?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you change the background color of an element in CSS?</p></div>",
   "type": "Single Choice"
  },
  {
@@ -204,119 +284,79 @@
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "duration": 60.0,
-  "modified": "2024-11-26 12:25:59.935120",
-  "name": "dc2f0jf51l",
+  "modified": "2024-11-28 12:14:36.349201",
+  "name": "1ssr2b9q2d",
   "options": [
    {
-    "label": "Yuan",
-    "parent": "dc2f0jf51l",
+    "label": "font-weight",
+    "parent": "1ssr2b9q2d",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "Yen",
-    "parent": "dc2f0jf51l",
+    "label": "font-family",
+    "parent": "1ssr2b9q2d",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "Won",
-    "parent": "dc2f0jf51l",
+    "label": "font-style",
+    "parent": "1ssr2b9q2d",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "Peso",
-    "parent": "dc2f0jf51l",
+    "label": "font-text",
+    "parent": "1ssr2b9q2d",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is the currency of Japan?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>Which property is used to change the font of an element?</p></div>",
   "type": "Single Choice"
  },
  {
-  "answer": "3",
+  "answer": "1",
   "docstatus": 0,
   "doctype": "Scrutin Question",
   "duration": 60.0,
-  "modified": "2024-11-26 12:26:58.900847",
-  "name": "dckt9g0mv7",
+  "modified": "2024-11-28 12:15:46.713914",
+  "name": "1ter595312",
   "options": [
    {
-    "label": "Vincent van Gogh",
-    "parent": "dckt9g0mv7",
+    "label": "box-shadow: 10px 10px 5px grey;",
+    "parent": "1ter595312",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "Pablo Picasso",
-    "parent": "dckt9g0mv7",
+    "label": "shadow: 10px 10px 5px grey;",
+    "parent": "1ter595312",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "Leonardo da Vinci",
-    "parent": "dckt9g0mv7",
+    "label": "box-shadow: grey 10px 10px 5px;",
+    "parent": "1ter595312",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "Claude Monet",
-    "parent": "dckt9g0mv7",
+    "label": "shadow-box: 10px 10px 5px grey;",
+    "parent": "1ter595312",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>Who painted the Mona Lisa?</p></div>",
-  "type": "Single Choice"
- },
- {
-  "answer": "4",
-  "docstatus": 0,
-  "doctype": "Scrutin Question",
-  "duration": 60.0,
-  "modified": "2024-11-26 12:27:54.898765",
-  "name": "dd6dd2hpd7",
-  "options": [
-   {
-    "label": "Amazon River",
-    "parent": "dd6dd2hpd7",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "1"
-   },
-   {
-    "label": "Yangtze River",
-    "parent": "dd6dd2hpd7",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "2"
-   },
-   {
-    "label": "Mississippi River",
-    "parent": "dd6dd2hpd7",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "3"
-   },
-   {
-    "label": "Nile River",
-    "parent": "dd6dd2hpd7",
-    "parentfield": "options",
-    "parenttype": "Scrutin Question",
-    "value": "4"
-   }
-  ],
-  "question": "<div class=\"ql-editor read-mode\"><p>Which is the longest river in the world?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you add a shadow to a box in CSS?</p></div>",
   "type": "Single Choice"
  }
 ]
