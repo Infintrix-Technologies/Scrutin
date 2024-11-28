@@ -20,12 +20,12 @@ const SpecificAssessments: React.FC = () => {
   const { candidate_id } = useParams<{ candidate_id: string }>();
 
   const create_candidate = useFrappePostCall("scrutin.api.candidate.create_candidate");
-  console.log(create_candidate);
+  // console.log(create_candidate);
 
   // Fetch the specific candidate's details based on the candidate_id from the URL
   const specificCandidate = useFrappeGetDoc("Scrutin Candidate", candidate_id || "");
   const candidate = specificCandidate?.data || [];
-  console.log(candidate);
+  // console.log(candidate);
 
   return (
     <div>
@@ -50,19 +50,19 @@ const SpecificAssessments: React.FC = () => {
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name" className='font-semibold'>Name</Label>
               <h1>
-                {candidate.name}
+                {candidate?.name}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name" className='font-semibold'>Email</Label>
               <h1>
-                {candidate.job_applicant}
+                {candidate?.job_applicant}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name" className='font-semibold'>Assessments</Label>
               <h1>
-                {candidate.assessment}
+                {candidate?.assessment}
               </h1>
             </div>
             <div className="flex flex-col space-y-1.5">

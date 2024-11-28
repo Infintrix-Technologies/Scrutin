@@ -35,13 +35,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { ScrutinAssessment } from "./Interfaces/Interface";
 // import { RainbowButton } from "./ui/rainbow-button";
 
-type ScrutinAssessment = {
-  assessment_name: string;
-  company: string;
-  language: string;
-};
 
 const CreateAssessment = () => {
   const globalState = useGlobalState();
@@ -137,8 +133,8 @@ const AssessmentForm = () => {
                       <SelectGroup>
                         <SelectLabel>Languages</SelectLabel>
                         {(languages_query?.data || []).map((language) => (
-                          <SelectItem key={language.name} value={language.name}>
-                            {language.name}
+                          <SelectItem key={language?.name} value={language?.name}>
+                            {language?.name}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -164,8 +160,8 @@ const AssessmentForm = () => {
                       <SelectGroup>
                         <SelectLabel>Companies</SelectLabel>
                         {(companies_query?.data || []).map((company) => (
-                          <SelectItem key={company.name} value={company.name}>
-                            {company.company_name}
+                          <SelectItem key={company?.name} value={company?.name}>
+                            {company?.company_name}
                           </SelectItem>
                         ))}
                       </SelectGroup>

@@ -96,17 +96,9 @@ import {
 import { FaChevronLeft } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
 import { useFrappeGetCall } from "frappe-react-sdk";
-// import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
+import { Assessment, AssessmentTest, Question, SkillData } from "@/components/Interfaces/Interface";
 
-// interface Question {
-//   text: string;
-//   rating: number;
-// }
-interface SkillData {
-  skill: string;
-  correct: number;
-  incorrect: number;
-}
+
 const skillsData: SkillData[] = [
   {
     skill: "Understanding and interpreting written communication",
@@ -155,6 +147,7 @@ const CandidatesDetailPage: React.FC = () => {
 
   const candidate_details =
     get_candidate_details?.data?.message?.candidate_assessment || [];
+  // console.log(candidate_details,"candidate_details");
 
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
@@ -164,7 +157,8 @@ const CandidatesDetailPage: React.FC = () => {
   const totalWidth = 400;
   return (
     <div className="px-14">
-      {candidate_details.map((assessment: any, i: number) => {
+      {candidate_details?.map((assessment: Assessment, i: number) => {
+
         return (
           <div key={i}>
             <header className="flex  justify-between px-4 py-3 border-b">
@@ -237,15 +231,14 @@ const CandidatesDetailPage: React.FC = () => {
                 <div className="flex flex-col justify-center">
                   <div className="flex items-center">
                     <h2 className="font-bold text-lg">Assessment</h2>
-                    <span className="ml-2">{assessment.assessment_title}</span>
+                    <span className="ml-2">{assessment?.assessment_title || "N/A"}</span>
                   </div>
                   <div className="flex justify-start items-start gap-2">
-                    {ratings.map((rating, index) => (
+                    {ratings?.map((rating, index) => (
                       <FaStar
                         key={index}
-                        className={`cursor-pointer ${
-                          rating === 1 ? "text-yellow-500" : "text-gray-400"
-                        }`}
+                        className={`cursor-pointer ${rating === 1 ? "text-yellow-500" : "text-gray-400"
+                          }`}
                         onClick={() => handleRatingChange(index)}
                       />
                     ))}
@@ -317,7 +310,7 @@ const CandidatesDetailPage: React.FC = () => {
                   <div className="p-4 border rounded-md">
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Invited</h3>
-                      <p className="text-gray-600">{assessment.invited_on}</p>
+                      <p className="text-gray-600">{assessment?.invited_on}</p>
                     </div>
 
                     <div className="mb-2">
@@ -438,12 +431,12 @@ const CandidatesDetailPage: React.FC = () => {
                         </div>
                       </div>
 
-                      {assessment.tests.map((test: any, index: number) => {
+                      {assessment?.tests?.map((test: AssessmentTest, index: number) => {
                         return (
                           <Accordion key={index} type="single" collapsible>
                             <AccordionItem value={String(index)}>
                               <AccordionTrigger className="flex justify-between ">
-                                <span>{test.title}</span>
+                                <span>{test?.title}</span>
                                 <span className="ml-[250px] "> 0% </span>
                               </AccordionTrigger>
                               <AccordionContent>
@@ -476,29 +469,26 @@ const CandidatesDetailPage: React.FC = () => {
                                             <div
                                               className="bg-green-400  text-black font-bold text-center"
                                               style={{
-                                                width: `${
-                                                  (item.correct /
-                                                    (item.correct +
-                                                      item.incorrect)) *
+                                                width: `${(item?.correct /
+                                                    (item?.correct +
+                                                      item?.incorrect)) *
                                                   totalWidth
-                                                }px`,
+                                                  }px`,
                                               }}
                                             >
                                               {item?.correct}
                                             </div>
                                             <div
-                                              className={`${
-                                                item.incorrect === 5
+                                              className={`${item.incorrect === 5
                                                   ? "bg-[#9e9e9e]"
                                                   : "bg-red-300"
-                                              } text-black font-bold text-center`}
+                                                } text-black font-bold text-center`}
                                               style={{
-                                                width: `${
-                                                  (item.incorrect /
-                                                    (item.correct +
-                                                      item.incorrect)) *
+                                                width: `${(item?.incorrect /
+                                                    (item?.correct +
+                                                      item?.incorrect)) *
                                                   totalWidth
-                                                }px`,
+                                                  }px`,
                                               }}
                                             >
                                               {item?.correct}
@@ -543,243 +533,6 @@ const CandidatesDetailPage: React.FC = () => {
                           </Accordion>
                         );
                       })}
-
-                      {/* <Accordion key="2" type="single" collapsible>
-                        <AccordionItem value={"2"}>
-                          <AccordionTrigger className="flex justify-between ">
-                            <span>
-                              {assessment.tests[1].title}
-                            </span>
-                            <span className="ml-[250px] "> 67% </span>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <div className="flex justify-between items-center">
-                              <p className="flex gap-2 items-center">
-                                <AiOutlineBarChart />
-                                intermediate
-                              </p>
-                              <p className="flex gap-2 items-center">
-                                <RxTimer />
-                                Finished in 00:09:00 out of 00:09:00{" "}
-                              </p>
-                            </div>
-
-                            <Card className="w-full max-w-2xl my-3">
-                              <CardHeader>
-                                <CardTitle className="text-lg font-semibold">
-                                  Communication Skills Assessment
-                                </CardTitle>
-                                <hr />
-                              </CardHeader>
-                              <CardContent>
-                                <ul className="space-y-6">
-                                  {skillsData.map((item, index) => (
-                                    <li key={index} className="space-y-2">
-                                      <p className="text-sm">{item.skill}</p>
-                                      <div className="flex h-6 w-full">
-                                        <div
-                                          className="bg-green-400  text-black font-bold text-center"
-                                          style={{
-                                            width: `${
-                                              (item.correct /
-                                                (item.correct +
-                                                  item.incorrect)) *
-                                              totalWidth
-                                            }px`,
-                                          }}
-                                        >
-                                          {item?.correct}
-                                        </div>
-                                        <div
-                                          className={`${
-                                            item.incorrect === 5
-                                              ? "bg-[#9e9e9e]"
-                                              : "bg-red-300"
-                                          } text-black font-bold text-center`}
-                                          style={{
-                                            width: `${
-                                              (item.incorrect /
-                                                (item.correct +
-                                                  item.incorrect)) *
-                                              totalWidth
-                                            }px`,
-                                          }}
-                                        >
-                                          {item?.correct}
-                                        </div>
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ul>
-                                <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                                  <div className="flex items-center">
-                                    <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                                    <span>Correct</span>
-                                  </div>
-                                  <div className="flex items-center">
-                                    <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                                    <span>Incorrect</span>
-                                  </div>
-                                  <div className="flex items-center">
-                                    <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                                    <span>Not answered</span>
-                                  </div>
-                                </div>
-                              </CardContent>
-                              <hr />
-                              <CardFooter>
-                                <Button
-                                  variant="link"
-                                  className="text-pink-500 p-0"
-                                  onClick={() =>
-                                    globalState.openModal(
-                                      "communication_skills_assessment",
-                                      true
-                                    )
-                                  }
-                                >
-                                  Learn more
-                                </Button>
-                              </CardFooter>
-                            </Card>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-
-                      <Accordion key="3" type="single" collapsible>
-                        <AccordionItem value="3">
-                          <AccordionTrigger className="flex justify-between ">
-                            <span>
-                              {assessment.tests[2].title}
-                            </span>
-                            <span className="ml-[250px] "> 7% </span>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <div className="flex justify-between items-center">
-                              <p className="flex gap-2 items-center">
-                                <AiOutlineBarChart />
-                                Basic
-                              </p>
-                              <p className="flex gap-2 items-center">
-                                <RxTimer />
-                                Finished in 00:07:35 out of 00:08:00{" "}
-                              </p>
-                            </div>
-
-                            <Card className="w-full max-w-2xl my-3">
-                              <CardHeader>
-                                <CardTitle className="text-lg font-semibold">
-                                  Communication Skills Assessment
-                                </CardTitle>
-                                <hr />
-                              </CardHeader>
-                              <CardContent>
-                                <ul className="space-y-6">
-                                  {skillsData.map((item, index) => (
-                                    <li key={index} className="space-y-2">
-                                      <p className="text-sm">{item.skill}</p>
-                                      <div className="flex h-6 w-full">
-                                        <div
-                                          className="bg-green-400  text-black font-bold text-center"
-                                          style={{
-                                            width: `${
-                                              (item.correct /
-                                                (item.correct +
-                                                  item.incorrect)) *
-                                              totalWidth
-                                            }px`,
-                                          }}
-                                        >
-                                          {item?.correct}
-                                        </div>
-                                        <div
-                                          className={`${
-                                            item.incorrect === 5
-                                              ? "bg-[#9e9e9e]"
-                                              : "bg-red-300"
-                                          } text-black font-bold text-center`}
-                                          style={{
-                                            width: `${
-                                              (item.incorrect /
-                                                (item.correct +
-                                                  item.incorrect)) *
-                                              totalWidth
-                                            }px`,
-                                          }}
-                                        >
-                                          {item?.correct}
-                                        </div>
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ul>
-                                <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                                  <div className="flex items-center">
-                                    <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                                    <span>Correct</span>
-                                  </div>
-                                  <div className="flex items-center">
-                                    <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                                    <span>Incorrect</span>
-                                  </div>
-                                  <div className="flex items-center">
-                                    <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                                    <span>Not answered</span>
-                                  </div>
-                                </div>
-                              </CardContent>
-                              <hr />
-                              <CardFooter>
-                                <Button
-                                  variant="link"
-                                  className="text-pink-500 p-0"
-                                  onClick={() =>
-                                    globalState.openModal(
-                                      "communication_skills_assessment",
-                                      true
-                                    )
-                                  }
-                                >
-                                  Learn more
-                                </Button>
-                              </CardFooter>
-                            </Card>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-
-                      <Accordion key="4" type="single" collapsible>
-                        <AccordionItem value="4">
-                          <AccordionTrigger className="flex justify-between ">
-                            <span>Motivation</span>
-                            <span className="ml-[250px] "> Survey Needed </span>
-                          </AccordionTrigger>
-                        </AccordionItem>
-                      </Accordion>
-                      <p className="font-bold py-3">
-                        Tests not included in overall assessment score
-                      </p>
-
-                      <Accordion key="4" type="single" collapsible>
-                        <AccordionItem value="4">
-                          <AccordionTrigger className="flex justify-between ">
-                            <span>Big 5 (OCEAN)</span>
-                            <span className="ml-[250px] "> Unavailable </span>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <div className="flex justify-between items-center">
-                              <p className="flex gap-2 items-center">
-                                <AiOutlineBarChart />
-                                Basic
-                              </p>
-                              <p className="flex gap-2 items-center">
-                                The candidate did not answer all of the
-                                questions.{" "}
-                              </p>
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion> */}
                     </CardHeader>
                   </Card>
                 </div>
@@ -827,12 +580,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${
-                              assessment.filled_out_only_once_from_ip_address ===
-                              0
+                            className={`${assessment.filled_out_only_once_from_ip_address ===
+                                0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
+                              } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -841,7 +593,7 @@ const CandidatesDetailPage: React.FC = () => {
                             }
                           >
                             {assessment.filled_out_only_once_from_ip_address ===
-                            0
+                              0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -853,11 +605,10 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${
-                              assessment.web_cam_enabled === 0
+                            className={`${assessment.web_cam_enabled === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
+                              } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -877,11 +628,10 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${
-                              assessment.full_screen_mode_always_active === 0
+                            className={`${assessment.full_screen_mode_always_active === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
+                              } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -903,11 +653,10 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${
-                              assessment.mouse_always_in_assessment_window === 0
+                            className={`${assessment.mouse_always_in_assessment_window === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
+                              } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -974,17 +723,19 @@ const CandidatesDetailPage: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody className="">
-                    {assessment.questions.map(
-                      (question: any, index: number) => (
+                    {assessment?.questions?.map(
+                      (question: Question, index: number) => (
                         <TableRow key={index}>
                           {/* Question Column */}
 
                           <TableCell className="p-4 flex items-center">
-                            <p className="">
-                              {question.question
-                                .replace(/<\/?[^>]+(>|$)/g, "")
-                                .replace(/&amp;/g, "&")}
-                            </p>
+                            <div
+                              className="p-4 flex items-center"
+                              dangerouslySetInnerHTML={{
+                                __html: question?.question || "N/A",
+                              }}
+                            ></div>
+
                           </TableCell>
 
                           {/* View Answer Column */}
@@ -1006,13 +757,14 @@ const CandidatesDetailPage: React.FC = () => {
                           <TableCell>
                             <div className="flex justify-center gap-1">
                               {[...Array(5)].map((_, i) => (
-                                <StarIcon
+                                <FaStar
                                   key={i}
                                   className={`w-4 h-4 ${
-                                    i < question.rating
+                                    // i < question?.rating
+                                    i < 3
                                       ? "text-yellow-400 fill-yellow-400"
                                       : "text-gray-300"
-                                  }`}
+                                    }`}
                                 />
                               ))}
                             </div>
@@ -1085,7 +837,7 @@ const CandidatesDetailPage: React.FC = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle className="leading-5">
-                        <p>
+                        <div>
                           {" "}
                           A measure of how well a candidate performed on a test,
                           calculated by taking the number of points scored and
@@ -1096,7 +848,7 @@ const CandidatesDetailPage: React.FC = () => {
                           a test where each question was worth 1 point, then
                           they scored 5/10 points, and their percentage correct
                           would be 50% because 5/10 x 100 = 50%.
-                        </p>
+                        </div>
                         <p>
                           Percentage correct is a simple way to understand a
                           person's performance on a test, but it does not take
@@ -1665,9 +1417,8 @@ const CandidatesDetailPage: React.FC = () => {
                       {[...Array(5)].map((_, i) => (
                         <FaStar
                           key={i}
-                          className={`ml-1 ${
-                            i < 3 ? "text-yellow-400" : "text-gray-300"
-                          } text-[20px]`}
+                          className={`ml-1 ${i < 3 ? "text-yellow-400" : "text-gray-300"
+                            } text-[20px]`}
                         />
                       ))}
                     </div>

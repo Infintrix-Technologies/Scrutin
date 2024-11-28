@@ -67,7 +67,6 @@ import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
 import {
   AssessmentData,
-  Candidate,
   Test,
 } from "@/components/Interfaces/Interface";
 
@@ -96,11 +95,14 @@ const AssessmentDetailPage = () => {
       assessment_name: assessment_id,
     }
   );
+  console.log(get_tests_for_assessment,"get_specific_assessment_candidate_name");
 
   const custom_questions_for_assessment =
     get_custom_questions_for_assessment?.data?.message || [];
+
   const get_specific_assessment =
     get_specific_assessment_candidate_name?.data?.message || [];
+    
   const tests_for_assessment = get_tests_for_assessment?.data?.message || [];
   console.log(get_specific_assessment, "get_specific_assessment");
 
@@ -108,11 +110,7 @@ const AssessmentDetailPage = () => {
     return dayjs(dateString).format("DD-MM-YY hh:mm:ss A");
   };
 
-  // const getPlainText = (html: string) => {
-  //   return html.replace(/<[^>]*>?/gm, "");
-  // };
-
-  const candidates: Candidate[] = [
+  const candidates = [
     {
       name: "Abdul Muqeet",
       score: 11,
@@ -428,7 +426,7 @@ const AssessmentDetailPage = () => {
               </Dialog>
 
               <Dialog
-                open={globalState?.modals?.set_test_weights.open}
+                open={globalState?.modals?.set_test_weights?.open}
                 onOpenChange={(open) =>
                   globalState.openModal("set_test_weights", open)
                 }
