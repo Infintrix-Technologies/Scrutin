@@ -64,33 +64,33 @@ export default function Component() {
         <h1 className="text-3xl font-bold">Jobs</h1>
         <Link to="/jobs/post">
         <Button>
-          <FaPlus />
+          <FaPlus className="mr-2" />
           Post Job
         </Button>
         </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 pb-6 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
-          <Card key={job.id} className="flex flex-col">
+          <Card key={job?.id} className="flex flex-col">
             <CardHeader>
               <Link to={`/jobs/detail`}>
-               <CardTitle>{job.title}</CardTitle>
+               <CardTitle>{job?.title}</CardTitle>
               </Link>
              
-              <CardDescription>{job.company}</CardDescription>
+              <CardDescription>{job?.company}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-2">
                 <MapPin className="w-4 h-4" />
-                <span>{job.location}</span>
+                <span>{job?.location}</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
                 <Briefcase className="w-4 h-4" />
-                <span>{job.type}</span>
+                <span>{job?.type}</span>
               </div>
               <Badge variant="secondary" className="mb-4">
                 <Clock className="w-4 h-4 mr-1" />
-                {job.postedAt}
+                {job?.postedAt}
               </Badge>
             </CardContent>
             <CardFooter>

@@ -1,4 +1,4 @@
-import { AssessmentsList } from "@/pages/AssessmentsList";
+import AssessmentsList from "./AssessmentsList";
 import CreateAssessment from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

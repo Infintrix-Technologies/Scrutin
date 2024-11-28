@@ -11,8 +11,7 @@ import { useAssessmentsListQuery } from "@/hooks/query-hooks";
 import { AssessmentActions } from "../components/AssessmentActions";
 import { Link } from "react-router-dom";
   
-  export function AssessmentsList() {
-
+    const AssessmentsList = () => {
     const assessments_query = useAssessmentsListQuery()
     
     const assessments = assessments_query?.data || []
@@ -30,7 +29,7 @@ import { Link } from "react-router-dom";
           </TableRow>
         </TableHeader>
         <TableBody>
-          {assessments.map((assessment) => (
+          {assessments?.map((assessment) => (
             <>
             <TableRow key={assessment?.assessment_name}>
             <Link 
@@ -48,4 +47,5 @@ import { Link } from "react-router-dom";
       </Table>
     )
   }
+  export default AssessmentsList;
   

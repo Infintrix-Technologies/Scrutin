@@ -9,15 +9,14 @@ import { useFrappeDeleteDoc } from "frappe-react-sdk";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
+import { JobApplicantActionsProps } from "./Interfaces/Interface";
 
-interface Props {
-  applicant: any;
-}
 
-export const JobApplicantActions = ({applicant}:Props )=> {
+
+export const JobApplicantActions: React.FC<JobApplicantActionsProps> = ({ applicant }) => {
   const delete_api = useFrappeDeleteDoc();
 
-  console.log(applicant,"0000000000004")
+  // console.log(applicant,"console for applicant")
 
   const handleDelete = (name: string) => {
     console.log(name,"name");

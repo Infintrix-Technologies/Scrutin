@@ -13,6 +13,7 @@ import { CandidateActions } from "./CandidateActions";
 // import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
 import { CandidateList } from "./Interfaces/Interface";
+import dayjs from "dayjs";
 
   export const CandidatesList = () => {
  
@@ -32,6 +33,7 @@ import { CandidateList } from "./Interfaces/Interface";
       },
     );
 
+    
 const navigate = useNavigate()
 
 const handleNavigate = (candidateEmail: string) => {
@@ -40,8 +42,13 @@ const handleNavigate = (candidateEmail: string) => {
   navigate(`/candidates/${candidateEmail}`)
 
 }
+const formatDate = (dateString: string) => {
+  return dayjs(dateString).format("DD-MM-YY hh:mm A");
+};
 
 const applicants = applicant_query?.data || []
+console.log(applicants,"applicants");
+
 const applicantMap = applicants.reduce((map, applicant) => {
   map[applicant.email_id] = applicant.applicant_name;
   return map;
@@ -66,19 +73,10 @@ const applicantMap = applicants.reduce((map, applicant) => {
               <TableCell className="cursor-pointer" onClick={() => {handleNavigate(candidate.job_applicant)}}>{applicantMap[candidate.job_applicant] || 'N/A'}</TableCell>
               <TableCell>{candidate.job_applicant}</TableCell>
               <TableCell>{candidate?.Assessments}</TableCell>
+              
+
               <TableCell>
-              {candidate?.invited_on}
-              {/* <div className="flex items-center gap-2">
-                {candidate.status === 'Open' ? (
-                  <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-100">
-                    Open
-                  </Badge>
-                ) : (
-                  <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100">
-                    Accepted
-                  </Badge>
-                )}
-              </div> */}
+              {formatDate(candidate?.invited_on)}               
             </TableCell>
               <TableCell><CandidateActions candidate={candidate}/></TableCell>
             </TableRow>

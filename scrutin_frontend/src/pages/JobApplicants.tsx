@@ -34,6 +34,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { JobApplicantActions } from "@/components/JobApplicantActions";
+import { JobApplication } from "@/components/Interfaces/Interface";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -140,10 +141,10 @@ const JobApplicants = () => {
   });
 
   // Function to handle form submission
-  const onSubmit = (data: { assessment: string; job_applicant: string }) => {
+  const onSubmit = (data:JobApplication ) => {
     send_invite.call(data).then(()=>{
-        setIsDialogOpen(false); // Close the dialog after form submission
-        reset(); // Reset the form fields
+        setIsDialogOpen(false); 
+        reset(); 
     })
   };
 
@@ -245,25 +246,22 @@ const JobApplicants = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {job_applicants.map((applicant) => (
+          {job_applicants?.map((applicant) => (
                         
             <>
             <TableRow key={applicant.name}>
               <TableCell>{applicant.applicant_name}</TableCell>
-              <TableCell className="flex py-10">{renderStars(applicant.applicant_rating)}</TableCell>
-              {/* <TableCell>{applicant.job_title}</TableCell> */}
-              <TableCell>{job_openingMap[applicant.job_title] || 'N/A'}</TableCell>
-
-              {/* <TableCell>{applicant.status}</TableCell> */}
+              <TableCell className="flex py-6">{renderStars(applicant?.applicant_rating)}</TableCell>
+              <TableCell>{job_openingMap[applicant?.job_title] || 'N/A'}</TableCell>
               <TableCell>
               <div className="flex items-center gap-2">
                 {/* <span className="w-16 text-sm text-muted-foreground">Status</span> */}
-                {applicant.status === 'Open' || applicant.status === 'Replied' ? (
+                {applicant?.status === 'Open' || applicant?.status === 'Replied' ? (
                   <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-100">
                     {/* Open */}
                     {applicant.status === 'Open' ? "Open": "Replied"}
                   </Badge>
-                ): applicant.status === 'Rejected' || applicant.status === 'Hold' ?(
+                ): applicant?.status === 'Rejected' || applicant?.status === 'Hold' ?(
                   <Badge variant="secondary" className="bg-red-100 text-red-700 hover:bg-red-100">
                     {applicant.status === 'Rejected' ? "Rejected": "Hold"}
                   </Badge>
@@ -293,7 +291,7 @@ const JobApplicants = () => {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={5}>
-              Total applicants: {job_applicants.length}
+              Total applicants: {job_applicants?.length}
             </TableCell>
           </TableRow>
         </TableFooter>
