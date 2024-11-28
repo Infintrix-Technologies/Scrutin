@@ -110,6 +110,10 @@ const add_scrutin_test_progress = useFrappePostCall("scrutin.api.candidate_test.
 const add_scrutin_question_response = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_question_response")
 
 
+const get_candidate_questions_answer_responses = useFrappePostCall("scrutin.api.candidate_test.get_candidate_questions_answer_responses")
+
+
+
 
 
 // TEST PAGE API
@@ -117,6 +121,10 @@ const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_te
 
 
 const get_question_with_answer_and_post_in_responses = useFrappePostCall("scrutin.api.candidate_test.get_question_with_answer_and_post_in_responses")
+
+
+const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_current_question")
+
 
 
 
@@ -240,17 +248,6 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
 
 
       <Button onClick={() => {
-        add_scrutin_question_response.call({
-          candidate_id: '37hc0ipka2',
-          question_id: 'dc2f0jf51l',
-          answer: '3'
-        });
-      }}>
-        POST Candidate Question Response
-      </Button>
-
-
-      <Button onClick={() => {
         get_question_with_answer_and_post_in_responses.call({
           candidate_id: '37hc0ipka2',
           selected_option: {value: [3]}    //we can send single value (selected_option: 3) like this
@@ -272,7 +269,7 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
 
       <Button onClick={() => {
         get_specific_test_details.call({
-          test_id: 'Backend Development',
+          test_id: '36se65gll1',
         });
       }}>
         Specific Test Duration & no_of_q
@@ -299,7 +296,7 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
 
       <Button onClick={() => {
         get_candidate_detail_based_on_candidate_id.call({
-          candidate_id: 'k39k9ek7i1',
+          candidate_id: '37hc0ipka2',
         });
       }}>
         get_candidate_detail_based_on_candidate_id
@@ -349,6 +346,35 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
         });
       }}>
         get_question_details
+      </Button>
+
+
+      <Button onClick={() => {
+        get_current_question.call({
+          candidate_id: '37hc0ipka2',
+        });
+      }}>
+        Get Current Question
+      </Button>
+
+
+      <Button onClick={() => {
+        add_scrutin_question_response.call({
+          candidate_id: '37hc0ipka2',
+          question_id: '1qdl8clsbn',
+          answer: '3'
+        });
+      }}>
+        POST Candidate Question Response
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_questions_answer_responses.call({
+          candidate_id: '37hc0ipka2'
+        });
+      }}>
+        GET Candidate Question Response
       </Button>
 
 
