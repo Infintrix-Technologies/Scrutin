@@ -7,136 +7,7 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-26 12:20:37.346506",
-  "name": "k887uj90a1",
-  "status": "Draft",
-  "test_focus": [],
-  "test_format": "Multiple-choice",
-  "test_questions": [
-   {
-    "parent": "k887uj90a1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d52hjv6o5h"
-   },
-   {
-    "parent": "k887uj90a1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d5q2j7mdhd"
-   },
-   {
-    "parent": "k887uj90a1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d6daut8s78"
-   },
-   {
-    "parent": "k887uj90a1",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d76a87uerl"
-   }
-  ],
-  "title": "Forntend Developer"
- },
- {
-  "description": null,
-  "docstatus": 0,
-  "doctype": "Scrutin Test",
-  "duration": null,
-  "job_role": null,
-  "language": "en",
-  "level": "Beginner",
-  "modified": "2024-11-26 12:20:01.068883",
-  "name": "k8krlm90s7",
-  "status": "Draft",
-  "test_focus": [],
-  "test_format": "Multiple-choice",
-  "test_questions": [
-   {
-    "parent": "k8krlm90s7",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d7qa337fmm"
-   },
-   {
-    "parent": "k8krlm90s7",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d52hjv6o5h"
-   },
-   {
-    "parent": "k8krlm90s7",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d5q2j7mdhd"
-   },
-   {
-    "parent": "k8krlm90s7",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d6daut8s78"
-   }
-  ],
-  "title": "Backend Developer"
- },
- {
-  "description": null,
-  "docstatus": 0,
-  "doctype": "Scrutin Test",
-  "duration": null,
-  "job_role": null,
-  "language": "en",
-  "level": "Beginner",
-  "modified": "2024-11-26 12:21:42.999336",
-  "name": "k9a5emvdd6",
-  "status": "Draft",
-  "test_focus": [],
-  "test_format": "Multiple-choice",
-  "test_questions": [
-   {
-    "parent": "k9a5emvdd6",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d52hjv6o5h"
-   },
-   {
-    "parent": "k9a5emvdd6",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d5q2j7mdhd"
-   },
-   {
-    "parent": "k9a5emvdd6",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d6daut8s78"
-   },
-   {
-    "parent": "k9a5emvdd6",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d76a87uerl"
-   },
-   {
-    "parent": "k9a5emvdd6",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d7qa337fmm"
-   }
-  ],
-  "title": "Full Stack Developer"
- },
- {
-  "description": null,
-  "docstatus": 0,
-  "doctype": "Scrutin Test",
-  "duration": null,
-  "job_role": null,
-  "language": "en",
-  "level": "Beginner",
-  "modified": "2024-11-26 12:22:43.860094",
+  "modified": "2024-11-28 12:23:09.934916",
   "name": "k9o3uoe1ob",
   "status": "Draft",
   "test_focus": [],
@@ -146,28 +17,22 @@
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "d52hjv6o5h"
+    "question": "1ter595312"
    },
    {
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "d5q2j7mdhd"
+    "question": "1ssr2b9q2d"
    },
    {
     "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "d76a87uerl"
-   },
-   {
-    "parent": "k9o3uoe1ob",
-    "parentfield": "test_questions",
-    "parenttype": "Scrutin Test",
-    "question": "d7qa337fmm"
+    "question": "1s7burote5"
    }
   ],
-  "title": "Python Developer"
+  "title": "CSS Test"
  },
  {
   "description": null,
@@ -177,7 +42,42 @@
   "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-26 12:23:09.310372",
+  "modified": "2024-11-28 12:21:58.607858",
+  "name": "f3988t64af",
+  "status": "Draft",
+  "test_focus": [],
+  "test_format": "Multiple-choice",
+  "test_questions": [
+   {
+    "parent": "f3988t64af",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1nuqjb313j"
+   },
+   {
+    "parent": "f3988t64af",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1p44dmohkp"
+   },
+   {
+    "parent": "f3988t64af",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1pp98pd64f"
+   }
+  ],
+  "title": "Python Test"
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Scrutin Test",
+  "duration": null,
+  "job_role": null,
+  "language": "en",
+  "level": "Beginner",
+  "modified": "2024-11-28 12:22:34.906569",
   "name": "36se65gll1",
   "status": "Draft",
   "test_focus": [],
@@ -187,15 +87,21 @@
     "parent": "36se65gll1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "d5q2j7mdhd"
+    "question": "1qdl8clsbn"
    },
    {
     "parent": "36se65gll1",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "d6daut8s78"
+    "question": "1r23648a1j"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1rkncvbr6i"
    }
   ],
-  "title": "Testing Test"
+  "title": "JavaScript Test"
  }
 ]

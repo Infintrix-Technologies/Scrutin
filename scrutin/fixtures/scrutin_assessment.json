@@ -1,149 +1,26 @@
 [
  {
-  "assessment_name": "Python Developer",
+  "assessment_name": "Python Assessment",
   "assessment_tests": [
    {
     "parent": "ju7mgf9ceg",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k9o3uoe1ob",
-    "weight": "1"
-   },
-   {
-    "parent": "ju7mgf9ceg",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k8krlm90s7",
-    "weight": "1"
-   }
-  ],
-  "company": "Infintrix (Demo)",
-  "custom_questions": [
-   {
-    "parent": "ju7mgf9ceg",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dc2f0jf51l"
-   },
-   {
-    "parent": "ju7mgf9ceg",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dckt9g0mv7"
-   }
-  ],
-  "docstatus": 0,
-  "doctype": "Scrutin Assessment",
-  "language": "en",
-  "modified": "2024-11-26 12:28:55.028053",
-  "name": "ju7mgf9ceg"
- },
- {
-  "assessment_name": "React Developer",
-  "assessment_tests": [
-   {
-    "parent": "juocinh9un",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k887uj90a1",
-    "weight": "1"
-   },
-   {
-    "parent": "juocinh9un",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k9a5emvdd6",
-    "weight": "1"
-   },
-   {
-    "parent": "juocinh9un",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k9o3uoe1ob",
-    "weight": "1"
-   }
-  ],
-  "company": "Infintrix",
-  "custom_questions": [
-   {
-    "parent": "juocinh9un",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dc2f0jf51l"
-   },
-   {
-    "parent": "juocinh9un",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dd6dd2hpd7"
-   }
-  ],
-  "docstatus": 0,
-  "doctype": "Scrutin Assessment",
-  "language": "en",
-  "modified": "2024-11-26 12:28:24.946403",
-  "name": "juocinh9un"
- },
- {
-  "assessment_name": "Full Stack Developer",
-  "assessment_tests": [
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k887uj90a1",
-    "weight": "1"
-   },
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k8krlm90s7",
-    "weight": "1"
-   },
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "assessment_tests",
-    "parenttype": "Scrutin Assessment",
-    "test": "k9a5emvdd6",
-    "weight": "1"
-   }
-  ],
-  "company": "Infintrix",
-  "custom_questions": [
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dc2f0jf51l"
-   },
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dckt9g0mv7"
-   },
-   {
-    "parent": "jvecvcvl4o",
-    "parentfield": "custom_questions",
-    "parenttype": "Scrutin Assessment",
-    "question": "dd6dd2hpd7"
-   }
-  ],
-  "docstatus": 0,
-  "doctype": "Scrutin Assessment",
-  "language": "en",
-  "modified": "2024-11-26 12:29:29.320269",
-  "name": "jvecvcvl4o"
- },
- {
-  "assessment_name": "Testing Assessment",
-  "assessment_tests": [
-   {
-    "parent": "c2ms1le5va",
     "parentfield": "assessment_tests",
     "parenttype": "Scrutin Assessment",
     "test": "36se65gll1",
+    "weight": "1"
+   },
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "f3988t64af",
+    "weight": "1"
+   },
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k9o3uoe1ob",
     "weight": "1"
    }
   ],
@@ -152,7 +29,40 @@
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
   "language": "en",
-  "modified": "2024-11-22 11:48:58.449267",
-  "name": "c2ms1le5va"
+  "modified": "2024-11-28 12:24:19.905918",
+  "name": "ju7mgf9ceg"
+ },
+ {
+  "assessment_name": "JavaScript Assessment",
+  "assessment_tests": [
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k9o3uoe1ob",
+    "weight": "1"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "f3988t64af",
+    "weight": "1"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "36se65gll1",
+    "weight": "1"
+   }
+  ],
+  "company": "Infintrix",
+  "custom_questions": [],
+  "docstatus": 0,
+  "doctype": "Scrutin Assessment",
+  "language": "en",
+  "modified": "2024-11-28 12:25:21.026199",
+  "name": "juocinh9un"
  }
 ]
