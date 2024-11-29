@@ -408,25 +408,6 @@ def get_candidate_questions_answer_responses(candidate_id):
 
 
 @frappe.whitelist()
-def get_specific_test_details(test_id):
-    ScrutinTest = DocType("Scrutin Test")
-    ScrutinQuestion = DocType("Scrutin Question")
-    ScrutinTestQuestion = DocType("Scrutin Test Question")
-
-    question_query = (
-        frappe.qb.from_(ScrutinTestQuestion)
-        .inner_join(ScrutinTest)
-        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-        .inner_join(ScrutinQuestion)
-        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-        .select(ScrutinTestQuestion.question)
-        .where(ScrutinTest.name == test_id)
-    )
-    question_ids = question_query.run(as_dict=True)
-    return question_ids
-
-
-@frappe.whitelist()
 def are_all_questions_answered(test_name, candidate_id):
 
     ScrutinTest = DocType("Scrutin Test")
@@ -455,6 +436,29 @@ def are_all_questions_answered(test_name, candidate_id):
             return False
     
     return True
+
+
+
+
+
+@frappe.whitelist()
+def get_specific_test_details(test_id):
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question)
+        .where(ScrutinTest.name == test_id)
+    )
+    question_ids = question_query.run(as_dict=True)
+    return question_ids
+
 
 
 
