@@ -361,7 +361,7 @@ const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_c
       <Button onClick={() => {
         add_scrutin_question_response.call({
           candidate_id: '37hc0ipka2',
-          question_id: '1qdl8clsbn',
+          question_id: '1ssr2b9q2d',
           answer: '3'
         });
       }}>
