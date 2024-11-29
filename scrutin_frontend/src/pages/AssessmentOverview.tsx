@@ -1,7 +1,7 @@
 import { OverViewPage } from "@/components/Interfaces/Interface"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { useFrappeGetCall} from "frappe-react-sdk"
+import { useFrappeGetCall, useFrappePostCall} from "frappe-react-sdk"
 import { CheckIcon, ChevronRightIcon, EyeIcon } from "lucide-react"
 import { Link, useParams } from "react-router-dom"
 
@@ -14,6 +14,9 @@ export default function AssessmentOverview() {
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = get_specific_assessment_tests?.data?.message || [];
+  console.log(specific_assessment_tests,"specific_assessment_testsspecific_assessment_tests");
+  
+  const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_started_time")
 
   return (
     <div className="px-4 sm:px-8 lg:px-32 xl:px-64">
@@ -31,11 +34,14 @@ export default function AssessmentOverview() {
 
           <div className="mb-6">
             <h3 className="font-semibold mb-2">This assessment includes the following steps:</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 lg:mt-4">
+            <div className="lg:flex lg:justify-center grid grid-cols-2 md:grid-cols-3 sm:grid-cols-2 gap-6 lg:mt-4">
               {specific_assessment_tests?.tests?.map((data: OverViewPage) => (
-                <div className="flex flex-col items-center text-center space-y-2" key={data?.id}>
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <CheckIcon className="w-5 h-5 text-primary-foreground" />
+                <div className="flex flex-col items-center text-center text-black space-y-2" key={data?.id}>
+                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                    {/* <CheckIcon className="w-5 h-5 text-primary-foreground" /> */}
+                   
+                   {data?.answered_questions === data?.total_questions ? <CheckIcon className="w-8 h-8 text-primary-foreground" /> : <p className="text-lg font-bold">{data?.answered_questions} / {data?.total_questions}</p>}
+
                   </div>
                   <div>
                     <p className="font-semibold">{data?.title}</p>
@@ -50,19 +56,20 @@ export default function AssessmentOverview() {
                   </div>
                 </div>
               ))}
+              {specific_assessment_tests?.custom_questions !== 0 && 
               <div className="flex flex-col items-center text-center space-y-2">
                 <div className="w-8 h-8 rounded-full cursor-pointer bg-primary flex items-center justify-center">
                 <CheckIcon className="w-5 h-5 text-primary-foreground" />
                 </div>
-                
                 <div>
                   <p className="font-semibold">Custom Questions</p>
                   <p className="text-sm text-muted-foreground">{specific_assessment_tests?.custom_questions}</p>
                 </div>
               </div>
+              }
               <div className="flex flex-col items-center text-center space-y-2">
-                <div className="w-8 h-8 rounded-full cursor-pointer bg-secondary flex items-center justify-center">
-                  <EyeIcon className="w-5 h-5 text-secondary-foreground" />
+                <div className="w-12 h-12 rounded-full cursor-pointer bg-secondary flex items-center justify-center">
+                  <EyeIcon className="w-8 h-8 text-secondary-foreground" />
                 </div>
                 
                 <div>
@@ -109,8 +116,14 @@ export default function AssessmentOverview() {
 
           <div className="flex justify-end mt-6">
             <Link to={`/candidacy/${candidate_id}/setup`}>
-              <Button className="text-end flex items-center">
-                Next
+              <Button className="text-end flex items-center"
+              onClick={() => {
+                update_assessment_started_time.call({
+                  candidate_id: candidate_id,
+                });
+              }}
+              >
+                Next Assessment
                 <ChevronRightIcon className="ml-2 h-4 w-4" />
               </Button>
             </Link>

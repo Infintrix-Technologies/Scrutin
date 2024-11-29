@@ -25,7 +25,7 @@ const TestPage = () => {
 
   const handleSubmit = async () => {
     if (!selectedOption) {
-      toast.error("Select an option before submit.");
+      toast.error("Select any option before submit.");
       return;
     }
 
@@ -39,6 +39,8 @@ const TestPage = () => {
       setSelectedOption(null); 
       // when reload the window update the question
       setTriggerReload((prev) => !prev); 
+      toast.success("Response submitted successfully!");
+
     } catch (error) {
       console.error("Error in post call:", error);
       toast.error("There was an issue submitting your response. Please try again.");
@@ -53,15 +55,16 @@ const TestPage = () => {
 
   return (
     <div className="flex justify-center items-center h-auto">   
-      <Toaster position="top-center" reverseOrder={false} />
-      
-      <Card className="w-full max-w-full md:min-w-[750px] lg:min-w-[800px] mx-auto">
-        <CardContent className="space-y-6">
-          <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
-            <div className="flex-1 p-4">
-              <h3 className="text-lg font-semibold mb-2">
+      <div className="flex flex-col px-3">
+        <h3 className="text-lg font-semibold m-2">
                 Test Name: {test?.test?.title}
               </h3>
+      <Card className="w-full max-w-full md:min-w-[750px] lg:min-w-[800px] mx-auto">
+        <CardContent className="space-y-6">
+          
+          <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
+            <div className="flex-1 p-4">
+             
               <div
                 className="ql-editor read-mode [&_ol]:list-decimal [&_ul]:list-disc [&_li]:mb-2 [&_li]:ml-4"
                 dangerouslySetInnerHTML={{
@@ -91,6 +94,8 @@ const TestPage = () => {
           </div>
         </CardContent>
       </Card>
+      </div>
+      <Toaster position="top-center" reverseOrder={false} />      
     </div>
   );
 };
