@@ -509,7 +509,7 @@ def get_current_question(candidate_id):
     def mark_test_completed(candidate_id, test_name):
         test_progress_query = (
             frappe.qb.from_(ScrutinTestProgress)
-            .select(ScrutinTestProgress.name)
+            .select(ScrutinTestProgress.name, ScrutinTestProgress.completed_at)
             .where(
                 (ScrutinTestProgress.parent == candidate_id) &
                 (ScrutinTestProgress.test == test_name)
@@ -517,9 +517,12 @@ def get_current_question(candidate_id):
         )
         test_progress = test_progress_query.run(as_dict=True)
         if test_progress:
-            progress_name = test_progress[0]['name']
-            frappe.db.set_value("Scrutin Test Progress", progress_name, "completed_at", now())
-            frappe.db.commit()
+            progress_entry = test_progress[0]
+            if not progress_entry['completed_at']:  # Only update if not already completed
+                frappe.db.set_value(
+                    "Scrutin Test Progress", progress_entry['name'], "completed_at", now()
+                )
+                frappe.db.commit()
 
     # Helper function to check if all questions of a test are answered
     def are_all_questions_answered(test_name, candidate_id):
@@ -692,6 +695,7 @@ def get_current_question(candidate_id):
             # 'next_question': next_question
         }
     }
+
 
 # Function to add test progress
 def add_scrutin_test_progress(candidate_id, test_name, started_at):
