@@ -1148,6 +1148,7 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
         .select(
             JobApplicant.applicant_name,
         )
+        .where(ScrutinCandidate.name == candidate_id)
     ).run(as_dict=True)
     applicant_name = candidate_detail[0]["applicant_name"] if candidate_detail else None
 
