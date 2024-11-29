@@ -23,7 +23,7 @@ export default function AssessmentOverview() {
       <Card className="w-full">
         <CardContent className="p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4">
-            Hello Abdul! Ready to showcase your skills?
+            Hello {specific_assessment_tests?.applicant_name} Ready to showcase your skills?
           </h2>
           <p className="mb-2 text-sm sm:text-base">
             Thank you for applying for this role and welcome to your skill assessment administered by TestGorilla.
