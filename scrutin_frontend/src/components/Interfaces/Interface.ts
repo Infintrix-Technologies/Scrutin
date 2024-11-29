@@ -48,6 +48,7 @@ export interface OverViewPage {
   total_duration: number;
   total_questions: number;
   index: number;
+  answered_questions:number
 }
 
 export interface Option {
