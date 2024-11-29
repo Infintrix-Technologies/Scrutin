@@ -615,7 +615,7 @@ def get_curr(candidate_id):
 
 
 
-
+@frappe.whitelist()
 def get_current_question(candidate_id):
     # Define DocTypes
     ScrutinAssessment = DocType("Scrutin Assessment")
@@ -806,7 +806,7 @@ def get_current_question(candidate_id):
                 'text': current_question['question_text'],  
                 'options': options
             },
-            'next_question': next_question
+            # 'next_question': next_question
         }
     }
 
