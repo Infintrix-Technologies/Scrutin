@@ -349,7 +349,7 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
 
       <Button onClick={() => {
         get_current_question.call({
-          candidate_id: '37hc0ipka2',
+          candidate_id: 'k39k9ek7i1',
         });
       }}>
         Get Current Question
@@ -358,8 +358,8 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
 
       <Button onClick={() => {
         add_scrutin_question_response.call({
-          candidate_id: '37hc0ipka2',
-          question_id: '1nuqjb313j',
+          candidate_id: 'k39k9ek7i1',
+          question_id: '1pp98pd64f',
           answer: '3'
         });
       }}>
