@@ -650,23 +650,23 @@ def get_current_question(candidate_id):
         }
 
     # Find the current test
-    current_test_index = 0
-    while current_test_index < len(tests):
-        current_test = tests[current_test_index]
+    current_test = 0
+    while current_test < len(tests):
+        current_test = tests[current_test]
         test_name = current_test['test']
 
         if are_all_questions_answered(test_name, candidate_id):
-            current_test_index += 1
+            current_test += 1
         else:
             break
 
-    if current_test_index >= len(tests):
+    if current_test >= len(tests):
         return {
             'message': 'All tests are completed'
         }
 
     # Get questions for the current test
-    test_name = tests[current_test_index]['test']
+    test_name = tests[current_test]['test']
     question_query = (
         frappe.qb.from_(ScrutinTestQuestion)
         .inner_join(ScrutinTest)
@@ -708,9 +708,9 @@ def get_current_question(candidate_id):
 
     # If the current question is the last question of the current test
     if next_question is None:
-        next_test_index = current_test_index + 1
-        if next_test_index < len(tests):
-            next_test = tests[next_test_index]
+        next_test = current_test + 1
+        if next_test < len(tests):
+            next_test = tests[next_test]
             next_test_name = next_test['test']
             # Query to get questions for the next test
             next_test_question_query = (
