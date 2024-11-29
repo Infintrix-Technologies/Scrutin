@@ -147,16 +147,15 @@ def get_question_with_navigation(candidate_id, current_test_index=0, current_que
 
 # This API is used to POST data into Scrutin Test Progress child Table
 @frappe.whitelist(allow_guest=True)
-def add_scrutin_test_progress(candidate_id, test_id, started_at=None, completed_at=None):
+def add_scrutin_test_progress(candidate_id, test_name, started_at):
     try:
         # Fetch the Scrutin Candidate document
         candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
         
         # Add a new entry in the child table
         candidate.append("test_progress", {
-            "test": test_id,
+            "test": test_name,
             "started_at": started_at or now(),
-            "completed_at": completed_at or now(),
         })
 
         # Save the document to commit the changes
@@ -190,7 +189,23 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
     except Exception as e:
         frappe.db.rollback()
         return f"An error occurred: {e}"
+
+
+@frappe.whitelist()
+def update_assessment_started_time(candidate_id):
+    try:
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+
+        #
+        candidate.assessment_started_at = now()
+
+        candidate.save()
+        frappe.db.commit()
+        return f"Assessment started time updated successfully for candidate {candidate_id}"
     
+    except Exception as e:
+        frappe.db.rollback()
+        return f"An error occurred: {e}"  
 
 
 
@@ -786,14 +801,16 @@ def get_current_question(candidate_id):
         .where(ScrutinTestProgress.test == test_name)
     )
     test_progress = test_progress_query.run(as_dict=True)
-    if not test_progress:
-        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
-        candidate.append("test_progress", {
-            "test": test_name,
-            "started_at": now(),
-        })
-        candidate.save()
-        frappe.db.commit()
+    if not test_progress: 
+        started_at = now()  # Get the current timestamp
+        add_scrutin_test_progress(candidate_id, test_name, started_at)
+        # candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        # candidate.append("test_progress", {
+        #     "test": test_name,
+        #     "started_at": now(),
+        # })
+        # candidate.save()
+        # frappe.db.commit()
 
     return {
         'test': {

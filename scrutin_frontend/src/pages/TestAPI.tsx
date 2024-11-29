@@ -126,6 +126,10 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
 const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_current_question")
 
 
+const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_started_time")
+
+
+
 
 
 
@@ -234,16 +238,6 @@ const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_c
         });
       }}>
         GET Candidate Test Progress
-      </Button>
-
-
-      <Button onClick={() => {
-        add_scrutin_test_progress.call({
-          candidate_id: '37hc0ipka2',
-          test_id: 'k9o3uoe1ob'
-        });
-      }}>
-        POST Candidate Test Progress
       </Button>
 
 
@@ -361,7 +355,7 @@ const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_c
       <Button onClick={() => {
         add_scrutin_question_response.call({
           candidate_id: '37hc0ipka2',
-          question_id: '1ssr2b9q2d',
+          question_id: '1nuqjb313j',
           answer: '3'
         });
       }}>
@@ -375,6 +369,25 @@ const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_c
         });
       }}>
         GET Candidate Question Response
+      </Button>
+
+
+      <Button onClick={() => {
+        add_scrutin_test_progress.call({
+          candidate_id: '37hc0ipka2',
+          test_id: 'k9o3uoe1ob'
+        });
+      }}>
+        POST Candidate Test Progress
+      </Button>
+
+
+      <Button onClick={() => {
+        update_assessment_started_time.call({
+          candidate_id: '37hc0ipka2',
+        });
+      }}>
+        Update Assessment started time
       </Button>
 
 
