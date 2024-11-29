@@ -212,6 +212,22 @@ def update_assessment_started_time(candidate_id):
         return f"An error occurred: {e}"
 
 
+@frappe.whitelist()
+def update_assessment_completed_time(candidate_id):
+    try:
+
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+
+        candidate.assessment_completed_at = now()
+        candidate.save()
+        frappe.db.commit()
+        return f"Assessment started time updated successfully for candidate {candidate_id}"
+    
+    except Exception as e:
+        frappe.db.rollback()
+        return f"An error occurred: {e}"
+
+
 
 # This API Show Test Question One by One and also POST the Test and Question & Answer 
 # into the candidate Responses if we change the answer then it will change the that question answer

@@ -129,6 +129,10 @@ const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_c
 const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_started_time")
 
 
+const update_assessment_completed_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_completed_time")
+
+
+
 const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test.are_all_questions_answered")
 
 
@@ -392,6 +396,15 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
         });
       }}>
         Update Assessment started time
+      </Button>
+
+
+      <Button onClick={() => {
+        update_assessment_completed_time.call({
+          candidate_id: '37hc0ipka2',
+        });
+      }}>
+        Update Assessment Completed time
       </Button>
 
 
