@@ -129,6 +129,10 @@ const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_c
 const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_started_time")
 
 
+const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test.are_all_questions_answered")
+
+
+
 
 
 
@@ -308,7 +312,7 @@ const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_
 
       <Button onClick={() => {
         get_specific_assessment_tests_by_candidate_id.call({
-          candidate_id: 'u3qafmr9qo',
+          candidate_id: '37hc0ipka2',
         });
       }}>
         get_specific_assessment_tests_by_candidate_id
@@ -388,6 +392,16 @@ const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_
         });
       }}>
         Update Assessment started time
+      </Button>
+
+
+      <Button onClick={() => {
+        are_all_questions_answered.call({
+          candidate_id: '37hc0ipka2',
+          test_name: 'f3988t64af'
+        });
+      }}>
+        Check complete test progress for overview page
       </Button>
 
 
