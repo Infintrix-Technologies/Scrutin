@@ -194,17 +194,11 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 
 
 
-
 # This API Show Test Question One by One and also POST the Test and Question & Answer 
 # into the candidate Responses if we change the answer then it will change the that question answer
 # not make a new entry in the candidate Responses
 @frappe.whitelist()
 def get_question_with_answer_and_post_in_responses(candidate_id, current_test_index=0, current_question_index=0, selected_option=None):
-    try:
-        current_test_index = int(current_test_index)
-        current_question_index = int(current_question_index)
-    except ValueError:
-        frappe.throw("Invalid input: current_test_index and current_question_index must be integers.")
 
     # Define DocTypes
     ScrutinAssessment = DocType("Scrutin Assessment")
@@ -215,7 +209,6 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
     ScrutinQuestionOption = DocType("Scrutin Question Option")
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinTestProgress = DocType("Scrutin Test Progress")
-    ScrutinQuestionResponse = DocType("Scrutin Question Responses")
 
     # Query to get candidate's assessment
     query = (
@@ -365,4 +358,417 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
         }
     }
 
+
+
+
+
+
+@frappe.whitelist()
+
+# Function to get candidate's questions and their responses
+def get_candidate_questions_answer_responses(candidate_id):
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinQuestionResponse = DocType("Scrutin Question Responses")
+    ScrutinQuestion = DocType("Scrutin Question")
+    
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .join(ScrutinQuestionResponse)
+        .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
+        .join(ScrutinQuestion)
+        .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+        .select(
+            ScrutinQuestion.name.as_("question"),
+            ScrutinQuestion.question.as_("question_content"),
+            ScrutinQuestionResponse.answer,
+        )
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    results = query.run(as_dict=True)
+    return results
+
+
+@frappe.whitelist()
+def get_specific_test_details(test_id):
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question)
+        .where(ScrutinTest.name == test_id)
+    )
+    question_ids = question_query.run(as_dict=True)
+    return question_ids
+
+
+
+
+@frappe.whitelist()
+def get_cur(candidate_id):
+    # Define DocTypes
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinTestProgress = DocType("Scrutin Test Progress")
+
+    # Query to get candidate's assessment
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_assessments = query.run(as_dict=True)
+    if candidate_assessments:
+        assessment_name = candidate_assessments[0].get('assessment')
+    else:
+        assessment_name = None
+
+    if not assessment_name:
+        return {
+            'message': 'No assessment found for the candidate'
+        }
+
+    # Query to get tests related to the assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    if not tests:
+        return {
+            'message': 'No tests available for the assessment'
+        }
+
+    # Get the first test from the assessment
+    
+    current_test_index = 0
+    current_test = tests[current_test_index]
+    test_name = current_test['test']
+
+    # Query to get questions for the current test
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question)
+        .where(ScrutinTest.name == test_name)
+    )
+    questions = question_query.run(as_dict=True)
+
+    if not questions:
+        return {
+            'message': 'No questions available for the test'
+        }
+
+    # Get candidate's responses
+    responses = get_candidate_questions_answer_responses(candidate_id)
+    answered_questions = {response['question'] for response in responses}
+
+    # Initialize current and next questions
+    current_question = None
+    next_question = None
+
+    # Iterate through questions to find the current and next questions
+    for i, question in enumerate(questions):
+        if question['question'] not in answered_questions:
+            current_question = question
+            if i + 1 < len(questions):
+                next_question = questions[i + 1]['question']
+            else:
+                # If the current question is the last question in the current test
+                next_question = None
+            break
+
+    if not current_question:
+        current_question = questions[0]
+        next_question = questions[1]['question'] if len(questions) > 1 else None
+
+    # If the current question is the last question of the current test
+    if next_question is None:
+
+        next_test_index = current_test_index + 1
+        if next_test_index < len(tests):
+            next_test = tests[next_test_index]
+            next_test_name = next_test['test']
+            # Query to get questions for the next test
+            next_test_question_query = (
+                frappe.qb.from_(ScrutinTestQuestion)
+                .inner_join(ScrutinTest)
+                .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+                .inner_join(ScrutinQuestion)
+                .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+                .select(ScrutinTestQuestion.question)
+                .where(ScrutinTest.name == next_test_name)
+            )
+            next_test_questions = next_test_question_query.run(as_dict=True)
+            if next_test_questions:
+                next_question = next_test_questions[0]['question']
+        else:
+            next_question = None
+
+    # Add options for the current question
+    option_query = (
+        frappe.qb.from_(ScrutinQuestionOption)
+        .select(
+            ScrutinQuestionOption.value,
+            ScrutinQuestionOption.label
+        )
+        .where(ScrutinQuestionOption.parent == current_question['question'])
+    )
+    options = option_query.run(as_dict=True)
+    current_question['options'] = options
+
+    # Update the current test, current question, and next question in Scrutin Candidate
+    update_data = {
+        'custom_current_question': current_question['question'],
+        'custom_next_question': next_question
+    }
+    frappe.db.set_value("Scrutin Candidate", candidate_id, update_data)
+
+    # Check if the test has already been logged in ScrutinTestProgress
+    test_progress_query = (
+        frappe.qb.from_(ScrutinTestProgress)
+        .select(ScrutinTestProgress.test)
+        .where(ScrutinTestProgress.test == test_name)
+    )
+    test_progress = test_progress_query.run(as_dict=True)
+    if not test_progress:
+        # Add test progress if not already recorded
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        candidate.append("test_progress", {
+            "test": test_name,
+            "started_at": now(),
+        })
+        candidate.save()
+        frappe.db.commit()
+
+    # Return the current test and question with their details
+    return {
+        'test': {
+            'test': current_test['test'],
+            'current_question': current_question,
+        }
+    }
+
+
+
+
+@frappe.whitelist()
+def get_current_question(candidate_id):
+    # Define DocTypes
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinTestProgress = DocType("Scrutin Test Progress")
+
+    # Helper function to check if all questions of a test are answered
+    def are_all_questions_answered(test_name, candidate_id):
+        # Get questions for the test
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(ScrutinTestQuestion.question)
+            .where(ScrutinTest.name == test_name)
+        )
+        questions = question_query.run(as_dict=True)
+        
+        if not questions:
+            return True  # No questions in the test
+        
+        # Get candidate's responses
+        responses = get_candidate_questions_answer_responses(candidate_id)
+        answered_questions = {response['question'] for response in responses}
+        
+        # Check if all questions are answered
+        for question in questions:
+            if question['question'] not in answered_questions:
+                return False
+        
+        return True
+
+    # Query to get candidate's assessment
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_assessments = query.run(as_dict=True)
+    if candidate_assessments:
+        assessment_name = candidate_assessments[0].get('assessment')
+    else:
+        assessment_name = None
+
+    if not assessment_name:
+        return {
+            'message': 'No assessment found for the candidate'
+        }
+
+    # Query to get tests related to the assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    if not tests:
+        return {
+            'message': 'No tests available for the assessment'
+        }
+
+    # Find the current test
+    current_test = 0
+    while current_test < len(tests):
+        current_test = tests[current_test]
+        test_name = current_test['test']
+
+        if are_all_questions_answered(test_name, candidate_id):
+            current_test += 1
+        else:
+            break
+
+    if current_test >= len(tests):
+        return {
+            'message': 'All tests are completed'
+        }
+
+    # Get questions for the current test
+    test_name = tests[current_test]['test']
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question)
+        .where(ScrutinTest.name == test_name)
+    )
+    questions = question_query.run(as_dict=True)
+
+    if not questions:
+        return {
+            'message': 'No questions available for the test'
+        }
+
+    # Get candidate's responses
+    responses = get_candidate_questions_answer_responses(candidate_id)
+    answered_questions = {response['question'] for response in responses}
+
+    # Initialize current and next questions
+    current_question = None
+    next_question = None
+
+    # Iterate through questions to find the current and next questions
+    for i, question in enumerate(questions):
+        if question['question'] not in answered_questions:
+            current_question = question
+            if i + 1 < len(questions):
+                next_question = questions[i + 1]['question']
+            else:
+                # If the current question is the last question in the current test
+                next_question = None
+            break
+
+    if not current_question:
+        current_question = questions[0]
+        next_question = questions[1]['question'] if len(questions) > 1 else None
+
+    # If the current question is the last question of the current test
+    if next_question is None:
+        next_test = current_test + 1
+        if next_test < len(tests):
+            next_test = tests[next_test]
+            next_test_name = next_test['test']
+            # Query to get questions for the next test
+            next_test_question_query = (
+                frappe.qb.from_(ScrutinTestQuestion)
+                .inner_join(ScrutinTest)
+                .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+                .inner_join(ScrutinQuestion)
+                .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+                .select(ScrutinTestQuestion.question)
+                .where(ScrutinTest.name == next_test_name)
+            )
+            next_test_questions = next_test_question_query.run(as_dict=True)
+            if next_test_questions:
+                next_question = next_test_questions[0]['question']
+        else:
+            next_question = None
+
+    # Add options for the current question
+    option_query = (
+        frappe.qb.from_(ScrutinQuestionOption)
+        .select(
+            ScrutinQuestionOption.value,
+            ScrutinQuestionOption.label
+        )
+        .where(ScrutinQuestionOption.parent == current_question['question'])
+    )
+    options = option_query.run(as_dict=True)
+    current_question['options'] = options
+
+    # Update the current test, current question, and next question in Scrutin Candidate
+    update_data = {
+        'custom_current_question': current_question['question'],
+        'custom_next_question': next_question
+    }
+    frappe.db.set_value("Scrutin Candidate", candidate_id, update_data)
+
+    # Check if the test has already been logged in ScrutinTestProgress
+    test_progress_query = (
+        frappe.qb.from_(ScrutinTestProgress)
+        .select(ScrutinTestProgress.test)
+        .where(ScrutinTestProgress.test == test_name)
+    )
+    test_progress = test_progress_query.run(as_dict=True)
+    if not test_progress:
+        # Add test progress if not already recorded
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        candidate.append("test_progress", {
+            "test": test_name,
+            "started_at": now(),
+        })
+        candidate.save()
+        frappe.db.commit()
+
+    # Return the current test and question with their details
+    return {
+        'test': {
+            'test': current_test['test'],
+            'current_question': current_question,
+        }
+    }
 
