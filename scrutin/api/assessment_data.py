@@ -1109,6 +1109,88 @@ def get_candidate_detail_for_intro(candidate_id):
 
 
 # This API is used to show data about specific candidate on OVERVIEW PAGE by candidate_id
+# @frappe.whitelist()
+# def get_specific_assessment_tests_by_candidate_id(candidate_id):
+#     ScrutinAssessment = DocType("Scrutin Assessment")
+#     ScrutinTest = DocType("Scrutin Test")
+#     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+#     ScrutinQuestion = DocType("Scrutin Question")
+#     ScrutinTestQuestion = DocType("Scrutin Test Question")
+#     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+#     ScrutinCandidate = DocType("Scrutin Candidate")
+
+#     query = (
+#         frappe.qb.from_(ScrutinCandidate)
+#         .select(ScrutinCandidate.assessment)
+#         .where(ScrutinCandidate.name == candidate_id)
+#     )
+#     candidate_assessments = query.run(as_dict=True) 
+#     if candidate_assessments:
+#         assessment_id = candidate_assessments[0].get('assessment')
+#     else:
+#         assessment_id = None
+
+#     custom_question_count_query = (
+#         frappe.qb.from_(ScrutinAssessmentQuestion)
+#         .select(fn.Count(ScrutinAssessmentQuestion.question).as_("total_custom_questions"))
+#         .where(ScrutinAssessmentQuestion.parent == assessment_id)
+#     )
+#     custom_question_count_result = custom_question_count_query.run(as_dict=True)
+#     total_custom_questions = custom_question_count_result[0]['total_custom_questions'] if custom_question_count_result else 0
+
+#     # Query to get tests for the candidate's assessment
+#     tests_query = (
+#         frappe.qb.from_(ScrutinAssessmentTest)
+#         .inner_join(ScrutinAssessment)
+#         .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+#         .inner_join(ScrutinTest)
+#         .on(ScrutinTest.name == ScrutinAssessmentTest.test)
+#         .select(
+#             ScrutinAssessment.assessment_name,
+#             ScrutinTest.name,
+#             ScrutinTest.title,
+#         )
+#         .where(ScrutinAssessment.name == assessment_id)
+#     )
+#     tests = tests_query.run(as_dict=True)
+
+#     for test in tests:
+#         test_name = test['name']
+        
+#         # Query to get total duration of the test
+#         duration_query = (
+#             frappe.qb.from_(ScrutinTestQuestion)
+#             .inner_join(ScrutinTest)
+#             .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+#             .inner_join(ScrutinQuestion)
+#             .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+#             .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+#             .where(ScrutinTest.name == test_name)
+#         )
+#         duration_result = duration_query.run(as_dict=True)
+#         total_duration = duration_result[0]['total_duration'] if duration_result else 0
+        
+#         # Query to get total number of questions in the test
+#         question_count_query = (
+#             frappe.qb.from_(ScrutinTestQuestion)
+#             .inner_join(ScrutinTest)
+#             .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+#             .select(fn.Count(ScrutinTestQuestion.question).as_("total_questions"))
+#             .where(ScrutinTest.name == test_name)
+#         )
+#         question_count_result = question_count_query.run(as_dict=True)
+#         total_questions = question_count_result[0]['total_questions'] if question_count_result else 0
+        
+#         test['total_duration'] = total_duration
+#         test['total_questions'] = total_questions
+
+#     return {
+#         "tests": tests,
+#         "custom_questions": total_custom_questions,
+#     }
+
+
+
 @frappe.whitelist()
 def get_specific_assessment_tests_by_candidate_id(candidate_id):
     ScrutinAssessment = DocType("Scrutin Assessment")
@@ -1118,26 +1200,38 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
     ScrutinTestQuestion = DocType("Scrutin Test Question")
     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
     ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinQuestionResponse = DocType("Scrutin Question Responses")
 
+    # Helper function to get candidate's question responses
+    def get_candidate_questions_answer_responses(candidate_id):
+        query = (
+            frappe.qb.from_(ScrutinCandidate)
+            .join(ScrutinQuestionResponse)
+            .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
+            .join(ScrutinQuestion)
+            .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+            .select(
+                ScrutinQuestion.name.as_("question"),
+                ScrutinQuestion.question.as_("question_content"),
+                ScrutinQuestionResponse.answer,
+            )
+            .where(ScrutinCandidate.name == candidate_id)
+        )
+        return query.run(as_dict=True)
+    
+    # Fetch candidate's assessments
     query = (
         frappe.qb.from_(ScrutinCandidate)
         .select(ScrutinCandidate.assessment)
         .where(ScrutinCandidate.name == candidate_id)
     )
-    candidate_assessments = query.run(as_dict=True) 
+    candidate_assessments = query.run(as_dict=True)
     if candidate_assessments:
         assessment_id = candidate_assessments[0].get('assessment')
     else:
         assessment_id = None
 
-    # Fetch candidate details
-    # candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
-    # if not candidate:
-    #     return {"error": "Candidate not found"}
-
-    # assessment_id = candidate.assessment
-
-    # Query to get the total number of Custom questions for the candidate's assessment
+    # Fetch custom questions count
     custom_question_count_query = (
         frappe.qb.from_(ScrutinAssessmentQuestion)
         .select(fn.Count(ScrutinAssessmentQuestion.question).as_("total_custom_questions"))
@@ -1146,7 +1240,7 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
     custom_question_count_result = custom_question_count_query.run(as_dict=True)
     total_custom_questions = custom_question_count_result[0]['total_custom_questions'] if custom_question_count_result else 0
 
-    # Query to get tests for the candidate's assessment
+    # Fetch tests for the candidate's assessment
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
         .inner_join(ScrutinAssessment)
@@ -1162,10 +1256,14 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
     )
     tests = tests_query.run(as_dict=True)
 
+    # Fetch candidate's responses
+    candidate_responses = get_candidate_questions_answer_responses(candidate_id)
+    answered_questions = {response['question'] for response in candidate_responses}
+
     for test in tests:
         test_name = test['name']
-        
-        # Query to get total duration of the test
+
+        # Fetch total duration of the test
         duration_query = (
             frappe.qb.from_(ScrutinTestQuestion)
             .inner_join(ScrutinTest)
@@ -1178,7 +1276,7 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
         duration_result = duration_query.run(as_dict=True)
         total_duration = duration_result[0]['total_duration'] if duration_result else 0
         
-        # Query to get total number of questions in the test
+        # Fetch total number of questions in the test
         question_count_query = (
             frappe.qb.from_(ScrutinTestQuestion)
             .inner_join(ScrutinTest)
@@ -1188,14 +1286,33 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
         )
         question_count_result = question_count_query.run(as_dict=True)
         total_questions = question_count_result[0]['total_questions'] if question_count_result else 0
+
+        # Check if all questions in the test are answered
+        test_questions_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(ScrutinTestQuestion.question)
+            .where(ScrutinTest.name == test_name)
+        )
+        test_questions = test_questions_query.run(as_dict=True)
+        unanswered_questions = [
+            question['question'] for question in test_questions if question['question'] not in answered_questions
+        ]
         
+        # Update test details
         test['total_duration'] = total_duration
         test['total_questions'] = total_questions
+        test['unanswered_questions'] = len(unanswered_questions)
+        test['answered_questions'] = total_questions - len(unanswered_questions)
 
     return {
         "tests": tests,
         "custom_questions": total_custom_questions,
     }
+
 
 
 
