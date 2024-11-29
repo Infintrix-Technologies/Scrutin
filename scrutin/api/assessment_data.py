@@ -1119,6 +1119,7 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinQuestionResponse = DocType("Scrutin Question Responses")
+    JobApplicant = DocType("Job Applicant")
 
     # Helper function to get candidate's question responses
     def get_candidate_questions_answer_responses(candidate_id):
@@ -1137,6 +1138,19 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
         )
         return query.run(as_dict=True)
     
+    # Fetch candidate's detail including applicant name
+    candidate_detail = (
+        frappe.qb.from_(ScrutinCandidate)
+        .left_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
+        .left_join(JobApplicant)
+        .on(JobApplicant.name == ScrutinCandidate.job_applicant)
+        .select(
+            JobApplicant.applicant_name,
+        )
+    ).run(as_dict=True)
+    applicant_name = candidate_detail[0]["applicant_name"] if candidate_detail else None
+
     # Fetch candidate's assessments
     query = (
         frappe.qb.from_(ScrutinCandidate)
@@ -1229,6 +1243,7 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
     return {
         "tests": tests,
         "custom_questions": total_custom_questions,
+        "applicant_name": applicant_name,
     }
 
 
