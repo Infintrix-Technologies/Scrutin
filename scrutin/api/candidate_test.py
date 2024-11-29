@@ -194,18 +194,22 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 @frappe.whitelist()
 def update_assessment_started_time(candidate_id):
     try:
+        # Fetch the Scrutin Candidate document
         candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
 
-        #
-        candidate.assessment_started_at = now()
+        # Check if the assessment_started_at field is already set
+        if candidate.assessment_started_at:
+            return f"Assessment started time is already set for candidate {candidate_id}"
 
+        # Set the assessment_started_at field to the current timestamp
+        candidate.assessment_started_at = now()
         candidate.save()
         frappe.db.commit()
         return f"Assessment started time updated successfully for candidate {candidate_id}"
     
     except Exception as e:
         frappe.db.rollback()
-        return f"An error occurred: {e}"  
+        return f"An error occurred: {e}"
 
 
 
@@ -420,6 +424,37 @@ def get_specific_test_details(test_id):
     )
     question_ids = question_query.run(as_dict=True)
     return question_ids
+
+
+@frappe.whitelist()
+def are_all_questions_answered(test_name, candidate_id):
+
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(ScrutinTestQuestion.question)
+        .where(ScrutinTest.name == test_name)
+    )
+    questions = question_query.run(as_dict=True)
+    
+    if not questions:
+        return True  # No questions in the test
+    
+    responses = get_candidate_questions_answer_responses(candidate_id)
+    answered_questions = {response['question'] for response in responses}
+    
+    for question in questions:
+        if question['question'] not in answered_questions:
+            return False
+    
+    return True
 
 
 
