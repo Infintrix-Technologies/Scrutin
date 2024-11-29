@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "react-hot-toast";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import { Option } from "@/components/Interfaces/Interface";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TestPage = () => {
   const { candidate_id } = useParams();
@@ -22,6 +22,7 @@ const TestPage = () => {
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.add_scrutin_question_response"
   );
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!selectedOption) {
@@ -30,22 +31,30 @@ const TestPage = () => {
     }
 
     try {
-      await call({
+      const response = await call({
         candidate_id,
         question_id: data?.message?.test?.current_question?.name,
         answer: selectedOption,
       });
-      // reset selection when page is reload or reFresh
-      setSelectedOption(null); 
-      // when reload the window update the question
-      setTriggerReload((prev) => !prev); 
-      toast.success("Response submitted successfully!");
 
+      if (response?.message?.message === "All tests are completed") {
+        navigate(`/candidacy/${candidate_id}/overview`);
+      } else {
+        setSelectedOption(null); // Reset selection
+        setTriggerReload((prev) => !prev); // Reload questions
+        toast.success("Response submitted successfully!");
+      }
     } catch (error) {
       console.error("Error in post call:", error);
       toast.error("There was an issue submitting your response. Please try again.");
     }
   };
+
+  useEffect(() => {
+    if (data?.message?.message === "All tests are completed") {
+      navigate(`/candidacy/${candidate_id}/overview`);
+    }
+  }, [data, navigate, candidate_id]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading test data.</p>;
