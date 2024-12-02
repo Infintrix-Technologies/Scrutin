@@ -1,0 +1,24 @@
+[
+    {
+        "doctype": "Custom Field",
+        "dt": "Scrutin Candidate",
+        "module": "scrutin",
+        "name": "Current-question",
+        "fieldname": "current_question",
+        "fieldtype": "Link",
+        "label": "Current Question",
+        "options": "Scrutin Question",
+        "insert_after": "status"
+    },
+    {
+        "doctype": "Custom Field",
+        "dt": "Scrutin Candidate",
+        "module": "scrutin",
+        "name": "Next-question",
+        "fieldname": "next_question",
+        "fieldtype": "Link",
+        "label": "Next Question",
+        "options": "Scrutin Question",
+        "insert_after": "current_question"
+    }
+]

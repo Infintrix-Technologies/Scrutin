@@ -1015,6 +1015,7 @@ def get_candidate_detail_based_on_candidate_id(candidate_id):
             ScrutinTestQuestion.parent.as_("test_name"),
             ScrutinTestQuestion.question,
             ScrutinQuestion.question,
+            ScrutinQuestion.answer
         )
         .where(ScrutinTest.name.isin([test['test'] for test in tests]))
     )

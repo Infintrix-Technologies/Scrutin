@@ -193,39 +193,25 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 
 @frappe.whitelist()
 def update_assessment_started_time(candidate_id):
-    try:
-        # Fetch the Scrutin Candidate document
-        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
 
-        # Check if the assessment_started_at field is already set
-        if candidate.assessment_started_at:
-            return f"Assessment started time is already set for candidate {candidate_id}"
-
-        # Set the assessment_started_at field to the current timestamp
-        candidate.assessment_started_at = now()
-        candidate.save()
-        frappe.db.commit()
-        return f"Assessment started time updated successfully for candidate {candidate_id}"
-    
-    except Exception as e:
-        frappe.db.rollback()
-        return f"An error occurred: {e}"
-
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    # Using Query Builder to update the document
+    (
+        frappe.qb.update(ScrutinCandidate)
+        .set(ScrutinCandidate.assessment_started_at, now())
+        .where(ScrutinCandidate.name == candidate_id)
+    ).run()
 
 @frappe.whitelist()
 def update_assessment_completed_time(candidate_id):
-    try:
 
-        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
-
-        candidate.assessment_completed_at = now()
-        candidate.save()
-        frappe.db.commit()
-        return f"Assessment started time updated successfully for candidate {candidate_id}"
-    
-    except Exception as e:
-        frappe.db.rollback()
-        return f"An error occurred: {e}"
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    # Using Query Builder to update the document
+    (
+        frappe.qb.update(ScrutinCandidate)
+        .set(ScrutinCandidate.assessment_completed_at, now())
+        .where(ScrutinCandidate.name == candidate_id)
+    ).run()
 
 
 
@@ -398,9 +384,8 @@ def get_question_with_answer_and_post_in_responses(candidate_id, current_test_in
 
 
 
-@frappe.whitelist()
-
 # Function to get candidate's questions and their responses
+@frappe.whitelist()
 def get_candidate_questions_answer_responses(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinQuestionResponse = DocType("Scrutin Question Responses")
@@ -677,8 +662,8 @@ def get_current_question(candidate_id):
     current_question['options'] = options
 
     update_data = {
-        'custom_current_question': current_question['question'],
-        'custom_next_question': next_question
+        'current_question': current_question['question'],
+        'next_question': next_question
     }
     frappe.db.set_value("Scrutin Candidate", candidate_id, update_data)
 
@@ -719,5 +704,61 @@ def add_scrutin_test_progress(candidate_id, test_name, started_at):
     except Exception as e:
         frappe.db.rollback()
         return f"An error occurred: {e}"
+
+
+
+
+
+
+@frappe.whitelist()
+# def check_how_many_candidate_responses_are_correct(candidate_id):
+#     ScrutinCandidate = DocType("Scrutin Candidate")
+#     ScrutinQuestionResponse = DocType("Scrutin Question Responses") #response->question->answer
+#     ScrutinQuestion = DocType("Scrutin Question") #question -> answer
+    
+#     query = (
+#         frappe.qb.from_(ScrutinCandidate)
+#         .join(ScrutinQuestionResponse)
+#         .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
+#         .join(ScrutinQuestion)
+#         .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+#         .select(
+#             ScrutinQuestion.name.as_("question"),
+#             ScrutinQuestion.question.as_("question_content"),
+#             ScrutinQuestionResponse.answer.as_("candidate_answer"),
+#             ScrutinQuestion.answer.as_("actual_answer")
+
+#         )
+#         .where(ScrutinCandidate.name == candidate_id)
+#     )
+#     results = query.run(as_dict=True)
+#     return results
+
+def check_how_many_candidate_responses_are_correct(candidate_id):
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinQuestionResponse = DocType("Scrutin Question Responses")  # response->question->answer
+    ScrutinQuestion = DocType("Scrutin Question")  # question -> answer
+
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .join(ScrutinQuestionResponse)
+        .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
+        .join(ScrutinQuestion)
+        .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+        .select(
+            ScrutinQuestion.name.as_("question"),
+            ScrutinQuestion.question.as_("question_content"),
+            ScrutinQuestionResponse.answer.as_("candidate_answer"),
+            ScrutinQuestion.answer.as_("actual_answer"),
+        )
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    results = query.run(as_dict=True)
+
+    # Add comparison to check if answers match
+    for result in results:
+        result["is_correct"] = result["candidate_answer"] == result["actual_answer"]
+
+    return results
 
 
