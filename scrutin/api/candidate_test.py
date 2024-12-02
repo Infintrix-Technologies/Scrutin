@@ -614,7 +614,8 @@ def get_current_question(candidate_id):
         .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
         .select(
             ScrutinTestQuestion.question,
-            ScrutinQuestion.question.as_('question_text')  
+            ScrutinQuestion.question.as_('question_text'),
+            ScrutinQuestion.type.as_('question_type')
         )
         .where(ScrutinTest.name == test_name)
     )
@@ -690,6 +691,7 @@ def get_current_question(candidate_id):
             'current_question': {
                 'name': current_question['question'],
                 'text': current_question['question_text'],  
+                'type': current_question['question_type'],
                 'options': options
             },
             # 'next_question': next_question

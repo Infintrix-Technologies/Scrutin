@@ -363,7 +363,7 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
       <Button onClick={() => {
         add_scrutin_question_response.call({
           candidate_id: 'k39k9ek7i1',
-          question_id: '1pp98pd64f',
+          question_id: '1nuqjb313j',
           answer: '3'
         });
       }}>
