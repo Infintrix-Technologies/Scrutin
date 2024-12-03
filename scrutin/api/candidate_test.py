@@ -193,25 +193,67 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 
 @frappe.whitelist()
 def update_assessment_started_time(candidate_id):
-
     ScrutinCandidate = DocType("Scrutin Candidate")
-    # Using Query Builder to update the document
+
+    # Query to check if assessment_started_at is already set
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment_started_at)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    result = query.run(as_dict=True)
+
+    if result and result[0].get('assessment_started_at'):
+        # If assessment_started_at is already set, do not update it
+        return {
+            'message': 'Assessment started time is already set',
+            'assessment_started_at': result[0].get('assessment_started_at')
+        }
+    
+    # Using Query Builder to update the document if assessment_started_at is not set
     (
         frappe.qb.update(ScrutinCandidate)
         .set(ScrutinCandidate.assessment_started_at, now())
         .where(ScrutinCandidate.name == candidate_id)
     ).run()
 
-@frappe.whitelist()
-def update_assessment_completed_time(candidate_id):
+    return {
+        'message': 'Assessment started time updated',
+        'assessment_started_at': now()
+    }
 
+
+
+def update_assessment_completed_time(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
-    # Using Query Builder to update the document
+
+    # Query to check if assessment_completed_at is already set
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment_completed_at)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    result = query.run(as_dict=True)
+
+    if result and result[0].get('assessment_completed_at'):
+        # If assessment_completed_at is already set, do not update it
+        return {
+            'message': 'Assessment started time is already set',
+            'assessment_completed_at': result[0].get('assessment_completed_at')
+        }
+    
+    # Using Query Builder to update the document if assessment_completed_at is not set
     (
         frappe.qb.update(ScrutinCandidate)
         .set(ScrutinCandidate.assessment_completed_at, now())
         .where(ScrutinCandidate.name == candidate_id)
     ).run()
+
+    return {
+        'message': 'Assessment started time updated',
+        'assessment_completed_at': now()
+    }
+
 
 
 
