@@ -149,6 +149,11 @@ const get_candidate_assessment_performance = useFrappePostCall("scrutin.api.cand
 
 
 
+const get_assessment_based_on_designation = useFrappePostCall("scrutin.api.assessment_based_on_designation.get_assessment_based_on_designation")
+
+
+
+
 
 
 
@@ -177,7 +182,7 @@ const get_candidate_assessment_performance = useFrappePostCall("scrutin.api.cand
       flexDirection:"column",
       gap:"12px",
     }}>TestAPI
-<Button onClick={() => {
+      <Button onClick={() => {
         specific_assessment_candidates.call({
           assessmnt: 'Python Developer',
         });
@@ -459,6 +464,15 @@ const get_candidate_assessment_performance = useFrappePostCall("scrutin.api.cand
         });
       }}>
         get individual test average
+      </Button>
+
+
+      <Button onClick={() => {
+        get_assessment_based_on_designation.call({
+          applicant_id: 'salmansaeed7272@gmail.com'
+        });
+      }}>
+        get job applicant designation
       </Button>
 
 
