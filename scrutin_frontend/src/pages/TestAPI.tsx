@@ -137,6 +137,11 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
 
 
 
+const check_how_many_candidate_responses_are_correct = useFrappePostCall("scrutin.api.candidate_test.check_how_many_candidate_responses_are_correct")
+
+
+
+
 
 
 
@@ -364,7 +369,7 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
         add_scrutin_question_response.call({
           candidate_id: 'k39k9ek7i1',
           question_id: '1nuqjb313j',
-          answer: '3'
+          answer: '[2,4]'
         });
       }}>
         POST Candidate Question Response
@@ -373,7 +378,7 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
 
       <Button onClick={() => {
         get_candidate_questions_answer_responses.call({
-          candidate_id: '37hc0ipka2'
+          candidate_id: 'k39k9ek7i1'
         });
       }}>
         GET Candidate Question Response
@@ -415,6 +420,15 @@ const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test
         });
       }}>
         Check complete test progress for overview page
+      </Button>
+
+
+      <Button onClick={() => {
+        check_how_many_candidate_responses_are_correct.call({
+          candidate_id: 'k39k9ek7i1'
+        });
+      }}>
+        how many candidate responses are correct
       </Button>
 
 
