@@ -86,6 +86,8 @@ export interface AssessmentTest {
   test: string;
   weight: string;
   title: string;
+  test_title:string
+  accuracy:number
 }
 
 export interface Assessment {

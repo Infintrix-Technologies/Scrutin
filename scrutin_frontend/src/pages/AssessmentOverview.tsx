@@ -14,7 +14,7 @@ export default function AssessmentOverview() {
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = get_specific_assessment_tests?.data?.message || [];
-  console.log(specific_assessment_tests,"specific_assessment_testsspecific_assessment_tests");
+  // console.log(specific_assessment_tests,"specific_assessment_testsspecific_assessment_tests");
   
   const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_started_time")
 
@@ -115,19 +115,25 @@ export default function AssessmentOverview() {
           </div>
 
           <div className="flex justify-end mt-6">
-            <Link to={`/candidacy/${candidate_id}/setup`}>
-              <Button className="text-end flex items-center"
-              onClick={() => {
-                update_assessment_started_time.call({
-                  candidate_id: candidate_id,
-                });
-              }}
-              >
-                Next Assessment
-                <ChevronRightIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          {specific_assessment_tests?.tests?.map((test: OverViewPage, index:number) => 
+            test.answered_questions !== test.total_questions && index === 0 && (
+              <Link to={`/candidacy/${candidate_id}/setup`} key={index}>
+                <Button
+                  className="text-end flex items-center"
+                  onClick={() => {
+                    update_assessment_started_time.call({
+                      candidate_id: candidate_id,
+                    });
+                  }}
+                >
+                  Next Assessment
+                  <ChevronRightIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            )
+          )}
+        </div>
+
         </CardContent>
       </Card>
     </div>

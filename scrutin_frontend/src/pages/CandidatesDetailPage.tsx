@@ -147,7 +147,15 @@ const CandidatesDetailPage: React.FC = () => {
 
   const candidate_details =
     get_candidate_details?.data?.message?.candidate_assessment || [];
-  // console.log(candidate_details,"candidate_details");
+    const get_candidate_assessment_performance = useFrappeGetCall("scrutin.api.candidate_test.get_candidate_assessment_performance",
+      { candidate_id: candidate_details[0]?.candidate_id, 
+        // "v4qp61h4m8" 
+      }
+    )
+    console.log(get_candidate_assessment_performance,"get_candidate_assessment_performance");
+  
+  const candidate_assessment_performance =  get_candidate_assessment_performance?.data?.message || [];
+  console.log(candidate_assessment_performance,"get_candidate_assessment_performance");
 
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
@@ -430,14 +438,22 @@ const CandidatesDetailPage: React.FC = () => {
                           </h3>
                         </div>
                       </div>
+                      {/* {candidate_assessment_performance?.tests?.map((test: AssessmentTest,)=> {
+                        return (
+                          <p>{test?.test_title}</p>
+                        )
+                      })} */}
 
-                      {assessment?.tests?.map((test: AssessmentTest, index: number) => {
+                      {candidate_assessment_performance?.tests?.map((test: AssessmentTest, index: number) => {
                         return (
                           <Accordion key={index} type="single" collapsible>
                             <AccordionItem value={String(index)}>
-                              <AccordionTrigger className="flex justify-between ">
-                                <span>{test?.title}</span>
-                                <span className="ml-[250px] "> 0% </span>
+                              <AccordionTrigger className="flex">
+                                <span className="whitespace-nowrap">{test?.test_title}</span>
+                                <div className="flex justify-end items-center w-full space-x-1">
+
+                                <span > {(test?.accuracy || 0).toFixed(1)}%</span>
+                                </div>
                               </AccordionTrigger>
                               <AccordionContent>
                                 <div className="flex justify-between items-center">
@@ -447,23 +463,30 @@ const CandidatesDetailPage: React.FC = () => {
                                   </p>
                                   <p className="flex gap-2 items-center">
                                     <RxTimer />
-                                    Finished in 00:09:00 out of 00:09:00{" "}
+                                    Finished in 09:00 out of 09:00{" "}
                                   </p>
                                 </div>
 
                                 <Card className="w-full max-w-2xl my-3">
-                                  <CardHeader>
+                                  {/* <CardHeader>
                                     <CardTitle className="text-lg font-semibold">
                                       Communication Skills Assessment
                                     </CardTitle>
                                     <hr />
-                                  </CardHeader>
+                                  </CardHeader> */}
                                   <CardContent>
                                     <ul className="space-y-6">
+                                     <p className="text-sm">
+                                        total correct and incorrect questions.
+
+                                     </p>
+                                      <p className="text-sm">
+                                        un answered questions.
+                                      </p>
                                       {skillsData.map((item, index) => (
                                         <li key={index} className="space-y-2">
                                           <p className="text-sm">
-                                            {item.skill}
+                                            Total Correct and Incorrect Questions.
                                           </p>
                                           <div className="flex h-6 w-full">
                                             <div

@@ -1,6 +1,4 @@
-import {
-  //  useEffect, 
-  useState } from "react";
+import {  useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "react-hot-toast";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import { Option } from "@/components/Interfaces/Interface";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 const TestPage = () => {
   const { candidate_id } = useParams();
@@ -22,11 +20,7 @@ const TestPage = () => {
     [triggerReload]
   );
 
-  const { call } = useFrappePostCall(
-    "scrutin.api.candidate_test.add_scrutin_question_response"
-  );
-  const navigate = useNavigate();
-
+  
   const handleSubmit = async () => {
     if (!selectedOption || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
       toast.error("Select an option before submitting.");
@@ -34,46 +28,22 @@ const TestPage = () => {
     }
   
     try {
-      const response = await call({
+      await call({
         candidate_id,
         question_id: data?.message?.test?.current_question?.name,
         answer: Array.isArray(selectedOption)
-        // Convert elements to numbers and stringify
           ? JSON.stringify(selectedOption.map(Number)) 
-          // Handle single answer
           : selectedOption,
       });
-  
-      if (response?.message?.message === "All tests are completed") {
-        navigate(`/candidacy/${candidate_id}/overview`);
-      } else {
-        // Reset selection
+
         setSelectedOption(null); 
-        // Reload questions
         setTriggerReload((prev) => !prev); 
-        toast.success("Response submitted successfully!");
-      }
+        // toast.success("Response submitted successfully!");
     } catch (error) {
       console.error("Error in post call:", error);
       toast.error("There was an issue submitting your response. Please try again.");
     }
   };
-  
-  
-
-  // useEffect(() => {
-  //   if (data?.message?.message === "All tests are completed") {
-  //     navigate(`/candidacy/${candidate_id}/overview`);
-  //   }
-  // }, [data, navigate, candidate_id]);
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading test data.</p>;
-
-  const test = data?.message?.test;
-  const currentQuestion = test?.current_question;
-
-  const isMultiChoice = currentQuestion?.type === "Multi Choice";
 
   const handleMultiSelectChange = (value: string) => {
     setSelectedOption((prev) => {
@@ -83,6 +53,25 @@ const TestPage = () => {
       return [value];
     });
   };
+
+  const { call } = useFrappePostCall(
+    "scrutin.api.candidate_test.add_scrutin_question_response"
+  );
+
+ 
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading test data.</p>;
+
+
+  if (data?.message?.completed === true) return <Navigate to={`/candidacy/${candidate_id}/overview`}/>
+
+
+  const test = data?.message?.test;
+  const currentQuestion = test?.current_question;
+
+  const isMultiChoice = currentQuestion?.type === "Multi Choice";
+
 
   return (
     <div className="flex justify-center items-center h-auto">
