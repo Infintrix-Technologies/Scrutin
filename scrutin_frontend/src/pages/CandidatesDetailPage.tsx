@@ -96,36 +96,36 @@ import {
 import { FaChevronLeft } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
 import { useFrappeGetCall } from "frappe-react-sdk";
-import { Assessment, AssessmentTest, Question, SkillData } from "@/components/Interfaces/Interface";
+import { Assessment, AssessmentTest, Question } from "@/components/Interfaces/Interface";
 
 
-const skillsData: SkillData[] = [
-  {
-    skill: "Understanding and interpreting written communication",
-    correct: 2,
-    incorrect: 2,
-  },
-  {
-    skill: "Listening actively and interpreting non-verbal cues",
-    correct: 1,
-    incorrect: 4,
-  },
-  {
-    skill: "Communicating clearly in business contexts",
-    correct: 1.75,
-    incorrect: 2.25,
-  },
-  {
-    skill: "Using professional communication etiquette",
-    correct: 1.4,
-    incorrect: 3.6,
-  },
-  {
-    skill: "Priority and planning",
-    correct: 0,
-    incorrect: 5,
-  },
-];
+// const skillsData: SkillData[] = [
+//   {
+//     skill: "Understanding and interpreting written communication",
+//     correct: 2,
+//     incorrect: 2,
+//   },
+//   {
+//     skill: "Listening actively and interpreting non-verbal cues",
+//     correct: 1,
+//     incorrect: 4,
+//   },
+//   {
+//     skill: "Communicating clearly in business contexts",
+//     correct: 1.75,
+//     incorrect: 2.25,
+//   },
+//   {
+//     skill: "Using professional communication etiquette",
+//     correct: 1.4,
+//     incorrect: 3.6,
+//   },
+//   {
+//     skill: "Priority and planning",
+//     correct: 0,
+//     incorrect: 5,
+//   },
+// ];
 
 const CandidatesDetailPage: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
@@ -154,6 +154,18 @@ const CandidatesDetailPage: React.FC = () => {
     )
     console.log(get_candidate_assessment_performance,"get_candidate_assessment_performance");
   
+    const get_candidate_test_response_report = useFrappeGetCall("scrutin.api.test_response_report.get_candidate_test_response_report",
+      { candidate_id: candidate_details[0]?.candidate_id, 
+        // "v4qp61h4m8" 
+      }
+    )
+
+    console.log(get_candidate_test_response_report,"get_candidate_test_response_report");
+
+    const candidate_test_response_report =  get_candidate_test_response_report?.data?.message || [];
+  console.log(candidate_test_response_report,"candidate_test_response_report");
+
+
   const candidate_assessment_performance =  get_candidate_assessment_performance?.data?.message || [];
   console.log(candidate_assessment_performance,"get_candidate_assessment_performance");
 
@@ -162,7 +174,7 @@ const CandidatesDetailPage: React.FC = () => {
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
   };
-  const totalWidth = 400;
+  // const totalWidth = 400;
   return (
     <div className="px-14">
       {candidate_details?.map((assessment: Assessment, i: number) => {
@@ -391,11 +403,11 @@ const CandidatesDetailPage: React.FC = () => {
                           <Badge variant="outline">Test User</Badge>
                         </div>
                         <div>
-                          <h1 className="text-2xl font-bold">15%</h1>
+                          <h1 className="text-2xl font-bold">{(candidate_test_response_report?.assessment_average || 0).toFixed(1)}%</h1>
                           <p className="text-sm text-gray-500">Average score</p>
                         </div>
                       </div>
-                      <Progress className="mt-4" value={15} max={100} />
+                      <Progress className="mt-4" value={candidate_test_response_report?.assessment_average || 0} max={100} />
                       <p
                         className="py-2 text-blue-600 cursor-pointer"
                         onClick={() =>
@@ -455,6 +467,7 @@ const CandidatesDetailPage: React.FC = () => {
                                 <span > {(test?.accuracy || 0).toFixed(1)}%</span>
                                 </div>
                               </AccordionTrigger>
+                              <Progress className="my-4" value={test?.accuracy || 0} max={100} />
                               <AccordionContent>
                                 <div className="flex justify-between items-center">
                                   <p className="flex gap-2 items-center">
@@ -478,17 +491,42 @@ const CandidatesDetailPage: React.FC = () => {
                                     <ul className="space-y-6">
                                      <p className="text-sm">
                                         total correct and incorrect questions.
+{/* {candidate_test_response_report?.tests?.map((test: AssessmentTest,)=> {
+  console.log(test,"testtesttesttest");
+  
+                        return (
+                          <>                      
+                       
+                                        <div
+                                              className={`${test.incorrect_count === 5
+                                                  ? "bg-[#9e9e9e]"
+                                                  : "bg-red-300"
+                                                } text-black font-bold text-center`}
+                                              style={{
+                                                width: `${(test?.incorrect_count /
+                                                    (test?.correct_count +
+                                                      test?.incorrect_count)) *
+                                                  totalWidth
+                                                  }px`,
+                                              }}
+                                            >
+                                              {test?.correct_count}
+                                            </div>
+                                            </>
+                        )
+                      })} */}
+
 
                                      </p>
                                       <p className="text-sm">
                                         un answered questions.
                                       </p>
-                                      {skillsData.map((item, index) => (
+                                      {/* {skillsData.map((item, index) => (
                                         <li key={index} className="space-y-2">
                                           <p className="text-sm">
                                             Total Correct and Incorrect Questions.
                                           </p>
-                                          <div className="flex h-6 w-full">
+                                          <div >
                                             <div
                                               className="bg-green-400  text-black font-bold text-center"
                                               style={{
@@ -500,6 +538,7 @@ const CandidatesDetailPage: React.FC = () => {
                                               }}
                                             >
                                               {item?.correct}
+                                              
                                             </div>
                                             <div
                                               className={`${item.incorrect === 5
@@ -518,7 +557,8 @@ const CandidatesDetailPage: React.FC = () => {
                                             </div>
                                           </div>
                                         </li>
-                                      ))}
+                                      ))} */}
+                                      
                                     </ul>
                                     <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
                                       <div className="flex items-center">
