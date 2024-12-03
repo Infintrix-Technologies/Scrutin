@@ -7,8 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "candidate_information_section",
-  "assessment",
   "job_applicant",
+  "assessments_based_on_designation",
+  "assessment",
   "user",
   "status",
   "column_break_ahwp",
@@ -154,11 +155,17 @@
    "fieldtype": "Table",
    "label": "Test Progress",
    "options": "Scrutin Test Progress"
+  },
+  {
+   "default": "0",
+   "fieldname": "assessments_based_on_designation",
+   "fieldtype": "Check",
+   "label": "Assessments Based on Job Designation"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-22 19:36:34.923627",
+ "modified": "2024-12-03 13:08:54.294909",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Candidate",
