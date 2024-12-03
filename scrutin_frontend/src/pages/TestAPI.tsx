@@ -153,6 +153,11 @@ const get_assessment_based_on_designation = useFrappePostCall("scrutin.api.asses
 
 
 
+const get_candidate_test_response_report = useFrappePostCall("scrutin.api.test_response_report.get_candidate_test_response_report")
+
+
+
+
 
 
 
@@ -336,7 +341,7 @@ const get_assessment_based_on_designation = useFrappePostCall("scrutin.api.asses
 
       <Button onClick={() => {
         get_specific_assessment_tests_by_candidate_id.call({
-          candidate_id: '37hc0ipka2',
+          candidate_id: 'k39k9ek7i1',
         });
       }}>
         get_specific_assessment_tests_by_candidate_id
@@ -473,6 +478,15 @@ const get_assessment_based_on_designation = useFrappePostCall("scrutin.api.asses
         });
       }}>
         get job applicant designation
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_test_response_report.call({
+          candidate_id: 'k39k9ek7i1'
+        });
+      }}>
+        Candidate Test Response Report
       </Button>
 
 

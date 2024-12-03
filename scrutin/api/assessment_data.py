@@ -1110,6 +1110,7 @@ def get_candidate_detail_for_intro(candidate_id):
 
 
 # This API is used to show data about specific candidate on OVERVIEW PAGE by candidate_id
+# This show the total duration,(total, answer & unanswer) question of test
 @frappe.whitelist()
 def get_specific_assessment_tests_by_candidate_id(candidate_id):
     ScrutinAssessment = DocType("Scrutin Assessment")
@@ -1357,22 +1358,5 @@ def get_assessment_test_and_question_with_options_with_candidate_id(candidate_id
 
 
 
-@frappe.whitelist()
-def get_scrutin_question_detail(question_id):
-    ScrutinQuestion = DocType("Scrutin Question")
-    query = (
-        frappe.qb.from_(ScrutinQuestion)
-        .select(ScrutinQuestion.name, 
-                ScrutinQuestion.question, 
-                ScrutinQuestion.type, 
-                ScrutinQuestion.duration,
-                ScrutinQuestion.answer)
-        .where(ScrutinQuestion.name == question_id)
-    )
-    question_detail = query.run(as_dict=True)
 
-    if question_detail:
-        return question_detail[0]
-    else:
-        return None
 
