@@ -465,7 +465,7 @@ const get_candidate_test_response_report = useFrappePostCall("scrutin.api.test_r
 
       <Button onClick={() => {
         get_candidate_assessment_performance.call({
-          candidate_id: 'k39k9ek7i1'
+          candidate_id: 'v4qp61h4m8'
         });
       }}>
         get individual test average
