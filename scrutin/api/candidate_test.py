@@ -454,7 +454,10 @@ def get_specific_test_details(test_id):
         .on(ScrutinTest.name == ScrutinTestQuestion.parent)
         .inner_join(ScrutinQuestion)
         .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-        .select(ScrutinTestQuestion.question)
+        .select(ScrutinTestQuestion.question,
+                ScrutinQuestion.question,
+                ScrutinQuestion.type,
+                ScrutinQuestion.answer)
         .where(ScrutinTest.name == test_id)
     )
     question_ids = question_query.run(as_dict=True)
@@ -711,29 +714,6 @@ def add_scrutin_test_progress(candidate_id, test_name, started_at):
 
 
 @frappe.whitelist()
-# def check_how_many_candidate_responses_are_correct(candidate_id):
-#     ScrutinCandidate = DocType("Scrutin Candidate")
-#     ScrutinQuestionResponse = DocType("Scrutin Question Responses") #response->question->answer
-#     ScrutinQuestion = DocType("Scrutin Question") #question -> answer
-    
-#     query = (
-#         frappe.qb.from_(ScrutinCandidate)
-#         .join(ScrutinQuestionResponse)
-#         .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
-#         .join(ScrutinQuestion)
-#         .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
-#         .select(
-#             ScrutinQuestion.name.as_("question"),
-#             ScrutinQuestion.question.as_("question_content"),
-#             ScrutinQuestionResponse.answer.as_("candidate_answer"),
-#             ScrutinQuestion.answer.as_("actual_answer")
-
-#         )
-#         .where(ScrutinCandidate.name == candidate_id)
-#     )
-#     results = query.run(as_dict=True)
-#     return results
-
 def check_how_many_candidate_responses_are_correct(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinQuestionResponse = DocType("Scrutin Question Responses")  # response->question->answer
@@ -762,3 +742,167 @@ def check_how_many_candidate_responses_are_correct(candidate_id):
     return results
 
 
+
+
+@frappe.whitelist()
+def get_candidate_assessment_test_and_question(candidate_id):
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    
+    assessment_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinCandidate.assessment == ScrutinAssessment.name)
+        .select(ScrutinAssessment.name.as_("assessment_name"))
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    assessment = assessment_query.run(as_dict=True)
+
+    if not assessment:
+        frappe.throw(f"No assessment found for candidate ID {candidate_id}")
+    
+    assessment_name = assessment[0]['assessment_name']
+    
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    response = []
+
+    for test in tests:
+        test_name = test['test']
+        
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(
+                ScrutinTestQuestion.question, 
+                ScrutinQuestion.question.as_("question_text"),
+            )
+            .where(ScrutinTest.name == test_name)
+        )
+        questions = question_query.run(as_dict=True)
+    
+        response.append({
+            'test': test_name,
+            'title': test['title'],
+            'questions': questions,
+        })
+    
+    return {
+        'candidate_id': candidate_id,
+        'assessment': assessment_name,
+        'tests': response,
+    }
+
+
+
+
+
+
+@frappe.whitelist()
+def get_candidate_assessment_performance(candidate_id):
+    # Define DocTypes
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionResponse = DocType("Scrutin Question Responses")
+
+    # Fetch the candidate's assessment
+    assessment_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinCandidate.assessment == ScrutinAssessment.name)
+        .select(ScrutinAssessment.name.as_("assessment_name"))
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    assessment = assessment_query.run(as_dict=True)
+
+    if not assessment:
+        frappe.throw(f"No assessment found for candidate ID {candidate_id}")
+
+    assessment_name = assessment[0]["assessment_name"]
+
+    # Fetch the tests associated with the assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test.as_("test_name"),
+            ScrutinTest.title.as_("test_title"),
+        )
+        .where(ScrutinAssessment.name == assessment_name)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    response = []
+
+    for test in tests:
+        test_name = test["test_name"]
+
+        # Fetch questions and candidate's responses for the test
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .left_join(ScrutinQuestionResponse)
+            .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+            .select(
+                ScrutinTestQuestion.question.as_("question_id"),
+                ScrutinQuestion.question.as_("question_text"),
+                ScrutinQuestion.answer.as_("actual_answer"),
+                ScrutinQuestionResponse.answer.as_("candidate_answer"),
+            )
+            .where((ScrutinTest.name == test_name) & (ScrutinQuestionResponse.parent == candidate_id))
+        )
+        questions = question_query.run(as_dict=True)
+
+        # Check correctness and calculate statistics
+        correct_count = 0
+        for question in questions:
+            question["is_correct"] = question["candidate_answer"] == question["actual_answer"]
+            if question["is_correct"]:
+                correct_count += 1
+
+        total_questions = len(questions)
+        accuracy = (correct_count / total_questions * 100) if total_questions else 0
+
+        # Append test result to response
+        response.append({
+            "test_name": test_name,
+            "test_title": test["test_title"],
+            "questions": questions,
+            "accuracy": accuracy,
+        })
+
+    # Return the complete response
+    return {
+        "candidate_id": candidate_id,
+        "assessment": assessment_name,
+        "tests": response,
+    }

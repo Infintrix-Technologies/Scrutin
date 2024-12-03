@@ -141,6 +141,16 @@ const check_how_many_candidate_responses_are_correct = useFrappePostCall("scruti
 
 
 
+const get_candidate_assessment_test_and_question = useFrappePostCall("scrutin.api.candidate_test.get_candidate_assessment_test_and_question")
+
+
+
+const get_candidate_assessment_performance = useFrappePostCall("scrutin.api.candidate_test.get_candidate_assessment_performance")
+
+
+
+
+
 
 
 
@@ -429,6 +439,26 @@ const check_how_many_candidate_responses_are_correct = useFrappePostCall("scruti
         });
       }}>
         how many candidate responses are correct
+      </Button>
+
+
+
+      <Button onClick={() => {
+        get_candidate_assessment_test_and_question.call({
+          candidate_id: 'k39k9ek7i1'
+        });
+      }}>
+        get candidate assessment test & question
+      </Button>
+
+
+
+      <Button onClick={() => {
+        get_candidate_assessment_performance.call({
+          candidate_id: 'k39k9ek7i1'
+        });
+      }}>
+        get individual test average
       </Button>
 
 
