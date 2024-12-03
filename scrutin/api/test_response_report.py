@@ -5,6 +5,7 @@ from frappe.query_builder import functions as fn
 
 
 @frappe.whitelist()
+@frappe.whitelist()
 def get_candidate_test_response_report(candidate_id):
     # Define DocTypes
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -90,6 +91,7 @@ def get_candidate_test_response_report(candidate_id):
     answered_questions = {response['question'] for response in candidate_responses}
 
     response = []
+    total_accuracy = 0
 
     for test in tests:
         test_name = test['name']
@@ -160,7 +162,8 @@ def get_candidate_test_response_report(candidate_id):
                 correct_count += 1
 
         total_test_questions = len(questions)
-        accuracy = (correct_count / total_questions * 100) if total_test_questions else 0
+        accuracy = (correct_count / total_test_questions * 100) if total_test_questions else 0
+        total_accuracy += accuracy
 
         # Update test details
         test['total_duration'] = total_duration
@@ -182,10 +185,15 @@ def get_candidate_test_response_report(candidate_id):
             "unanswered_questions": test['unanswered_questions'],
         })
 
+    # Calculate the assessment average accuracy
+    total_tests = len(tests)
+    assessment_average = total_accuracy / total_tests if total_tests else 0
+
     return {
         "candidate_id": candidate_id,
         "applicant_name": applicant_name,
         "assessment": assessment_id,
         "tests": response,
         "custom_questions": total_custom_questions,
+        "assessment_average": assessment_average,
     }
