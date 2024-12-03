@@ -9,7 +9,8 @@
   "company",
   "language",
   "assessment_tests",
-  "custom_questions"
+  "custom_questions",
+  "designation"
  ],
  "fields": [
   {
@@ -43,11 +44,17 @@
    "fieldtype": "Data",
    "label": "Assessment Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-06 17:06:27.251565",
+ "modified": "2024-12-03 13:07:32.369801",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Assessment",

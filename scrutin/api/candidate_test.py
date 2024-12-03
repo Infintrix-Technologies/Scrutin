@@ -588,7 +588,8 @@ def get_current_question(candidate_id):
 
     if current_test_index >= len(tests):
         return {
-            'message': 'All tests are completed'
+            'message': 'All tests are completed',
+            'completed': True
         }
 
     test_name = tests[current_test_index]['test']
@@ -712,7 +713,7 @@ def add_scrutin_test_progress(candidate_id, test_name, started_at):
 
 
 
-
+# This API check whick question is correct that candidate submit into the responses
 @frappe.whitelist()
 def check_how_many_candidate_responses_are_correct(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -743,7 +744,7 @@ def check_how_many_candidate_responses_are_correct(candidate_id):
 
 
 
-
+# This API gives specific assessment tests and their questions
 @frappe.whitelist()
 def get_candidate_assessment_test_and_question(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -816,7 +817,7 @@ def get_candidate_assessment_test_and_question(candidate_id):
 
 
 
-
+# This API give the average of individual tests in a given assessment
 @frappe.whitelist()
 def get_candidate_assessment_performance(candidate_id):
     # Define DocTypes
