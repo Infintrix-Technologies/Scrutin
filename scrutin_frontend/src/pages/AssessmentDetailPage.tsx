@@ -75,6 +75,11 @@ const AssessmentDetailPage = () => {
   const globalState = useGlobalState();
   const params = useParams();
   const assessment_id = params?.assessment_id || null;
+  
+  const get_assessment_data = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_data",{
+      assessment_name: 'jvecvcvl4o',
+  })
+  console.log(get_assessment_data,"get_assessment_data");
 
   const get_specific_assessment_candidate_name = useFrappeGetCall(
     "scrutin.api.assessment_data.get_specific_assessment_candidate_name",

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Dispatch, FC, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
 import { createContext } from 'react'
 interface Modal {
