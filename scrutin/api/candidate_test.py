@@ -141,6 +141,7 @@ def get_candidate_questions_answer_responses(candidate_id):
     return results
 
 
+#This API tells how many test question are present in the candidate question responses
 @frappe.whitelist()
 def are_all_questions_answered(test_name, candidate_id):
 
