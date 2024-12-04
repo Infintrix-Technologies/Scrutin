@@ -61,7 +61,7 @@ const get_candidate_responses = useFrappePostCall("scrutin.api.assessment_data.g
 const get_candidate_response_questions_answer = useFrappePostCall("scrutin.api.assessment_data.get_candidate_response_questions_answer")
 
 
-const get_candidate_response_test = useFrappePostCall("scrutin.api.assessment_data.get_candidate_response_test")
+const get_candidate_response_test_finish_time = useFrappePostCall("scrutin.api.test_response_report.get_candidate_response_test_finish_time")
 
 
 const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data.get_specific_test_details")
@@ -272,8 +272,8 @@ const send_candidate_test_response_report = useFrappePostCall("scrutin.api.test_
 
 
       <Button onClick={() => {
-        get_candidate_response_test.call({
-          candidate_id: '37hc0ipka2',
+        get_candidate_response_test_finish_time.call({
+          candidate_id: 'k39k9ek7i1',
         });
       }}>
         GET Candidate Test Progress
