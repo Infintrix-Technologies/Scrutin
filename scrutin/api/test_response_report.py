@@ -1,6 +1,7 @@
 import frappe
 from frappe.query_builder import DocType
 from frappe.query_builder import functions as fn
+from frappe import _
 
 
 
