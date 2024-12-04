@@ -175,7 +175,7 @@ def are_all_questions_answered(test_name, candidate_id):
 
 
 # this api give current question and next question update the started_at time when test start and also update the completed_at
-# time when test is completed
+# time when test is completed also tell which own is the last test question
 @frappe.whitelist()
 def get_current_question(candidate_id):
     # Define DocTypes
@@ -328,6 +328,7 @@ def get_current_question(candidate_id):
 
     current_question = None
     next_question = None
+    last_test_question = False
 
     for i, question in enumerate(questions):
         if question['question'] not in answered_questions:
@@ -336,13 +337,14 @@ def get_current_question(candidate_id):
                 next_question = questions[i + 1]['question']
             else:
                 next_question = None
+                last_test_question = True  # This is the last question
             break
 
     if not current_question:
         current_question = questions[0]
         next_question = questions[1]['question'] if len(questions) > 1 else None
 
-    if next_question is None:
+    if next_question is None and not last_test_question:
         next_test_index = current_test_index + 1
         if next_test_index < len(tests):
             next_test = tests[next_test_index]
@@ -391,7 +393,7 @@ def get_current_question(candidate_id):
                 'type': current_question['question_type'],
                 'options': options
             },
-            # 'next_question': next_question
+            'last_test_question': last_test_question
         }
     }
 
@@ -595,7 +597,6 @@ def get_candidate_assessment_performance(candidate_id):
         "assessment": assessment_name,
         "tests": response,
     }
-
 
 
 
