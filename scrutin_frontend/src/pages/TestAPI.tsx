@@ -162,6 +162,7 @@ const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.
 
 
 
+const send_candidate_test_response_report = useFrappePostCall("scrutin.api.test_response_report.send_candidate_test_response_report")
 
 
 
@@ -497,11 +498,20 @@ const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.
 
       <Button onClick={() => {
         send_email_to_candidate_test_response_report.call({
-          candidate_id: 'k39k9ek7i1'
+          candidate_id: 'k34vmhmg2c'
         });
       }}>
         Send E-mail Candidate Test Response Report
       </Button>
+
+
+      {/* <Button onClick={() => {
+        send_candidate_test_response_report.call({
+          candidate_id: 'k39k9ek7i1'
+        });
+      }}>
+        Send Email to Candidate 
+      </Button> */}
 
 
       {/* <Button onClick={() => {

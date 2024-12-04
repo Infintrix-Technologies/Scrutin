@@ -44,6 +44,8 @@ def get_candidate_test_response_report(candidate_id):
         .on(JobApplicant.name == ScrutinCandidate.job_applicant)
         .select(
             JobApplicant.applicant_name,
+            JobApplicant.email_id.as_("applicant_email"),
+
         )
         .where(ScrutinCandidate.name == candidate_id)
     ).run(as_dict=True)
@@ -409,7 +411,7 @@ def send_email_to_candidate_test_response_report(candidate_id):
     # Send the email
     if applicant_email:
         frappe.sendmail(
-            recipients=["salmansaeed7272@gmail.com"],
+            recipients=[applicant_email],
             subject=email_subject,
             message=email_body
         )
@@ -433,9 +435,13 @@ def send_candidate_test_response_report(candidate_id):
 
     # Prepare email content
     applicant_name = report.get("applicant_name")
-    applicant_email = report.get("applicant_email")
+    applicant_email = report.get("applicant_email")  # Now fetched from the report
     assessment_average = report.get("assessment_average")
     tests = report.get("tests")
+
+    # Check if applicant_email exists
+    if not applicant_email:
+        frappe.throw(_("No email address found for the candidate."))
 
     email_subject = "Your Test Performance Report"
     email_body = f"Dear {applicant_name},\n\n"
@@ -455,14 +461,11 @@ def send_candidate_test_response_report(candidate_id):
     email_body += "Best regards,\nYour Assessment Team"
 
     # Send the email
-    if applicant_email:
-        frappe.sendmail(
-            recipients=[applicant_email],
-            subject=email_subject,
-            message=email_body
-        )
-    else:
-        frappe.throw(_("No email address found for the candidate."))
+    frappe.sendmail(
+        recipients=[applicant_email],
+        subject=email_subject,
+        message=email_body
+    )
 
     return {
         "status": "success",

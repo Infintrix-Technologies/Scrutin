@@ -12,19 +12,20 @@
 
 frappe.ui.form.on('Scrutin Candidate', {
     job_applicant: function(frm) {
-        update_assessment_field_visibility(frm);
-        if (frm.doc.job_applicant && frm.doc.assessments_based_on_designation) {
-            fetch_and_set_assessments(frm);
+        if (frm.doc.job_applicant) {
+            fetch_all_assessments(frm);
+            if (frm.doc.assessments_based_on_designation) {
+                fetch_and_set_assessments(frm);
+            }
         } else {
             clear_assessment_options(frm);
         }
     },
     assessments_based_on_designation: function(frm) {
-        update_assessment_field_visibility(frm);
         if (frm.doc.assessments_based_on_designation && frm.doc.job_applicant) {
             fetch_and_set_assessments(frm);
         } else {
-            clear_assessment_options(frm);
+            fetch_all_assessments(frm);
         }
     }
 });
@@ -56,14 +57,29 @@ function fetch_and_set_assessments(frm) {
     });
 }
 
-function update_assessment_field_visibility(frm) {
-    if (frm.doc.job_applicant && frm.doc.assessments_based_on_designation) {
-        frm.set_df_property('assessment', 'hidden', 0);
-    } else {
-        frm.set_df_property('assessment', 'hidden', 1);
-        frm.set_value('assessment', null);
-    }
-    frm.refresh_field('assessment');
+function fetch_all_assessments(frm) {
+    // Fetch and show all assessments
+    frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+            doctype: "Scrutin Assessment",
+            fields: ["name"]
+        },
+        callback: function(r) {
+            if (r.message) {
+                const all_assessments = r.message.map(item => item.name);
+
+                frm.set_query('assessment', function() {
+                    return {
+                        filters: [
+                            ['Scrutin Assessment', 'name', 'in', all_assessments]
+                        ]
+                    };
+                });
+                frm.refresh_field('assessment');
+            }
+        }
+    });
 }
 
 function clear_assessment_options(frm) {
@@ -77,5 +93,3 @@ function clear_assessment_options(frm) {
     });
     frm.refresh_field('assessment');
 }
-
-
