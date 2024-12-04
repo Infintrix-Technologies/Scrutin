@@ -102,59 +102,29 @@ import {
   Question,
 } from "@/components/Interfaces/Interface";
 
-// const skillsData: SkillData[] = [
-//   {
-//     skill: "Understanding and interpreting written communication",
-//     correct: 2,
-//     incorrect: 2,
-//   },
-//   {
-//     skill: "Listening actively and interpreting non-verbal cues",
-//     correct: 1,
-//     incorrect: 4,
-//   },
-//   {
-//     skill: "Communicating clearly in business contexts",
-//     correct: 1.75,
-//     incorrect: 2.25,
-//   },
-//   {
-//     skill: "Using professional communication etiquette",
-//     correct: 1.4,
-//     incorrect: 3.6,
-//   },
-//   {
-//     skill: "Priority and planning",
-//     correct: 0,
-//     incorrect: 5,
-//   },
-// ];
 
 const CandidatesDetailPage: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
+  const [sliderValue, setSliderValue] = React.useState(0);
   const globalState = useGlobalState();
   const params = useParams();
   const email = params?.email || null;
-  const [sliderValue, setSliderValue] = React.useState(0);
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
   };
 
-  //API that provide all details about Candidates based on Email
   const get_candidate_details = useFrappeGetCall(
     "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
-    {
-      email: email,
-    }
+    { email: email}
   );
 
   const candidate_details =
     get_candidate_details?.data?.message?.candidate_assessment || [];
+  
   const get_candidate_assessment_performance = useFrappeGetCall(
     "scrutin.api.candidate_test.get_candidate_assessment_performance",
     {
       candidate_id: candidate_details[0]?.candidate_id,
-      // "v4qp61h4m8"
     }
   );
   console.log(
@@ -166,7 +136,6 @@ const CandidatesDetailPage: React.FC = () => {
     "scrutin.api.test_response_report.get_candidate_test_response_report",
     {
       candidate_id: candidate_details[0]?.candidate_id,
-      // "v4qp61h4m8"
     }
   );
 
@@ -179,19 +148,11 @@ const CandidatesDetailPage: React.FC = () => {
     get_candidate_test_response_report?.data?.message || [];
   console.log(candidate_test_response_report, "candidate_test_response_report");
 
-  const candidate_assessment_performance =
-    get_candidate_assessment_performance?.data?.message || [];
-  console.log(
-    candidate_assessment_performance,
-    "get_candidate_assessment_performance"
-  );
-
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
   };
-  // const totalWidth = 400;
   return (
     <div className="px-14">
       {candidate_details?.map((assessment: Assessment, i: number) => {
@@ -419,7 +380,7 @@ const CandidatesDetailPage: React.FC = () => {
                     <CardHeader>
                       <div className="flex justify-between">
                         <div>
-                          <Badge variant="outline">Test User</Badge>
+                          <Badge variant="outline">{candidate_test_response_report?.applicant_name}</Badge>
                         </div>
                         <div>
                           <h1 className="text-2xl font-bold">
@@ -507,7 +468,14 @@ const CandidatesDetailPage: React.FC = () => {
                                   <div className="flex justify-end items-center">
                                     <p className="flex gap-2 items-center">
                                       <RxTimer />
-                                      Finished in 09:00 out of 09:00{" "}
+                                      Finished in {" "}
+                                      {test?.finished_time?.split(".")[0]} {" "}
+                                       out of : {test?.total_duration < 60
+                                          ? `${test.total_duration} seconds`
+                                          : `${Math?.floor(test?.total_duration / 60)} min${
+                                              test?.total_duration % 60 > 0 ? ` ${test?.total_duration % 60} sec` : ""
+                                            }`}                             
+                                              {" "}
                                     </p>
                                   </div>
 
@@ -521,7 +489,7 @@ const CandidatesDetailPage: React.FC = () => {
                                                 className="bg-green-400   my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.correct_count}
+                                                {test?.correct_count || 0}
                                               </div>
                                             )}
                                             {test?.incorrect_count !== 0 && (
@@ -529,7 +497,7 @@ const CandidatesDetailPage: React.FC = () => {
                                                 className="bg-red-300  my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.incorrect_count}
+                                                {test?.incorrect_count || 0 }
                                               </div>
                                             )}
 
@@ -539,7 +507,7 @@ const CandidatesDetailPage: React.FC = () => {
                                                 className="bg-gray-300 my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.unanswered_questions}
+                                                {test?.unanswered_questions || 0}
                                               </div>
                                             )}
                                           </div>
@@ -643,7 +611,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment.filled_out_only_once_from_ip_address ===
+                            {assessment?.filled_out_only_once_from_ip_address ===
                             0
                               ? "No"
                               : "Yes"}
@@ -681,7 +649,7 @@ const CandidatesDetailPage: React.FC = () => {
                           <Badge
                             variant="secondary"
                             className={`${
-                              assessment.full_screen_mode_always_active === 0
+                              assessment?.full_screen_mode_always_active === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
                             } cursor-pointer`}
@@ -692,7 +660,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment.full_screen_mode_always_active === 0
+                            {assessment?.full_screen_mode_always_active === 0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -707,7 +675,7 @@ const CandidatesDetailPage: React.FC = () => {
                           <Badge
                             variant="secondary"
                             className={`${
-                              assessment.mouse_always_in_assessment_window === 0
+                              assessment?.mouse_always_in_assessment_window === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
                             } cursor-pointer`}
@@ -718,7 +686,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment.mouse_always_in_assessment_window === 0
+                            {assessment?.mouse_always_in_assessment_window === 0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -746,7 +714,7 @@ const CandidatesDetailPage: React.FC = () => {
                         )}
                         <Slider
                           defaultValue={[0]}
-                          max={assessment.webcam_snapshots.length - 1}
+                          max={assessment?.webcam_snapshots?.length - 1}
                           step={1}
                           value={[sliderValue]}
                           onValueChange={(value) =>

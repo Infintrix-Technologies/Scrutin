@@ -92,6 +92,8 @@ export interface AssessmentTest {
   incorrect_count:number
   answered_questions:number
   unanswered_questions:number
+  total_duration:number
+  finished_time:string
 }
 
 export interface Assessment {

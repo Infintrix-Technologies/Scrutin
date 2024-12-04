@@ -44,7 +44,7 @@ export default function AssessmentOverview() {
 
                   </div>
                   <div>
-                    <p className="font-semibold">{data?.title}</p>
+                    <p className="font-semibold text-white">{data?.title}</p>
                     <p className="text-sm text-muted-foreground">
                       {data?.total_questions}{data?.total_questions == 1 ? " Question " : " Questions "}  •{" "}
                       {data?.total_duration < 60
@@ -115,9 +115,8 @@ export default function AssessmentOverview() {
           </div>
 
           <div className="flex justify-end mt-6">
-          {specific_assessment_tests?.tests?.map((test: OverViewPage, index:number) => 
-            test.answered_questions !== test.total_questions && index === 0 && (
-              <Link to={`/candidacy/${candidate_id}/setup`} key={index}>
+          
+              <Link to={`/candidacy/${candidate_id}/setup`} >
                 <Button
                   className="text-end flex items-center"
                   onClick={() => {
@@ -126,12 +125,11 @@ export default function AssessmentOverview() {
                     });
                   }}
                 >
-                  Next Assessment
+                  Start Assessment
                   <ChevronRightIcon className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-            )
-          )}
+           
         </div>
 
         </CardContent>

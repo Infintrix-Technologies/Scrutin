@@ -19,7 +19,10 @@ const TestPage = () => {
     { candidate_id },
     [triggerReload]
   );
-
+  
+  const { call } = useFrappePostCall(
+    "scrutin.api.candidate_test.add_scrutin_question_response"
+  );
   
   const handleSubmit = async () => {
     if (!selectedOption || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
@@ -28,22 +31,23 @@ const TestPage = () => {
     }
   
     try {
+      const sortedAnswer = Array.isArray(selectedOption) ? JSON.stringify(selectedOption.map(Number).sort((a, b) => a - b)) : selectedOption;
+  
       await call({
         candidate_id,
         question_id: data?.message?.test?.current_question?.name,
-        answer: Array.isArray(selectedOption)
-          ? JSON.stringify(selectedOption.map(Number)) 
-          : selectedOption,
+        answer: sortedAnswer,
       });
-
-        setSelectedOption(null); 
-        setTriggerReload((prev) => !prev); 
-        // toast.success("Response submitted successfully!");
+  
+      setSelectedOption(null); 
+      setTriggerReload((prev) => !prev); 
+      // toast.success("Response submitted successfully!");
     } catch (error) {
       console.error("Error in post call:", error);
       toast.error("There was an issue submitting your response. Please try again.");
     }
   };
+  
 
   const handleMultiSelectChange = (value: string) => {
     setSelectedOption((prev) => {
@@ -54,9 +58,7 @@ const TestPage = () => {
     });
   };
 
-  const { call } = useFrappePostCall(
-    "scrutin.api.candidate_test.add_scrutin_question_response"
-  );
+  
 
  
 
