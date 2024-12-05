@@ -6,6 +6,7 @@ from frappe.query_builder import functions as fn
 from frappe.utils import now
 
 
+#Assessment List Page API
 @frappe.whitelist()
 def assessment_list_page_api():
     ScrutinAssessment = DocType("Scrutin Assessment")
@@ -1329,7 +1330,19 @@ def get_candidate_detail_for_intro(candidate_id):
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
     job_title = DocType("Job Opening")
-
+    
+    # Check if the candidate_id exists in Scrutin Candidate DocType
+    exists_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.name)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_exists = exists_query.run(as_dict=True)
+    
+    if not candidate_exists:
+        raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
+    
+    # If candidate exists, fetch the details
     query = (
         frappe.qb.from_(ScrutinAssessment)
         .left_join(ScrutinCandidate)
@@ -1346,7 +1359,7 @@ def get_candidate_detail_for_intro(candidate_id):
             JobApplicant.applicant_name.as_("candidate_name"),
             job_title.job_title.as_("job_title"),
         )
-        .where(ScrutinCandidate.name == candidate_id)  # Ensure email field matches
+        .where(ScrutinCandidate.name == candidate_id)
     )
     candidate_detail = query.run(as_dict=True)
     return candidate_detail
@@ -1367,6 +1380,16 @@ def get_specific_assessment_tests_by_candidate_id(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinQuestionResponse = DocType("Scrutin Question Responses")
     JobApplicant = DocType("Job Applicant")
+
+    exists_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.name)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_exists = exists_query.run(as_dict=True)
+    
+    if not candidate_exists:
+        raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
 
     # Helper function to get candidate's question responses
     def get_candidate_questions_answer_responses(candidate_id):

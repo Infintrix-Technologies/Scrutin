@@ -193,6 +193,16 @@ def get_current_question(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinTestProgress = DocType("Scrutin Test Progress")
 
+    exists_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.name)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_exists = exists_query.run(as_dict=True)
+    
+    if not candidate_exists:
+        raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
+
     # Function to check if a test has already started for the candidate
     def has_test_started(candidate_id, test_name):
         test_progress_query = (
