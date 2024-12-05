@@ -194,7 +194,7 @@ const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.
 
       <Button onClick={() => {
         get_assessment_data.call({
-          assessment_name: 'jvecvcvl4o',
+          assessment_name: 'ju7mgf9ceg',
         });
       }}>
         Assessment Detail
