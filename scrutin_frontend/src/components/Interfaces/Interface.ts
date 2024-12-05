@@ -31,6 +31,9 @@ export interface Test {
 export interface AssessmentData {
   applicant_name: string;
   status: string;
+  assessment_name:string
+  total_duration_of_all_tests:number
+  total_number_of_tests:number
   invited_on: string;
   job_applicant: string;
   question: string;
@@ -184,8 +187,22 @@ export  interface  CandidateAct {
 export  interface  CandidateActionsProps {
   candidate: CandidateAct;
 }
-export  interface  AssessmentData {
+export interface TestResponseReport {
+  tests: TestAssessments[];
+  assessment_average: number;
+}
+export  interface  Assessment_Data {
   assessment_name:string 
+  applicant_name:string
+  status: string;
+  invited_on: string;
   total_duration_of_all_tests:number
   total_number_of_tests:number
+  test_response_report: TestResponseReport;
+
+}
+
+export interface TestAssessments {
+  test_title: string;
+  accuracy: number;
 }

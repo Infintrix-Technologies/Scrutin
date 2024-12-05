@@ -65,7 +65,7 @@ import "dayjs/locale/en";
 import { useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
-import { AssessmentData, Test } from "@/components/Interfaces/Interface";
+import { Assessment_Data, AssessmentData, Test, TestAssessments } from "@/components/Interfaces/Interface";
 
 const AssessmentDetailPage = () => {
   const [showWeights, setShowWeights] = useState(false);
@@ -73,13 +73,23 @@ const AssessmentDetailPage = () => {
   const params = useParams();
   const assessment_id = params?.assessment_id || null;
 
+  // const get_assessment_data = useFrappeGetCall(
+  //   "scrutin.api.assessment_data.get_assessment_data",
+  //   {
+  //     assessment_id: assessment_id,
+  //   }
+  // );
+  // console.log(get_assessment_data,"get_assessment_data");
+
   const get_assessment_data = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_assessment_data",
+    "scrutin.api.assessment_data.get_assessment_data_for_assessment_detail_page",
     {
       assessment_id: assessment_id,
     }
   );
+console.log(get_assessment_data,"get_assessment_data");
 
+  
   const assessment_data = get_assessment_data?.data?.message || [];
 
   console.log(assessment_data, "assessment_data");
@@ -570,7 +580,7 @@ const AssessmentDetailPage = () => {
                 </TableHeader>
                 <TableBody>
                   {assessment_data?.candidate_name?.map(
-                    (data: AssessmentData) => (
+                    (data: Assessment_Data) => (
                       <TableRow className="whitespace-nowrap ">
                         <TableCell>
                           <Checkbox />
@@ -578,22 +588,17 @@ const AssessmentDetailPage = () => {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             {data?.applicant_name || "N/A"}
-                            {/* <Badge
-                            variant="secondary"
-                            className="bg-purple-100 text-purple-800"
-                          >
-                            Owner
-                          </Badge> */}
+                            
                           </div>
-                        </TableCell>
-                        <TableCell>{data.overall || "N/A"}</TableCell>
-                        {assessment_data?.tests.map(
-                          (test: Test, index: number) => (
+                        </TableCell>                       
+                         <TableCell>
+                            {data?.test_response_report?.assessment_average?.toFixed(2) || "N/A"}
+                          </TableCell>
+                          {data?.test_response_report?.tests?.map((test: TestAssessments, index: number) => (
                             <TableCell key={index}>
-                              {data?.test_scores?.[test.title] || "0%"}
+                              {test.accuracy.toFixed(2)}%
                             </TableCell>
-                          )
-                        )}
+                          ))}
                         <TableCell>
                           <Select>
                             <SelectTrigger className="w-[200px]">

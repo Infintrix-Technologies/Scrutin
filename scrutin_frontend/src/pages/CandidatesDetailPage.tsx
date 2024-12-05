@@ -95,7 +95,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaChevronLeft } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
-import { useFrappeGetCall } from "frappe-react-sdk";
+import { useFrappeGetCall, 
+  // useFrappePostCall
+ } from "frappe-react-sdk";
 import {
   Assessment,
   AssessmentTest,
@@ -149,6 +151,21 @@ const CandidatesDetailPage: React.FC = () => {
     get_candidate_test_response_report?.data?.message || [];
   console.log(candidate_test_response_report, "candidate_test_response_report");
 
+  // const  { call }  = useFrappePostCall("scrutin.api.test_response_report.send_email_to_candidate_test_response_report")
+
+  // const handleSubmit = async () => {
+  //   try {
+  
+  //     await call({
+  //      candidate_id: candidate_details[0]?.candidate_id,
+    
+  //     });
+ 
+  //   } catch (error) {
+  //     console.error("Error in post call:", error);
+  //   }
+  // };
+
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
@@ -157,6 +174,15 @@ const CandidatesDetailPage: React.FC = () => {
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY hh:mm A");
   };
+
+
+ 
+
+
+
+
+
+
   return (
     <div className="px-14">
       {candidate_details?.map((assessment: Assessment, i: number) => {
