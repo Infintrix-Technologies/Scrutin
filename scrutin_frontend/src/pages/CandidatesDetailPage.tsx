@@ -101,6 +101,7 @@ import {
   AssessmentTest,
   Question,
 } from "@/components/Interfaces/Interface";
+import dayjs from "dayjs";
 
 
 const CandidatesDetailPage: React.FC = () => {
@@ -152,6 +153,9 @@ const CandidatesDetailPage: React.FC = () => {
     const updatedRatings = [...ratings];
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
+  };
+  const formatDate = (dateString: string) => {
+    return dayjs(dateString).format("DD-MM-YY hh:mm A");
   };
   return (
     <div className="px-14">
@@ -310,26 +314,26 @@ const CandidatesDetailPage: React.FC = () => {
                   <div className="p-4 border rounded-md">
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Invited</h3>
-                      <p className="text-gray-600">{assessment?.invited_on}</p>
+                      <p className="text-gray-300">{formatDate(assessment?.invited_on)}</p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Completed</h3>
-                      <p className="text-gray-600">October 6th, 2024</p>
+                      <p className="text-gray-300">{assessment?.assessment_completed_at || "Not Completed"}</p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">
                         Extra time breakdown
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-gray-300">
                         No extra time was granted to this candidate
                       </p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Source</h3>
-                      <p className="text-gray-600">General public link</p>
+                      <p className="text-gray-300">General public link</p>
                     </div>
 
                     <p className="font-bold text-lg py-5"> Hiring stage </p>
@@ -394,13 +398,13 @@ const CandidatesDetailPage: React.FC = () => {
                         </div>
                       </div>
                       <Progress
-                        className="mt-4"
+                        className="mt-4 h-3"
                         value={
                           candidate_test_response_report?.assessment_average ||
                           0
                         }
                         max={100}
-                      />
+                      />            
                       <p
                         className="py-2 text-blue-600 cursor-pointer"
                         onClick={() =>
@@ -693,12 +697,12 @@ const CandidatesDetailPage: React.FC = () => {
                         </div>
                       </div>
                       <>
-                        {assessment.webcam_snapshots.length > 0 ? (
+                        {assessment?.webcam_snapshots?.length > 0 ? (
                           <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
                             <div className="flex h-full items-center justify-center">
                               {assessment.webcam_snapshots[sliderValue] ? (
                                 <img
-                                  src={assessment.webcam_snapshots[sliderValue]}
+                                  src={assessment?.webcam_snapshots[sliderValue]}
                                   alt="Snapshot"
                                   className="h-[230px] w-[410px] rounded-lg"
                                 />

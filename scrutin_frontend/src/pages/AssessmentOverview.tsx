@@ -58,12 +58,16 @@ export default function AssessmentOverview() {
               ))}
               {specific_assessment_tests?.custom_questions !== 0 && 
               <div className="flex flex-col items-center text-center space-y-2">
-                <div className="w-8 h-8 rounded-full cursor-pointer bg-primary flex items-center justify-center">
-                <CheckIcon className="w-5 h-5 text-primary-foreground" />
+                <div className="w-12 h-12 text-black font-bold rounded-full cursor-pointer bg-primary flex items-center justify-center">
+                {/* <CheckIcon className="w-12 h-12 text-primary-foreground" /> */}
+                {specific_assessment_tests?.custom_questions}
                 </div>
                 <div>
-                  <p className="font-semibold">Custom Questions</p>
-                  <p className="text-sm text-muted-foreground">{specific_assessment_tests?.custom_questions}</p>
+                  <p className="font-semibold">{specific_assessment_tests?.custom_questions === 1 ? "Custom Question" : "Custom Questions"} </p>
+                  <p className="text-sm text-muted-foreground">{specific_assessment_tests?.custom_questions}
+                  {specific_assessment_tests?.custom_questions == 1 ? " Question " : " Questions "}  • {" 0 min"}
+
+                  </p>
                 </div>
               </div>
               }
