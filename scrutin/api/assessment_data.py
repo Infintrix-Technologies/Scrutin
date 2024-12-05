@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from datetime import datetime
 from frappe.query_builder import DocType
 from frappe.query_builder import functions as fn
 from frappe.utils import now
@@ -168,7 +169,7 @@ def get_assessment_data(assessment_id):
         .left_join(JobApplicant)
         .on(JobApplicant.name == ScrutinCandidate.job_applicant)
         .select(
-            ScrutinCandidate.name.as_("candidate_name"),
+            ScrutinCandidate.name.as_("candidate_id"),
             ScrutinCandidate.job_applicant,
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
@@ -189,7 +190,8 @@ def get_assessment_data(assessment_id):
         .select(
             ScrutinAssessmentQuestion.question,
             ScrutinQuestion.question,
-            ScrutinQuestion.type
+            ScrutinQuestion.type,
+            ScrutinQuestion.duration,
         )
         .where(ScrutinAssessment.name == assessment_id)
     )
@@ -246,6 +248,199 @@ def get_assessment_data(assessment_id):
 
 
 
+
+
+@frappe.whitelist()
+def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
+    # Define DocTypes
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinQuestionResponse = DocType("Scrutin Question Responses")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+    ScrutinTestProgress = DocType("Scrutin Test Progress")
+
+    # Helper function to get candidate's question responses
+    def get_candidate_questions_answer_responses(candidate_id):
+        query = (
+            frappe.qb.from_(ScrutinCandidate)
+            .join(ScrutinQuestionResponse)
+            .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
+            .join(ScrutinQuestion)
+            .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+            .select(
+                ScrutinQuestion.name.as_("question"),
+                ScrutinQuestion.question.as_("question_content"),
+                ScrutinQuestionResponse.answer,
+            )
+            .where(ScrutinCandidate.name == candidate_id)
+        )
+        return query.run(as_dict=True)
+
+
+    # Fetch tests for the candidate's assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinAssessmentTest.test)
+        .select(
+            ScrutinAssessment.assessment_name,
+            ScrutinTest.name,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    # Fetch candidate's responses
+    candidate_responses = get_candidate_questions_answer_responses(candidate_id)
+    answered_questions = {response['question'] for response in candidate_responses}
+
+    response = []
+    total_accuracy = 0
+
+    for test in tests:
+        test_name = test['name']
+
+        # Fetch total duration of the test
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        total_duration = duration_result[0]['total_duration'] if duration_result else 0
+        
+        # Fetch total number of questions in the test
+        question_count_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .select(fn.Count(ScrutinTestQuestion.question).as_("total_questions"))
+            .where(ScrutinTest.name == test_name)
+        )
+        question_count_result = question_count_query.run(as_dict=True)
+        total_questions = question_count_result[0]['total_questions'] if question_count_result else 0
+
+
+        # Check if all questions in the test are answered
+        test_questions_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(ScrutinTestQuestion.question)
+            .where(ScrutinTest.name == test_name)
+        )
+        test_questions = test_questions_query.run(as_dict=True)
+        unanswered_questions = [
+            question['question'] for question in test_questions if question['question'] not in answered_questions
+        ]
+
+        # Fetch questions and candidate's responses for the test
+        question_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .left_join(ScrutinQuestionResponse)
+            .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
+            .select(
+                # ScrutinQuestion.name.as_("question_id"),
+                # ScrutinQuestion.question.as_("question_text"),
+                ScrutinQuestion.answer.as_("actual_answer"),
+                ScrutinQuestionResponse.answer.as_("candidate_answer"),
+            )
+            .where((ScrutinTest.name == test_name) & (ScrutinQuestionResponse.parent == candidate_id))
+        )
+        questions = question_query.run(as_dict=True)
+
+        # Check correctness and calculate statistics
+        correct_count = 0
+        for question in questions:
+            question["is_correct"] = question["candidate_answer"] == question["actual_answer"]
+            if question["is_correct"]:
+                correct_count += 1
+
+        total_test_questions = len(questions)
+        accuracy = (correct_count / total_test_questions * 100) if total_test_questions else 0
+        total_accuracy += accuracy
+
+        # Update test details
+        test['total_duration'] = total_duration
+        test['total_questions'] = total_questions
+        test['unanswered_questions'] = len(unanswered_questions)
+        test['answered_questions'] = total_questions - len(unanswered_questions)
+
+        # Append test result to response
+        response.append({
+            "test_name": test_name,
+            "test_title": test["title"],
+            "accuracy": accuracy,
+            "total_questions": total_questions,
+            "incorrect_count": total_test_questions - correct_count,
+        })
+
+    # Calculate the assessment average accuracy
+    total_tests = len(tests)
+    assessment_average = total_accuracy / total_tests if total_tests else 0
+
+    return {
+        "candidate_id": candidate_id,
+        "tests": response,
+        "assessment_average": assessment_average,
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #This api provides all details about Specific candidate based on the email (Not by name or ID)
 @frappe.whitelist()
 def get_combined_candidate_detail_with_snapshot(email):
@@ -273,6 +468,7 @@ def get_combined_candidate_detail_with_snapshot(email):
             JobApplicant.applicant_name.as_("candidate_name"),
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
+            ScrutinCandidate.assessment_completed_at,
             ScrutinCandidate.filled_out_only_once_from_ip_address,
             ScrutinCandidate.web_cam_enabled,
             ScrutinCandidate.full_screen_mode_always_active,
