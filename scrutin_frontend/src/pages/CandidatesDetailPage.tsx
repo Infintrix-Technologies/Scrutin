@@ -57,7 +57,7 @@ import {
   FaMousePointer,
   FaVideo,
 } from "react-icons/fa";
-import { AiOutlineBarChart } from "react-icons/ai";
+// import { AiOutlineBarChart } from "react-icons/ai";
 import { RxTimer } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
@@ -96,77 +96,66 @@ import {
 import { FaChevronLeft } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
 import { useFrappeGetCall } from "frappe-react-sdk";
-import { Assessment, AssessmentTest, Question, SkillData } from "@/components/Interfaces/Interface";
+import {
+  Assessment,
+  AssessmentTest,
+  Question,
+} from "@/components/Interfaces/Interface";
 
-
-const skillsData: SkillData[] = [
-  {
-    skill: "Understanding and interpreting written communication",
-    correct: 2,
-    incorrect: 2,
-  },
-  {
-    skill: "Listening actively and interpreting non-verbal cues",
-    correct: 1,
-    incorrect: 4,
-  },
-  {
-    skill: "Communicating clearly in business contexts",
-    correct: 1.75,
-    incorrect: 2.25,
-  },
-  {
-    skill: "Using professional communication etiquette",
-    correct: 1.4,
-    incorrect: 3.6,
-  },
-  {
-    skill: "Priority and planning",
-    correct: 0,
-    incorrect: 5,
-  },
-];
 
 const CandidatesDetailPage: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
+  const [sliderValue, setSliderValue] = React.useState(0);
   const globalState = useGlobalState();
   const params = useParams();
   const email = params?.email || null;
-  const [sliderValue, setSliderValue] = React.useState(0);
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
   };
 
-  //API that provide all details about Candidates based on Email
   const get_candidate_details = useFrappeGetCall(
     "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
-    {
-      email: email,
-    }
+    { email: email}
   );
 
   const candidate_details =
     get_candidate_details?.data?.message?.candidate_assessment || [];
-    const get_candidate_assessment_performance = useFrappeGetCall("scrutin.api.candidate_test.get_candidate_assessment_performance",
-      { candidate_id: candidate_details[0]?.candidate_id, 
-        // "v4qp61h4m8" 
-      }
-    )
-    console.log(get_candidate_assessment_performance,"get_candidate_assessment_performance");
   
-  const candidate_assessment_performance =  get_candidate_assessment_performance?.data?.message || [];
-  console.log(candidate_assessment_performance,"get_candidate_assessment_performance");
+  const get_candidate_assessment_performance = useFrappeGetCall(
+    "scrutin.api.candidate_test.get_candidate_assessment_performance",
+    {
+      candidate_id: candidate_details[0]?.candidate_id,
+    }
+  );
+  console.log(
+    get_candidate_assessment_performance,
+    "get_candidate_assessment_performance"
+  );
+
+  const get_candidate_test_response_report = useFrappeGetCall(
+    "scrutin.api.test_response_report.get_candidate_test_response_report",
+    {
+      candidate_id: candidate_details[0]?.candidate_id,
+    }
+  );
+
+  console.log(
+    get_candidate_test_response_report,
+    "get_candidate_test_response_report"
+  );
+
+  const candidate_test_response_report =
+    get_candidate_test_response_report?.data?.message || [];
+  console.log(candidate_test_response_report, "candidate_test_response_report");
 
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
     setRatings(updatedRatings);
   };
-  const totalWidth = 400;
   return (
     <div className="px-14">
       {candidate_details?.map((assessment: Assessment, i: number) => {
-
         return (
           <div key={i}>
             <header className="flex  justify-between px-4 py-3 border-b">
@@ -239,14 +228,17 @@ const CandidatesDetailPage: React.FC = () => {
                 <div className="flex flex-col justify-center">
                   <div className="flex items-center">
                     <h2 className="font-bold text-lg">Assessment</h2>
-                    <span className="ml-2">{assessment?.assessment_title || "N/A"}</span>
+                    <span className="ml-2">
+                      {assessment?.assessment_title || "N/A"}
+                    </span>
                   </div>
                   <div className="flex justify-start items-start gap-2">
                     {ratings?.map((rating, index) => (
                       <FaStar
                         key={index}
-                        className={`cursor-pointer ${rating === 1 ? "text-yellow-500" : "text-gray-400"
-                          }`}
+                        className={`cursor-pointer ${
+                          rating === 1 ? "text-yellow-500" : "text-gray-400"
+                        }`}
                         onClick={() => handleRatingChange(index)}
                       />
                     ))}
@@ -388,14 +380,27 @@ const CandidatesDetailPage: React.FC = () => {
                     <CardHeader>
                       <div className="flex justify-between">
                         <div>
-                          <Badge variant="outline">Test User</Badge>
+                          <Badge variant="outline">{candidate_test_response_report?.applicant_name}</Badge>
                         </div>
                         <div>
-                          <h1 className="text-2xl font-bold">15%</h1>
+                          <h1 className="text-2xl font-bold">
+                            {(
+                              candidate_test_response_report?.assessment_average ||
+                              0
+                            ).toFixed(1)}
+                            %
+                          </h1>
                           <p className="text-sm text-gray-500">Average score</p>
                         </div>
                       </div>
-                      <Progress className="mt-4" value={15} max={100} />
+                      <Progress
+                        className="mt-4"
+                        value={
+                          candidate_test_response_report?.assessment_average ||
+                          0
+                        }
+                        max={100}
+                      />
                       <p
                         className="py-2 text-blue-600 cursor-pointer"
                         onClick={() =>
@@ -438,124 +443,114 @@ const CandidatesDetailPage: React.FC = () => {
                           </h3>
                         </div>
                       </div>
-                      {/* {candidate_assessment_performance?.tests?.map((test: AssessmentTest,)=> {
-                        return (
-                          <p>{test?.test_title}</p>
-                        )
-                      })} */}
+                      {candidate_test_response_report?.tests?.map(
+                        (test: AssessmentTest, index: number) => {
+                          return (
+                            <Accordion key={index} type="single" collapsible>
+                              <AccordionItem value={String(index)}>
+                                <AccordionTrigger className="flex">
+                                  <span className="whitespace-nowrap">
+                                    {test?.test_title}
+                                  </span>
+                                  <div className="flex justify-end items-center w-full space-x-1">
+                                    <span>
+                                      {" "}
+                                      {(test?.accuracy || 0).toFixed(1)}%
+                                    </span>
+                                  </div>
+                                </AccordionTrigger>
+                                <Progress
+                                  className="my-4"
+                                  value={test?.accuracy || 0}
+                                  max={100}
+                                />
+                                <AccordionContent>
+                                  <div className="flex justify-end items-center">
+                                    <p className="flex gap-2 items-center">
+                                      <RxTimer />
+                                      Finished in {" "}
+                                      {test?.finished_time?.split(".")[0]} {" "}
+                                       out of : {test?.total_duration < 60
+                                          ? `${test.total_duration} seconds`
+                                          : `${Math?.floor(test?.total_duration / 60)} min${
+                                              test?.total_duration % 60 > 0 ? ` ${test?.total_duration % 60} sec` : ""
+                                            }`}                             
+                                              {" "}
+                                    </p>
+                                  </div>
 
-                      {candidate_assessment_performance?.tests?.map((test: AssessmentTest, index: number) => {
-                        return (
-                          <Accordion key={index} type="single" collapsible>
-                            <AccordionItem value={String(index)}>
-                              <AccordionTrigger className="flex">
-                                <span className="whitespace-nowrap">{test?.test_title}</span>
-                                <div className="flex justify-end items-center w-full space-x-1">
+                                  <Card className="w-full max-w-2xl my-3">
+                                    <CardContent>
+                                      <ul className="space-y-6">
+                                        <p className="text-sm">
+                                          <div className="flex">
+                                            {test?.correct_count !== 0 && (
+                                              <div
+                                                className="bg-green-400   my-4  text-black font-bold text-center"
+                                                style={{ width: "317px" }}
+                                              >
+                                                {test?.correct_count || 0}
+                                              </div>
+                                            )}
+                                            {test?.incorrect_count !== 0 && (
+                                              <div
+                                                className="bg-red-300  my-4  text-black font-bold text-center"
+                                                style={{ width: "317px" }}
+                                              >
+                                                {test?.incorrect_count || 0 }
+                                              </div>
+                                            )}
 
-                                <span > {(test?.accuracy || 0).toFixed(1)}%</span>
-                                </div>
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="flex justify-between items-center">
-                                  <p className="flex gap-2 items-center">
-                                    <AiOutlineBarChart />
-                                    intermediate
-                                  </p>
-                                  <p className="flex gap-2 items-center">
-                                    <RxTimer />
-                                    Finished in 09:00 out of 09:00{" "}
-                                  </p>
-                                </div>
-
-                                <Card className="w-full max-w-2xl my-3">
-                                  {/* <CardHeader>
-                                    <CardTitle className="text-lg font-semibold">
-                                      Communication Skills Assessment
-                                    </CardTitle>
-                                    <hr />
-                                  </CardHeader> */}
-                                  <CardContent>
-                                    <ul className="space-y-6">
-                                     <p className="text-sm">
-                                        total correct and incorrect questions.
-
-                                     </p>
-                                      <p className="text-sm">
-                                        un answered questions.
-                                      </p>
-                                      {skillsData.map((item, index) => (
-                                        <li key={index} className="space-y-2">
-                                          <p className="text-sm">
-                                            Total Correct and Incorrect Questions.
-                                          </p>
-                                          <div className="flex h-6 w-full">
-                                            <div
-                                              className="bg-green-400  text-black font-bold text-center"
-                                              style={{
-                                                width: `${(item?.correct /
-                                                    (item?.correct +
-                                                      item?.incorrect)) *
-                                                  totalWidth
-                                                  }px`,
-                                              }}
-                                            >
-                                              {item?.correct}
-                                            </div>
-                                            <div
-                                              className={`${item.incorrect === 5
-                                                  ? "bg-[#9e9e9e]"
-                                                  : "bg-red-300"
-                                                } text-black font-bold text-center`}
-                                              style={{
-                                                width: `${(item?.incorrect /
-                                                    (item?.correct +
-                                                      item?.incorrect)) *
-                                                  totalWidth
-                                                  }px`,
-                                              }}
-                                            >
-                                              {item?.correct}
-                                            </div>
+                                            {test?.unanswered_questions !==
+                                              0 && (
+                                              <div
+                                                className="bg-gray-300 my-4  text-black font-bold text-center"
+                                                style={{ width: "317px" }}
+                                              >
+                                                {test?.unanswered_questions || 0}
+                                              </div>
+                                            )}
                                           </div>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                    <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                                      <div className="flex items-center">
-                                        <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                                        <span>Correct</span>
+                                        </p>
+                                       
+                                      </ul>
+                                      <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                                        <div className="flex items-center">
+                                          <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                                          <span>Correct</span>
+                                        </div>
+                                        <div className="flex items-center">
+                                          <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                                          <span>Incorrect</span>
+                                        </div>
+                                        <div className="flex items-center">
+                                          <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                                          <span>Not answered</span>
+                                        </div>
                                       </div>
-                                      <div className="flex items-center">
-                                        <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                                        <span>Incorrect</span>
-                                      </div>
-                                      <div className="flex items-center">
-                                        <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                                        <span>Not answered</span>
-                                      </div>
-                                    </div>
-                                  </CardContent>
-                                  <hr />
-                                  <CardFooter>
-                                    <Button
-                                      variant="link"
-                                      className="text-pink-500 p-0"
-                                      onClick={() =>
-                                        globalState.openModal(
-                                          "communication_skills_assessment",
-                                          true
-                                        )
-                                      }
-                                    >
-                                      Learn more
-                                    </Button>
-                                  </CardFooter>
-                                </Card>
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        );
-                      })}
+                                    </CardContent>
+                                    <hr />
+                                    <CardFooter>
+                                      <Button
+                                        variant="link"
+                                        className="text-pink-500 p-0"
+                                        onClick={() =>
+                                          globalState.openModal(
+                                            "communication_skills_assessment",
+                                            true
+                                          )
+                                        }
+                                      >
+                                        Learn more
+                                      </Button>
+                                    </CardFooter>
+                                  </Card>
+                                </AccordionContent>
+                              </AccordionItem>
+                            </Accordion>
+                          );
+                        }
+                      )}
                     </CardHeader>
                   </Card>
                 </div>
@@ -603,11 +598,12 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${assessment.filled_out_only_once_from_ip_address ===
-                                0
+                            className={`${
+                              assessment.filled_out_only_once_from_ip_address ===
+                              0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                              } cursor-pointer`}
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -615,8 +611,8 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment.filled_out_only_once_from_ip_address ===
-                              0
+                            {assessment?.filled_out_only_once_from_ip_address ===
+                            0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -628,10 +624,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${assessment.web_cam_enabled === 0
+                            className={`${
+                              assessment.web_cam_enabled === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                              } cursor-pointer`}
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -651,10 +648,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${assessment.full_screen_mode_always_active === 0
+                            className={`${
+                              assessment?.full_screen_mode_always_active === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                              } cursor-pointer`}
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -662,7 +660,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment.full_screen_mode_always_active === 0
+                            {assessment?.full_screen_mode_always_active === 0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -676,10 +674,11 @@ const CandidatesDetailPage: React.FC = () => {
                           </div>
                           <Badge
                             variant="secondary"
-                            className={`${assessment.mouse_always_in_assessment_window === 0
+                            className={`${
+                              assessment?.mouse_always_in_assessment_window === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
-                              } cursor-pointer`}
+                            } cursor-pointer`}
                             onClick={() =>
                               globalState.openModal(
                                 "anti_cheating_measures",
@@ -687,7 +686,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment.mouse_always_in_assessment_window === 0
+                            {assessment?.mouse_always_in_assessment_window === 0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -715,7 +714,7 @@ const CandidatesDetailPage: React.FC = () => {
                         )}
                         <Slider
                           defaultValue={[0]}
-                          max={assessment.webcam_snapshots.length - 1}
+                          max={assessment?.webcam_snapshots?.length - 1}
                           step={1}
                           value={[sliderValue]}
                           onValueChange={(value) =>
@@ -758,7 +757,6 @@ const CandidatesDetailPage: React.FC = () => {
                                 __html: question?.question || "N/A",
                               }}
                             ></div>
-
                           </TableCell>
 
                           {/* View Answer Column */}
@@ -787,7 +785,7 @@ const CandidatesDetailPage: React.FC = () => {
                                     i < 3
                                       ? "text-yellow-400 fill-yellow-400"
                                       : "text-gray-300"
-                                    }`}
+                                  }`}
                                 />
                               ))}
                             </div>
@@ -1440,8 +1438,9 @@ const CandidatesDetailPage: React.FC = () => {
                       {[...Array(5)].map((_, i) => (
                         <FaStar
                           key={i}
-                          className={`ml-1 ${i < 3 ? "text-yellow-400" : "text-gray-300"
-                            } text-[20px]`}
+                          className={`ml-1 ${
+                            i < 3 ? "text-yellow-400" : "text-gray-300"
+                          } text-[20px]`}
                         />
                       ))}
                     </div>

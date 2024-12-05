@@ -471,7 +471,7 @@ const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.
 
       <Button onClick={() => {
         get_candidate_test_response_report.call({
-          candidate_id: 'k39k9ek7i1'
+          candidate_id: 'k3jas5g82l'
         });
       }}>
         Candidate Test Response Report

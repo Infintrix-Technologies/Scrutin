@@ -88,6 +88,12 @@ export interface AssessmentTest {
   title: string;
   test_title:string
   accuracy:number
+  correct_count:number
+  incorrect_count:number
+  answered_questions:number
+  unanswered_questions:number
+  total_duration:number
+  finished_time:string
 }
 
 export interface Assessment {
