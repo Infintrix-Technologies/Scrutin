@@ -65,21 +65,24 @@ import "dayjs/locale/en";
 import { useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
-import {
-  AssessmentData,
-  Test,
-} from "@/components/Interfaces/Interface";
+import { AssessmentData, Test } from "@/components/Interfaces/Interface";
 
 const AssessmentDetailPage = () => {
   const [showWeights, setShowWeights] = useState(false);
   const globalState = useGlobalState();
   const params = useParams();
   const assessment_id = params?.assessment_id || null;
-  
-  const get_assessment_data = useFrappeGetCall("scrutin.api.assessment_data.get_assessment_data",{
-      assessment_name: 'jvecvcvl4o',
-  })
-  console.log(get_assessment_data,"get_assessment_data");
+
+  const get_assessment_data = useFrappeGetCall(
+    "scrutin.api.assessment_data.get_assessment_data",
+    {
+      assessment_id: assessment_id,
+    }
+  );
+
+  const assessment_data = get_assessment_data?.data?.message || [];
+
+  console.log(assessment_data, "assessment_data");
 
   const get_specific_assessment_candidate_name = useFrappeGetCall(
     "scrutin.api.assessment_data.get_specific_assessment_candidate_name",
@@ -87,32 +90,12 @@ const AssessmentDetailPage = () => {
       assessment_name: assessment_id,
     }
   );
-  const get_custom_questions_for_assessment = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_custom_questions_for_assessment",
-    {
-      assessment_name: assessment_id,
-    }
-  );
-
-  const get_tests_for_assessment = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_tests_for_assessment",
-    {
-      assessment_name: assessment_id,
-    }
-  );
-  console.log(get_tests_for_assessment,"get_specific_assessment_candidate_name");
-
-  const custom_questions_for_assessment =
-    get_custom_questions_for_assessment?.data?.message || [];
 
   const get_specific_assessment =
     get_specific_assessment_candidate_name?.data?.message || [];
     
-  const tests_for_assessment = get_tests_for_assessment?.data?.message || [];
-  console.log(get_specific_assessment, "get_specific_assessment");
-
   const formatDate = (dateString: string) => {
-    return dayjs(dateString).format("DD-MM-YY hh:mm:ss A");
+    return dayjs(dateString).format("DD-MM-YY  hh:mm A");
   };
 
   const candidates = [
@@ -137,32 +120,47 @@ const AssessmentDetailPage = () => {
             <span className="sr-only">Go back</span>
           </Button>
 
-          <div className="flex flex-col gap-1 ">
-            <div className="flex gap-2">
-              <h1 className="text-xl font-semibold">Software Engineer</h1>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full h-6 w-6"
-              >
-                <Edit2 className="h-4 w-4" />
-                <span className="sr-only">Edit title</span>
-              </Button>
-            </div>
+          {assessment_data?.assessment_data?.map((data: AssessmentData) => (
+            <div className="flex flex-col gap-1 ">
+              <div className="flex gap-2">
+                <h1 className="text-xl font-semibold">
+                  {data?.assessment_name || ""}
+                </h1>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-6 w-6"
+                >
+                  <Edit2 className="h-4 w-4" />
+                  <span className="sr-only">Edit title</span>
+                </Button>
+              </div>
 
-            <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <PiNotepadBold />
-                <span>5 tests</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <RxTimer />
-                <span>68 mins excl. file upload(s)</span>
+              <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <PiNotepadBold />
+                  <span>{data?.total_number_of_tests} tests</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RxTimer />
+                  <span>
+                    {data?.total_duration_of_all_tests < 60
+                      ? data.total_duration_of_all_tests > 0
+                        ? `${data.total_duration_of_all_tests} seconds`
+                        : ""
+                      : `${Math.floor(
+                          data.total_duration_of_all_tests / 60
+                        )} min${
+                          data.total_duration_of_all_tests % 60 > 0
+                            ? ` ${data.total_duration_of_all_tests % 60} sec`
+                            : ""
+                        }`}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -558,9 +556,11 @@ const AssessmentDetailPage = () => {
                     </TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Overall</TableHead>
-                    {tests_for_assessment.map((test: Test, index: number) => (
-                      <TableHead key={index}>{test.title}</TableHead>
-                    ))}
+                    {assessment_data?.tests?.map(
+                      (test: Test, index: number) => (
+                        <TableHead key={index}>{test.title}</TableHead>
+                      )
+                    )}
                     <TableHead>Hiring stage</TableHead>
 
                     <TableHead>Status</TableHead>
@@ -569,92 +569,96 @@ const AssessmentDetailPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {get_specific_assessment.map((data: AssessmentData) => (
-                    <TableRow className="whitespace-nowrap ">
-                      <TableCell>
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {data?.applicant_name || "N/A"}
-                          <Badge
+                  {assessment_data?.candidate_name?.map(
+                    (data: AssessmentData) => (
+                      <TableRow className="whitespace-nowrap ">
+                        <TableCell>
+                          <Checkbox />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {data?.applicant_name || "N/A"}
+                            {/* <Badge
                             variant="secondary"
                             className="bg-purple-100 text-purple-800"
                           >
                             Owner
-                          </Badge>
-                        </div>
-                      </TableCell>
-                      <TableCell>{data.overall || "N/A"}</TableCell>
-                      {tests_for_assessment.map((test: Test, index: number) => (
-                        <TableCell key={index}>
-                          {data?.test_scores?.[test.title] || "0%"}
+                          </Badge> */}
+                          </div>
                         </TableCell>
-                      ))}
-                      <TableCell>
-                        <Select>
-                          <SelectTrigger className="w-[200px]">
-                            <SelectValue placeholder="Not yet evaluated" />
-                          </SelectTrigger>
+                        <TableCell>{data.overall || "N/A"}</TableCell>
+                        {assessment_data?.tests.map(
+                          (test: Test, index: number) => (
+                            <TableCell key={index}>
+                              {data?.test_scores?.[test.title] || "0%"}
+                            </TableCell>
+                          )
+                        )}
+                        <TableCell>
+                          <Select>
+                            <SelectTrigger className="w-[200px]">
+                              <SelectValue placeholder="Not yet evaluated" />
+                            </SelectTrigger>
 
-                          <SelectContent>
-                            {/* <SelectGroup> */}
+                            <SelectContent>
+                              {/* <SelectGroup> */}
 
-                            <SelectItem value="2"> Evaluated</SelectItem>
-                            <SelectItem value="3">
-                              {" "}
-                              Invited for interview
-                            </SelectItem>
-                            <SelectItem value="4"> Interviewed</SelectItem>
-                            <SelectItem value="5">
-                              {" "}
-                              Invited for take-home test
-                            </SelectItem>
-                            <SelectItem value="6">
-                              {" "}
-                              Take-home test completed
-                            </SelectItem>
-                            <SelectItem value="7">
-                              {" "}
-                              References checked
-                            </SelectItem>
-                            <SelectItem value="8"> Offer sent</SelectItem>
-                            <SelectItem value="9"> Offer declined</SelectItem>
-                            <SelectItem value="10">
-                              {" "}
-                              Candidate withdrew
-                            </SelectItem>
-                            <SelectItem value="11">
-                              {" "}
-                              Candidate unresponsive
-                            </SelectItem>
-                            <SelectItem value="12"> Rejected</SelectItem>
-                            <SelectItem value="13"> Hired 🎉</SelectItem>
-                            {/* </SelectGroup> */}
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          // className="bg-purple-100 text-purple-800"
-                        >
-                          {data?.status}
-                        </Badge>{" "}
-                      </TableCell>
-                      <TableCell>{formatDate(data?.invited_on)}</TableCell>
-                      <TableCell>
-                        <div className="flex justify-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon
-                              key={i}
-                              className={"w-4 h-4 text-gray-300"}
-                            />
-                          ))}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                              <SelectItem value="2"> Evaluated</SelectItem>
+                              <SelectItem value="3">
+                                {" "}
+                                Invited for interview
+                              </SelectItem>
+                              <SelectItem value="4"> Interviewed</SelectItem>
+                              <SelectItem value="5">
+                                {" "}
+                                Invited for take-home test
+                              </SelectItem>
+                              <SelectItem value="6">
+                                {" "}
+                                Take-home test completed
+                              </SelectItem>
+                              <SelectItem value="7">
+                                {" "}
+                                References checked
+                              </SelectItem>
+                              <SelectItem value="8"> Offer sent</SelectItem>
+                              <SelectItem value="9"> Offer declined</SelectItem>
+                              <SelectItem value="10">
+                                {" "}
+                                Candidate withdrew
+                              </SelectItem>
+                              <SelectItem value="11">
+                                {" "}
+                                Candidate unresponsive
+                              </SelectItem>
+                              <SelectItem value="12"> Rejected</SelectItem>
+                              <SelectItem value="13"> Hired 🎉</SelectItem>
+                              {/* </SelectGroup> */}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            // className="bg-purple-100 text-purple-800"
+                          >
+                            {data?.status}
+                          </Badge>{" "}
+                        </TableCell>
+                        <TableCell>{formatDate(data?.invited_on)}</TableCell>
+                        <TableCell>
+                          <div className="flex justify-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <StarIcon
+                                key={i}
+                                className={"w-4 h-4 text-gray-300"}
+                              />
+                            ))}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -728,23 +732,23 @@ const AssessmentDetailPage = () => {
                     <div>Impact</div>
                     <div>Duration</div>
                   </div>
-                  {tests_for_assessment?.map((data: Test, index: number) => (
+                  {assessment_data?.tests?.map((data: Test, index: number) => (
                     <div
                       key={index}
                       className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
                     >
-                      <div>{data?.title}</div>
-                      <div>{data?.weight || "--"}</div>Weight
+                      <div className="text-start">{data?.title}</div>
+                      <div>{data?.weight || "--"}</div>
                       <div>{data?.impact || "--"}</div>
-                      <div className="flex items-center">
+                      <div className="flex items-end">
                         <Clock className="mr-2 h-4 w-4" />
-                        {data?.duration < 60
-                          ? data.duration > 0
-                            ? `${data.duration} seconds`
+                        {data?.total_duration < 60
+                          ? data.total_duration > 0
+                            ? `${data.total_duration} seconds`
                             : ""
-                          : `${Math.floor(data.duration / 60)} min${
-                              data.duration % 60 > 0
-                                ? ` ${data.duration % 60} sec`
+                          : `${Math.floor(data.total_duration / 60)} min${
+                              data.total_duration % 60 > 0
+                                ? ` ${data.total_duration % 60} sec`
                                 : ""
                             }`}
                       </div>
@@ -764,17 +768,17 @@ const AssessmentDetailPage = () => {
               <CardContent>
                 <div className="rounded-lg border">
                   <div className="grid grid-cols-3 gap-4 p-4 font-medium text-sm border-b">
-                    <div className="col-span-2">Question</div>
+                    <div className="col-span-1 md:col-span-2">Question</div>
                     <div className="grid grid-cols-2">
                       <div>Type</div>
                       <div>Duration</div>
                     </div>
                   </div>
-                  {custom_questions_for_assessment.map(
+                  {assessment_data?.custom_questions?.map(
                     (question: AssessmentData, index: number) => (
                       <div
                         key={index}
-                        className="overflow-y-hidden grid grid-cols-3 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
+                        className="overflow-y-hidden grid grid-cols-2 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
                       >
                         {/* <div className="col-span-2">
                           {getPlainText(question?.question)}
@@ -793,11 +797,11 @@ const AssessmentDetailPage = () => {
                             <MessageSquare className="mr-2 h-4 w-4" />
                             {question?.type}
                           </div>
-                          <div className="flex items-center">
+                          <div className="flex items-center m-auto">
                             {/* {question.duration !== "--" && ( */}
                             <Clock className="mr-2 h-4 w-4" />
                             {/* )} */}
-                            {question?.duration || "5'"}
+                            {question?.duration || 0}
                           </div>
                         </div>
                       </div>
