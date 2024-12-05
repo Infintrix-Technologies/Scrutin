@@ -143,7 +143,7 @@ def get_questions_for_test_and_total_duration(test_name):
 #This APIs give the all details about the assessment like assessment total candidate, assessment all tests
 #and assessment all custom questions and it also give the total duration of each test present in the assessment
 @frappe.whitelist()
-def get_assessment_data(assessment_name):
+def get_assessment_data(assessment_id):
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
     ScrutinQuestion = DocType("Scrutin Question")
@@ -152,6 +152,13 @@ def get_assessment_data(assessment_name):
     ScrutinTestQuestion = DocType("Scrutin Test Question")
     ScrutinCandidate = DocType("Scrutin Candidate")
     JobApplicant = DocType("Job Applicant")
+
+    assessment_query = (
+        frappe.qb.from_(ScrutinAssessment)
+        .select(ScrutinAssessment.assessment_name)
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    assessment_data = assessment_query.run(as_dict=True)
 
     #Query to get the candidate of the specific assessment
     candidate_query = (
@@ -165,10 +172,9 @@ def get_assessment_data(assessment_name):
             ScrutinCandidate.job_applicant,
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
-            ScrutinAssessment.assessment_name,
             JobApplicant.applicant_name
         )
-        .where(ScrutinCandidate.assessment == assessment_name)
+        .where(ScrutinCandidate.assessment == assessment_id)
     )
 
     candidate_name = candidate_query.run(as_dict=True)
@@ -185,7 +191,7 @@ def get_assessment_data(assessment_name):
             ScrutinQuestion.question,
             ScrutinQuestion.type
         )
-        .where(ScrutinAssessment.name == assessment_name)
+        .where(ScrutinAssessment.name == assessment_id)
     )
     custom_questions = questions_query.run(as_dict=True)
 
@@ -201,7 +207,7 @@ def get_assessment_data(assessment_name):
             ScrutinAssessmentTest.weight,
             ScrutinTest.title,
         )
-        .where(ScrutinAssessment.name == assessment_name)
+        .where(ScrutinAssessment.name == assessment_id)
     )
     tests = tests_query.run(as_dict=True)
 
@@ -222,6 +228,7 @@ def get_assessment_data(assessment_name):
         test['total_duration'] = total_duration
 
     return {
+        'assessment_name': assessment_data,
         'custom_questions': custom_questions,
         'tests': tests,
         'candidate_name': candidate_name,
