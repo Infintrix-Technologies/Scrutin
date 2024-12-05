@@ -317,7 +317,7 @@ const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.
 
       <Button onClick={() => {
         get_candidate_detail_for_intro.call({
-          candidate_id: 'dkd7c993kk',
+          candidate_id: '37hc0ipka2',
         });
       }}>
         get_specific_candidate_details_for_intro_page
