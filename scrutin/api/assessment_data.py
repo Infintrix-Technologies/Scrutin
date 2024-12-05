@@ -143,7 +143,114 @@ def get_questions_for_test_and_total_duration(test_name):
 
 #This APIs give the all details about the assessment like assessment total candidate, assessment all tests
 #and assessment all custom questions and it also give the total duration of each test present in the assessment
-#This Both APIs are used for Assessment Detail Page 
+@frappe.whitelist()
+def get_assessment_data(assessment_id):
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    JobApplicant = DocType("Job Applicant")
+
+    assessment_query = (
+        frappe.qb.from_(ScrutinAssessment)
+        .select(ScrutinAssessment.assessment_name)
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    assessment_data = assessment_query.run(as_dict=True)
+
+    # Query to get the candidate of the specific assessment
+    candidate_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .left_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
+        .left_join(JobApplicant)
+        .on(JobApplicant.name == ScrutinCandidate.job_applicant)
+        .select(
+            ScrutinCandidate.name.as_("candidate_id"),
+            ScrutinCandidate.job_applicant,
+            ScrutinCandidate.status,
+            ScrutinCandidate.invited_on,
+            JobApplicant.applicant_name
+        )
+        .where(ScrutinCandidate.assessment == assessment_id)
+    )
+
+    candidate_name = candidate_query.run(as_dict=True)
+
+    # Query to get custom questions of the specific assessment
+    questions_query = (
+        frappe.qb.from_(ScrutinAssessmentQuestion)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
+        .select(
+            ScrutinAssessmentQuestion.question,
+            ScrutinQuestion.question,
+            ScrutinQuestion.type,
+            ScrutinQuestion.duration,
+        )
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    custom_questions = questions_query.run(as_dict=True)
+
+    # Query to get all tests of the specific assessment
+    tests_query = (
+        frappe.qb.from_(ScrutinAssessmentTest)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
+        .inner_join(ScrutinTest)
+        .on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        .select(
+            ScrutinAssessmentTest.test,
+            ScrutinAssessmentTest.weight,
+            ScrutinTest.title,
+        )
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    tests = tests_query.run(as_dict=True)
+
+    total_duration_of_all_tests = 0  # Initialize total duration
+    total_number_of_tests = len(tests)  # Get the total number of tests
+
+    # Add total duration for each test
+    for test in tests:
+        test_name = test['test']
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        total_duration = duration_result[0]['total_duration'] if duration_result else 0
+        test['total_duration'] = total_duration
+
+        total_duration_of_all_tests += total_duration  # Add to total duration of all tests
+
+    # Update assessment_data with total number of tests and total duration
+    if assessment_data:
+        assessment_data[0]['total_number_of_tests'] = total_number_of_tests
+        assessment_data[0]['total_duration_of_all_tests'] = total_duration_of_all_tests
+
+    return {
+        'assessment_data': assessment_data,
+        'custom_questions': custom_questions,
+        'tests': tests,
+        'candidate_name': candidate_name,
+    }
+
+
+
+
+#New API for Assessment Detail Page
+# These both api are used for the assessment_detail page
 @frappe.whitelist()
 def get_assessment_data_for_assessment_detail_page(assessment_id):
     ScrutinAssessment = DocType("Scrutin Assessment")
@@ -153,6 +260,7 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
     ScrutinTest = DocType("Scrutin Test")
     ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
 
     assessment_query = (
         frappe.qb.from_(ScrutinAssessment)
@@ -182,6 +290,22 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
         candidate_id = candidate.get("candidate_id")
         candidate['test_response_report'] = get_candidate_test_response_report_for_assessment_detail_page(candidate_id)
 
+
+    questions_query = (
+        frappe.qb.from_(ScrutinAssessmentQuestion)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
+        .select(
+            ScrutinAssessmentQuestion.question,
+            ScrutinQuestion.question,
+            ScrutinQuestion.type,
+            ScrutinQuestion.duration,
+        )
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    custom_questions = questions_query.run(as_dict=True)
 
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
@@ -228,6 +352,8 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
     return {
         'assessment_data': assessment_data,
         'candidate_name': candidate_name,
+        'tests': tests,
+        'custom_questions': custom_questions,
     }
 
 def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
@@ -316,7 +442,8 @@ def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
         "assessment_average": assessment_average,
     }
 
-# upper both APIs are used for assessment_detail page
+
+
 
 
 
