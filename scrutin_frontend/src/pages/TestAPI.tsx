@@ -168,6 +168,12 @@ const get_candidate_test_response_report_for_assessment_detail_page = useFrappeP
 
 
 
+const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.assessment_list_page_api")
+
+
+
+
+
 
 
 
@@ -512,6 +518,15 @@ const get_candidate_test_response_report_for_assessment_detail_page = useFrappeP
         });
       }}>
         Test & Assessment Average For Detail Page
+      </Button>
+
+
+      <Button onClick={() => {
+        assessment_list_page_api.call({
+        
+        });
+      }}>
+        Assessment List Page API
       </Button>
 
 

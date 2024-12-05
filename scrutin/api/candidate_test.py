@@ -73,6 +73,7 @@ def update_assessment_started_time(candidate_id):
     (
         frappe.qb.update(ScrutinCandidate)
         .set(ScrutinCandidate.assessment_started_at, now())
+        .set(ScrutinCandidate.status, "Started")
         .where(ScrutinCandidate.name == candidate_id)
     ).run()
 
@@ -82,6 +83,8 @@ def update_assessment_started_time(candidate_id):
     }
 
 
+
+@frappe.whitelist()
 def update_assessment_completed_time(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
 
@@ -104,6 +107,7 @@ def update_assessment_completed_time(candidate_id):
     (
         frappe.qb.update(ScrutinCandidate)
         .set(ScrutinCandidate.assessment_completed_at, now())
+        .set(ScrutinCandidate.status, "Completed")
         .where(ScrutinCandidate.name == candidate_id)
     ).run()
 
