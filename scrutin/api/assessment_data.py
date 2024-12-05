@@ -6,6 +6,30 @@ from frappe.query_builder import functions as fn
 from frappe.utils import now
 
 
+@frappe.whitelist()
+def assessment_list_page_api():
+    ScrutinAssessment = DocType("Scrutin Assessment")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+
+    query = (
+        frappe.qb.from_(ScrutinAssessment)
+        .inner_join(ScrutinCandidate)
+        .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
+        .select(
+            ScrutinAssessment.name,
+            ScrutinAssessment.assessment_name,
+            ScrutinAssessment.company,
+            ScrutinAssessment.language,
+            fn.Count(ScrutinCandidate.name).as_("candidate_count")
+        )
+        .groupby(ScrutinAssessment.name)
+    )
+    results = query.run(as_dict=True)
+    return results
+
+
+
+
 #This API provide the Job_title for Job_applicant
 @frappe.whitelist()
 def get_applicant_jobtitle():
