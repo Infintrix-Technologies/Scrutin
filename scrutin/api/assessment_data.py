@@ -160,7 +160,7 @@ def get_assessment_data(assessment_id):
     )
     assessment_data = assessment_query.run(as_dict=True)
 
-    #Query to get the candidate of the specific assessment
+    # Query to get the candidate of the specific assessment
     candidate_query = (
         frappe.qb.from_(ScrutinCandidate)
         .left_join(ScrutinAssessment)
@@ -211,6 +211,9 @@ def get_assessment_data(assessment_id):
     )
     tests = tests_query.run(as_dict=True)
 
+    total_duration_of_all_tests = 0  # Initialize total duration
+    total_number_of_tests = len(tests)  # Get the total number of tests
+
     # Add total duration for each test
     for test in tests:
         test_name = test['test']
@@ -227,12 +230,20 @@ def get_assessment_data(assessment_id):
         total_duration = duration_result[0]['total_duration'] if duration_result else 0
         test['total_duration'] = total_duration
 
+        total_duration_of_all_tests += total_duration  # Add to total duration of all tests
+
+    # Update assessment_data with total number of tests and total duration
+    if assessment_data:
+        assessment_data[0]['total_number_of_tests'] = total_number_of_tests
+        assessment_data[0]['total_duration_of_all_tests'] = total_duration_of_all_tests
+
     return {
-        'assessment_name': assessment_data,
+        'assessment_data': assessment_data,
         'custom_questions': custom_questions,
         'tests': tests,
         'candidate_name': candidate_name,
     }
+
 
 
 #This api provides all details about Specific candidate based on the email (Not by name or ID)
