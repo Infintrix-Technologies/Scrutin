@@ -22,6 +22,7 @@ export interface CandidateList {
   score:number;
 }
 export interface Test {
+  total_duration: number;
   duration: number;
   weight: string;
   title: number;
@@ -111,6 +112,7 @@ export interface Assessment {
   mouse_always_in_assessment_window: number;
   questions: Question[];
   webcam_snapshots: (string | null)[];
+  assessment_completed_at:(string | null)
 }
 
 export interface CustomTest {
@@ -181,4 +183,9 @@ export  interface  CandidateAct {
 
 export  interface  CandidateActionsProps {
   candidate: CandidateAct;
+}
+export  interface  AssessmentData {
+  assessment_name:string 
+  total_duration_of_all_tests:number
+  total_number_of_tests:number
 }
