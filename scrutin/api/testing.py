@@ -210,6 +210,7 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
     ScrutinTest = DocType("Scrutin Test")
     ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
 
     assessment_query = (
         frappe.qb.from_(ScrutinAssessment)
@@ -239,6 +240,22 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
         candidate_id = candidate.get("candidate_id")
         candidate['test_response_report'] = get_candidate_test_response_report_for_assessment_detail_page(candidate_id)
 
+
+    questions_query = (
+        frappe.qb.from_(ScrutinAssessmentQuestion)
+        .inner_join(ScrutinAssessment)
+        .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
+        .select(
+            ScrutinAssessmentQuestion.question,
+            ScrutinQuestion.question,
+            ScrutinQuestion.type,
+            ScrutinQuestion.duration,
+        )
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    custom_questions = questions_query.run(as_dict=True)
 
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
@@ -285,6 +302,8 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
     return {
         'assessment_data': assessment_data,
         'candidate_name': candidate_name,
+        'tests': tests,
+        'custom_questions': custom_questions,
     }
 
 def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
