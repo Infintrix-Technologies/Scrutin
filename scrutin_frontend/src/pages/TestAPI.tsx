@@ -160,6 +160,15 @@ const get_candidate_test_response_report = useFrappePostCall("scrutin.api.test_r
 const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.api.test_response_report.send_email_to_candidate_test_response_report")
 
 
+const get_assessment_data_for_assessment_detail_page = useFrappePostCall("scrutin.api.testing.get_assessment_data_for_assessment_detail_page")
+
+
+
+const get_candidate_test_response_report_for_assessment_detail_page = useFrappePostCall("scrutin.api.testing.get_candidate_test_response_report_for_assessment_detail_page")
+
+
+
+
 
 
 
@@ -484,6 +493,25 @@ const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.
         });
       }}>
         Send E-mail Candidate Test Response Report
+      </Button>
+
+
+      <Button onClick={() => {
+        get_assessment_data_for_assessment_detail_page.call({
+          assessment_id: 'juocinh9un',
+        });
+      }}>
+        Assessment Data For Detail Page
+      </Button>
+
+
+
+      <Button onClick={() => {
+        get_candidate_test_response_report_for_assessment_detail_page.call({
+          candidate_id: 'k39k9ek7i1',
+        });
+      }}>
+        Test & Assessment Average For Detail Page
       </Button>
 
 

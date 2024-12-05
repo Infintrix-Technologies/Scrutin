@@ -143,16 +143,16 @@ def get_questions_for_test_and_total_duration(test_name):
 
 #This APIs give the all details about the assessment like assessment total candidate, assessment all tests
 #and assessment all custom questions and it also give the total duration of each test present in the assessment
+#This Both APIs are used for Assessment Detail Page 
 @frappe.whitelist()
-def get_assessment_data(assessment_id):
+def get_assessment_data_for_assessment_detail_page(assessment_id):
     ScrutinAssessment = DocType("Scrutin Assessment")
-    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
+    ScrutinCandidate = DocType("Scrutin Candidate")
+    JobApplicant = DocType("Job Applicant")
     ScrutinQuestion = DocType("Scrutin Question")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
     ScrutinTest = DocType("Scrutin Test")
     ScrutinTestQuestion = DocType("Scrutin Test Question")
-    ScrutinCandidate = DocType("Scrutin Candidate")
-    JobApplicant = DocType("Job Applicant")
 
     assessment_query = (
         frappe.qb.from_(ScrutinAssessment)
@@ -161,7 +161,6 @@ def get_assessment_data(assessment_id):
     )
     assessment_data = assessment_query.run(as_dict=True)
 
-    # Query to get the candidate of the specific assessment
     candidate_query = (
         frappe.qb.from_(ScrutinCandidate)
         .left_join(ScrutinAssessment)
@@ -170,34 +169,20 @@ def get_assessment_data(assessment_id):
         .on(JobApplicant.name == ScrutinCandidate.job_applicant)
         .select(
             ScrutinCandidate.name.as_("candidate_id"),
-            ScrutinCandidate.job_applicant,
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
             JobApplicant.applicant_name
         )
         .where(ScrutinCandidate.assessment == assessment_id)
     )
-
     candidate_name = candidate_query.run(as_dict=True)
 
-    # Query to get custom questions of the specific assessment
-    questions_query = (
-        frappe.qb.from_(ScrutinAssessmentQuestion)
-        .inner_join(ScrutinAssessment)
-        .on(ScrutinAssessment.name == ScrutinAssessmentQuestion.parent)
-        .inner_join(ScrutinQuestion)
-        .on(ScrutinAssessmentQuestion.question == ScrutinQuestion.name)
-        .select(
-            ScrutinAssessmentQuestion.question,
-            ScrutinQuestion.question,
-            ScrutinQuestion.type,
-            ScrutinQuestion.duration,
-        )
-        .where(ScrutinAssessment.name == assessment_id)
-    )
-    custom_questions = questions_query.run(as_dict=True)
+    # Adding candidate test response report to each candidate
+    for candidate in candidate_name:
+        candidate_id = candidate.get("candidate_id")
+        candidate['test_response_report'] = get_candidate_test_response_report_for_assessment_detail_page(candidate_id)
 
-    # Query to get all tests of the specific assessment
+
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
         .inner_join(ScrutinAssessment)
@@ -239,20 +224,14 @@ def get_assessment_data(assessment_id):
         assessment_data[0]['total_number_of_tests'] = total_number_of_tests
         assessment_data[0]['total_duration_of_all_tests'] = total_duration_of_all_tests
 
+
     return {
         'assessment_data': assessment_data,
-        'custom_questions': custom_questions,
-        'tests': tests,
         'candidate_name': candidate_name,
     }
 
-
-
-
-
-@frappe.whitelist()
-def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
-    # Define DocTypes
+def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
+    
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
@@ -260,28 +239,19 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
     ScrutinTestQuestion = DocType("Scrutin Test Question")
     ScrutinQuestion = DocType("Scrutin Question")
     ScrutinQuestionResponse = DocType("Scrutin Question Responses")
-    ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
-    ScrutinTestProgress = DocType("Scrutin Test Progress")
 
-    # Helper function to get candidate's question responses
-    def get_candidate_questions_answer_responses(candidate_id):
-        query = (
-            frappe.qb.from_(ScrutinCandidate)
-            .join(ScrutinQuestionResponse)
-            .on(ScrutinCandidate.name == ScrutinQuestionResponse.parent)
-            .join(ScrutinQuestion)
-            .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
-            .select(
-                ScrutinQuestion.name.as_("question"),
-                ScrutinQuestion.question.as_("question_content"),
-                ScrutinQuestionResponse.answer,
-            )
-            .where(ScrutinCandidate.name == candidate_id)
-        )
-        return query.run(as_dict=True)
+    query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_assessments = query.run(as_dict=True)
+    if candidate_assessments:
+        assessment_id = candidate_assessments[0].get('assessment')
+    else:
+        assessment_id = None
 
 
-    # Fetch tests for the candidate's assessment
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
         .inner_join(ScrutinAssessment)
@@ -289,7 +259,6 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
         .inner_join(ScrutinTest)
         .on(ScrutinTest.name == ScrutinAssessmentTest.test)
         .select(
-            ScrutinAssessment.assessment_name,
             ScrutinTest.name,
             ScrutinTest.title,
         )
@@ -297,9 +266,6 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
     )
     tests = tests_query.run(as_dict=True)
 
-    # Fetch candidate's responses
-    candidate_responses = get_candidate_questions_answer_responses(candidate_id)
-    answered_questions = {response['question'] for response in candidate_responses}
 
     response = []
     total_accuracy = 0
@@ -307,47 +273,7 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
     for test in tests:
         test_name = test['name']
 
-        # Fetch total duration of the test
-        duration_query = (
-            frappe.qb.from_(ScrutinTestQuestion)
-            .inner_join(ScrutinTest)
-            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-            .inner_join(ScrutinQuestion)
-            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-            .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
-            .where(ScrutinTest.name == test_name)
-        )
-        duration_result = duration_query.run(as_dict=True)
-        total_duration = duration_result[0]['total_duration'] if duration_result else 0
-        
-        # Fetch total number of questions in the test
-        question_count_query = (
-            frappe.qb.from_(ScrutinTestQuestion)
-            .inner_join(ScrutinTest)
-            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-            .select(fn.Count(ScrutinTestQuestion.question).as_("total_questions"))
-            .where(ScrutinTest.name == test_name)
-        )
-        question_count_result = question_count_query.run(as_dict=True)
-        total_questions = question_count_result[0]['total_questions'] if question_count_result else 0
 
-
-        # Check if all questions in the test are answered
-        test_questions_query = (
-            frappe.qb.from_(ScrutinTestQuestion)
-            .inner_join(ScrutinTest)
-            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-            .inner_join(ScrutinQuestion)
-            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-            .select(ScrutinTestQuestion.question)
-            .where(ScrutinTest.name == test_name)
-        )
-        test_questions = test_questions_query.run(as_dict=True)
-        unanswered_questions = [
-            question['question'] for question in test_questions if question['question'] not in answered_questions
-        ]
-
-        # Fetch questions and candidate's responses for the test
         question_query = (
             frappe.qb.from_(ScrutinTestQuestion)
             .inner_join(ScrutinTest)
@@ -357,8 +283,6 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
             .left_join(ScrutinQuestionResponse)
             .on(ScrutinQuestionResponse.question == ScrutinQuestion.name)
             .select(
-                # ScrutinQuestion.name.as_("question_id"),
-                # ScrutinQuestion.question.as_("question_text"),
                 ScrutinQuestion.answer.as_("actual_answer"),
                 ScrutinQuestionResponse.answer.as_("candidate_answer"),
             )
@@ -377,19 +301,10 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
         accuracy = (correct_count / total_test_questions * 100) if total_test_questions else 0
         total_accuracy += accuracy
 
-        # Update test details
-        test['total_duration'] = total_duration
-        test['total_questions'] = total_questions
-        test['unanswered_questions'] = len(unanswered_questions)
-        test['answered_questions'] = total_questions - len(unanswered_questions)
-
         # Append test result to response
         response.append({
-            "test_name": test_name,
             "test_title": test["title"],
             "accuracy": accuracy,
-            "total_questions": total_questions,
-            "incorrect_count": total_test_questions - correct_count,
         })
 
     # Calculate the assessment average accuracy
@@ -397,46 +312,11 @@ def in_assessment_detail_page_get_candidate_test_response_report(candidate_id):
     assessment_average = total_accuracy / total_tests if total_tests else 0
 
     return {
-        "candidate_id": candidate_id,
         "tests": response,
         "assessment_average": assessment_average,
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# upper both APIs are used for assessment_detail page
 
 
 
