@@ -247,6 +247,9 @@ def get_assessment_data(assessment_id):
     }
 
 
+
+
+#New API for Assessment Detail Page
 # These both api are used for the assessment_detail page
 @frappe.whitelist()
 def get_assessment_data_for_assessment_detail_page(assessment_id):
