@@ -15,6 +15,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronRightIcon } from "lucide-react";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import { Checkbox } from "@/components/ui/checkbox";
+import NotFound from "@/pages/NotFound";
 
 // Define a schema Checkboxusing zod
 const formSchema = z.object({
@@ -35,12 +36,12 @@ export default function IntroForm() {
   const candidate_id = params?.candidate_id || null;
   const navigate = useNavigate();
   
-  const get_candidate_detail_for_intro = useFrappeGetCall(
+  const {data,isLoading,error} = useFrappeGetCall(
     "scrutin.api.assessment_data.get_candidate_detail_for_intro",
-    { candidate_id: candidate_id }  //"dkd7c993kk"
+    { candidate_id: candidate_id }  
   );
   const candidate_detail_for_intro =
-    get_candidate_detail_for_intro?.data?.message[0];
+    data?.message[0];
 
 
   const {
@@ -54,6 +55,9 @@ export default function IntroForm() {
   const onSubmit = () => {
     navigate(`/candidacy/${candidate_id}/overview`);
   };
+  
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <NotFound/>;
 
   return (
     <Card className="w-full max-w-2xl mx-auto">

@@ -1,79 +1,92 @@
-import {  useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "react-hot-toast";
-import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
-import { Option } from "@/components/Interfaces/Interface";
-import { Navigate, useParams } from "react-router-dom";
+import { useFrappePostCall } from "frappe-react-sdk";
+import { CurrentQuestionOption } from "@/components/Interfaces/Interface";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import NotFound from "./NotFound";
+import { useGlobalState } from "@/utils/StateProvider";
 
 const TestPage = () => {
   const { candidate_id } = useParams();
-  const [triggerReload, setTriggerReload] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | string[] | null>(null);
 
-  const { data, isLoading, error } = useFrappeGetCall(
-    "scrutin.api.candidate_test.get_current_question",
-    { candidate_id },
-    [triggerReload]
-  );
-  
+  const { question, updateCurrentQuestion, error, loading } = useGlobalState();
+  const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState <string | string[] | null >(null);
+
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.add_scrutin_question_response"
   );
-  
+
+  useEffect(() => {
+    updateCurrentQuestion(candidate_id);
+  }, [candidate_id]);
+
+  // const handleNextQuestion = () => {
+  //   setTriggerReload((prev) => !prev);
+  // };
   const handleSubmit = async () => {
-    if (!selectedOption || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
+    if (
+      !selectedOption ||
+      (Array.isArray(selectedOption) && selectedOption.length === 0)
+    ) {
       toast.error("Select an option before submitting.");
       return;
     }
-  
+
     try {
-      const sortedAnswer = Array.isArray(selectedOption) ? JSON.stringify(selectedOption.map(Number).sort((a, b) => a - b)) : selectedOption;
-  
+      const sortedAnswer = Array.isArray(selectedOption)
+        ? JSON.stringify(selectedOption.map(Number).sort((a, b) => a - b))
+        : selectedOption;
+
       await call({
         candidate_id,
-        question_id: data?.message?.test?.current_question?.name,
+        question_id: question?.message?.test?.current_question?.name,
         answer: sortedAnswer,
       });
-  
-      setSelectedOption(null); 
-      setTriggerReload((prev) => !prev); 
+
+      if (question?.message?.test?.last_test_question) {
+        navigate(`/candidacy/${candidate_id}/overview`);
+      }
+
       // toast.success("Response submitted successfully!");
+      setSelectedOption(null);
     } catch (error) {
-      console.error("Error in post call:", error);
-      toast.error("There was an issue submitting your response. Please try again.");
+      console.log(error, "error");
+      toast.error(
+        "There was an issue submitting your response. Please try again."
+      );
     }
   };
-  
 
   const handleMultiSelectChange = (value: string) => {
     setSelectedOption((prev) => {
       if (Array.isArray(prev)) {
-        return prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value];
+        return prev.includes(value)
+          ? prev.filter((v) => v !== value)
+          : [...prev, value];
       }
       return [value];
     });
   };
 
-  
+  if (loading) return <p>Loading...</p>;
+  if (error) return <NotFound />;
 
- 
+  if (question?.message?.completed) {
+    return <Navigate to={`/candidacy/${candidate_id}/overview`} />;
+  }
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading test data.</p>;
-
-
-  if (data?.message?.completed === true) return <Navigate to={`/candidacy/${candidate_id}/overview`}/>
-
-
-  const test = data?.message?.test;
+  const test = question?.message?.test;
   const currentQuestion = test?.current_question;
 
   const isMultiChoice = currentQuestion?.type === "Multi Choice";
-
 
   return (
     <div className="flex justify-center items-center h-auto">
@@ -101,12 +114,20 @@ const TestPage = () => {
                 <h3 className="text-lg font-semibold mb-2">Select Answer</h3>
                 {isMultiChoice ? (
                   <div>
-                    {currentQuestion?.options?.map((option: Option) => (
-                      <div key={option.value} className="my-2 flex items-center space-x-2">
+                    {currentQuestion.options.map((option: CurrentQuestionOption) => (
+                      <div
+                        key={option.value}
+                        className="my-2 flex items-center space-x-2"
+                      >
                         <Checkbox
                           id={option.value}
-                          checked={Array.isArray(selectedOption) && selectedOption.includes(option.value)}
-                          onCheckedChange={() => handleMultiSelectChange(option.value)}
+                          checked={
+                            Array.isArray(selectedOption) &&
+                            selectedOption.includes(option.value)
+                          }
+                          onCheckedChange={() =>
+                            handleMultiSelectChange(option.value)
+                          }
                         />
                         <Label htmlFor={option.value}>{option.label}</Label>
                       </div>
@@ -117,11 +138,21 @@ const TestPage = () => {
                     className="space-y-2"
                     name={`question-${currentQuestion?.name}`}
                     onValueChange={(value) => setSelectedOption(value)}
-                    value={Array.isArray(selectedOption) ? selectedOption[0] : selectedOption || ""}
+                    value={
+                      Array.isArray(selectedOption)
+                        ? selectedOption[0]
+                        : selectedOption || ""
+                    }
                   >
-                    {currentQuestion?.options?.map((option: Option) => (
-                      <div key={option.value} className="flex items-center space-x-2">
-                        <RadioGroupItem value={option.value} id={option.value} />
+                    {currentQuestion?.options?.map((option: CurrentQuestionOption) => (
+                      <div
+                        key={option.value}
+                        className="flex items-center space-x-2"
+                      >
+                        <RadioGroupItem
+                          value={option.value}
+                          id={option.value}
+                        />
                         <Label htmlFor={option.value}>{option.label}</Label>
                       </div>
                     ))}

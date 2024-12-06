@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
+import { useRetrieveNextQuestion } from '@/hooks/post-hooks';
 import { Dispatch, FC, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
 import { createContext } from 'react'
 interface Modal {
@@ -11,11 +13,34 @@ interface GlobalStateContextProps {
     modals : ModalState;
     setModals: Dispatch<SetStateAction<ModalState>>;
     openModal : (modal_key:string, open_state :boolean) => void;
+    triggerReload: boolean;
+    setTriggerReload: Dispatch<SetStateAction<boolean>>;
+    question : object|undefined;
+    updateCurrentQuestion : (candidate_id:string|undefined) => void;
+    loading: boolean
+    error: any | null
+    
 }
 
 export const GlobalStateContext = createContext<GlobalStateContextProps|undefined>(undefined)
 
 export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
+
+
+
+    const next_question_api = useRetrieveNextQuestion();
+    const question = next_question_api.result
+    const loading = next_question_api.loading
+    const error = next_question_api.error
+    // const { candidate_id } = useParams();
+
+    const updateCurrentQuestion = async (candidate_id:string|null=null) => {
+        if(candidate_id){
+            next_question_api.call({
+                candidate_id:candidate_id
+            })
+        }
+    }
 
     // const { mutate } = useSWRConfig()
     const [modals, setModals] = useState<ModalState>({
@@ -31,13 +56,15 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
 
     })
 
+    const [triggerReload, setTriggerReload] = useState(false);
+
     const openModal = (modal_key:string, open_state :boolean)=> {
         setModals({...modals, [modal_key]: { open: open_state } })
     }
 
 
     return (
-        <GlobalStateContext.Provider value={{ modals, setModals,openModal }}>
+        <GlobalStateContext.Provider value={{ modals, setModals,openModal, triggerReload, setTriggerReload , question,updateCurrentQuestion,loading ,error}}>
             {children}
         </GlobalStateContext.Provider>
     )

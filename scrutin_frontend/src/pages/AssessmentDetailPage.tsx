@@ -66,6 +66,7 @@ import { useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
 import { Assessment_Data, AssessmentData, Test, TestAssessments } from "@/components/Interfaces/Interface";
+import NotFound from "./NotFound";
 
 const AssessmentDetailPage = () => {
   const [showWeights, setShowWeights] = useState(false);
@@ -81,16 +82,16 @@ const AssessmentDetailPage = () => {
   // );
   // console.log(get_assessment_data,"get_assessment_data");
 
-  const get_assessment_data = useFrappeGetCall(
+  const {data,isLoading,error} = useFrappeGetCall(
     "scrutin.api.assessment_data.get_assessment_data_for_assessment_detail_page",
     {
       assessment_id: assessment_id,
     }
   );
-console.log(get_assessment_data,"get_assessment_data");
+console.log(data,"get_assessment_data");
 
   
-  const assessment_data = get_assessment_data?.data?.message || [];
+  const assessment_data = data?.message || [];
 
   console.log(assessment_data, "assessment_data");
 
@@ -115,6 +116,9 @@ console.log(get_assessment_data,"get_assessment_data");
       hired: false,
     },
   ];
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <NotFound/>;
 
   return (
     <>

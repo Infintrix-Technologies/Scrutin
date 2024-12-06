@@ -16,17 +16,17 @@ const Assessments = () => {
   const status = searchParams.get("status") || "active";
 
   return (
-    <div className="px-32">
+    <div className=" px-3 md:px-32">
       {/* <Button onClick={()=>{
         delete_api.deleteDoc('Scrutin Assessment', '0b1bdsk5tu')
       }}>Delete</Button> */}
-      <div className="flex justify-between mt-10">
+      <div className="block md:flex space-y-4 md:space-y-0 md:justify-between mt-10">
         <h1 className="text-3xl font-bold">Assessments</h1>
         <CreateAssessment/>
       </div>
 
       <div className="my-3">
-        <div className="flex justify-between items-center">
+        <div className="block md:flex space-y-4 md:space-y-0 md:justify-between md:items-center">
           <Input placeholder="Search" className="w-48" />
           <div>
             <Button

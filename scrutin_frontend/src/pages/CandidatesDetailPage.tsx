@@ -104,6 +104,7 @@ import {
   Question,
 } from "@/components/Interfaces/Interface";
 import dayjs from "dayjs";
+import NotFound from "./NotFound";
 
 
 const CandidatesDetailPage: React.FC = () => {
@@ -116,13 +117,13 @@ const CandidatesDetailPage: React.FC = () => {
     setSliderValue(value);
   };
 
-  const get_candidate_details = useFrappeGetCall(
+  const {data,isLoading,error} = useFrappeGetCall(
     "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
     { email: email}
   );
 
   const candidate_details =
-    get_candidate_details?.data?.message?.candidate_assessment || [];
+    data?.message?.candidate_assessment || [];
   
   const get_candidate_assessment_performance = useFrappeGetCall(
     "scrutin.api.candidate_test.get_candidate_assessment_performance",
@@ -151,21 +152,6 @@ const CandidatesDetailPage: React.FC = () => {
     get_candidate_test_response_report?.data?.message || [];
   console.log(candidate_test_response_report, "candidate_test_response_report");
 
-  // const  { call }  = useFrappePostCall("scrutin.api.test_response_report.send_email_to_candidate_test_response_report")
-
-  // const handleSubmit = async () => {
-  //   try {
-  
-  //     await call({
-  //      candidate_id: candidate_details[0]?.candidate_id,
-    
-  //     });
- 
-  //   } catch (error) {
-  //     console.error("Error in post call:", error);
-  //   }
-  // };
-
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
     updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
@@ -175,13 +161,8 @@ const CandidatesDetailPage: React.FC = () => {
     return dayjs(dateString).format("DD-MM-YY hh:mm A");
   };
 
-
- 
-
-
-
-
-
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <NotFound/>;
 
   return (
     <div className="px-14">
