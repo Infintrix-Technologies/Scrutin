@@ -314,7 +314,8 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
             ScrutinCandidate.name.as_("candidate_id"),
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
-            JobApplicant.applicant_name
+            JobApplicant.applicant_name,
+            JobApplicant.applicant_rating,
         )
         .where(ScrutinCandidate.assessment == assessment_id)
     )

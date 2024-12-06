@@ -643,20 +643,5 @@ def update_job_applicant_status(applicant_id):
 
 
 
-@frappe.whitelist()
-def get_job_applicant_data(applicant_id):
-    JobApplicant = DocType("Job Applicant")
-
-    applicant_data = (
-        frappe.qb.from_(JobApplicant)
-        .select(JobApplicant.name,
-                JobApplicant.applicant_name,
-                JobApplicant.email_id,
-                JobApplicant.applicant_rating)
-        .where(JobApplicant.name == applicant_id)
-    )
-    result = applicant_data.run(as_dict=True)
-    return result
-
 
 
