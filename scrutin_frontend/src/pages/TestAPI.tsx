@@ -172,7 +172,15 @@ const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.
 
 
 
+const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_rating")
 
+
+
+const get_job_applicant_data = useFrappePostCall("scrutin.api.candidate_test.get_job_applicant_data")
+
+
+
+const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
 
 
 
@@ -527,6 +535,34 @@ const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.
         });
       }}>
         Assessment List Page API
+      </Button>
+
+
+      <Button onClick={() => {
+        update_job_applicant_rating.call({
+        applicant_id: "salmansaeed7272@gmail.com",
+        rating: 0.7,
+        });
+      }}>
+        update job applicant rating
+      </Button>
+
+
+      <Button onClick={() => {
+        get_job_applicant_data.call({
+        applicant_id: "salmansaeed7272@gmail.com",
+        });
+      }}>
+        Get Job Applicant Data
+      </Button>
+
+
+      <Button onClick={() => {
+        update_job_applicant_status.call({
+        applicant_id: "salmansaeed7272@gmail.com",
+        });
+      }}>
+        Update Job Applicant Status
       </Button>
 
 
