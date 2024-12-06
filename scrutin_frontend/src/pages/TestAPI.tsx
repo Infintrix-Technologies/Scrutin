@@ -160,11 +160,11 @@ const get_candidate_test_response_report = useFrappePostCall("scrutin.api.test_r
 const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.api.test_response_report.send_email_to_candidate_test_response_report")
 
 
-const get_assessment_data_for_assessment_detail_page = useFrappePostCall("scrutin.api.testing.get_assessment_data_for_assessment_detail_page")
+const get_assessment_data_for_assessment_detail_page = useFrappePostCall("scrutin.api.assessment_data.get_assessment_data_for_assessment_detail_page")
 
 
 
-const get_candidate_test_response_report_for_assessment_detail_page = useFrappePostCall("scrutin.api.testing.get_candidate_test_response_report_for_assessment_detail_page")
+const get_candidate_test_response_report_for_assessment_detail_page = useFrappePostCall("scrutin.api.assessment_data.get_candidate_test_response_report_for_assessment_detail_page")
 
 
 

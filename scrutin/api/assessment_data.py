@@ -287,6 +287,16 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
     ScrutinTestQuestion = DocType("Scrutin Test Question")
     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
 
+    exists_query = (
+        frappe.qb.from_(ScrutinAssessment)
+        .select(ScrutinAssessment.name)
+        .where(ScrutinAssessment.name == assessment_id)
+    )
+    assessment_exists = exists_query.run(as_dict=True)
+    
+    if not assessment_exists:
+        raise frappe.DoesNotExistError(f"Candidate with ID {assessment_id} does not exist")
+
     assessment_query = (
         frappe.qb.from_(ScrutinAssessment)
         .select(ScrutinAssessment.assessment_name)
@@ -381,6 +391,7 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
         'custom_questions': custom_questions,
     }
 
+#This api is used on the assesment_detail page that give average of each candidate test and assessment
 def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
     
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -484,6 +495,16 @@ def get_combined_candidate_detail_with_snapshot(email):
     ScrutinAssessmentQuestion = DocType("Scrutin Assessment Questions")
     ScrutinQuestion = DocType("Scrutin Question")
     ScrutinWebcam = DocType("Scrutin Webcam Snapshot")
+
+    exists_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.name)
+        .where(ScrutinCandidate.job_applicant == email)
+    )
+    candidate_exists = exists_query.run(as_dict=True)
+    
+    if not candidate_exists:
+        raise frappe.DoesNotExistError(f"Candidate with ID {email} does not exist")
 
     # Query to get the assessments and candidate details for the specific job applicant email
     assessment_query = (
