@@ -7,6 +7,7 @@ from frappe.query_builder import functions as fn
 
 
 # this api give all details about assessment tests and also give in what time candidate finished the test
+# this api is used on the candidate detail page 
 @frappe.whitelist()
 def get_candidate_test_response_report(candidate_id):
     # Define DocTypes
@@ -91,6 +92,7 @@ def get_candidate_test_response_report(candidate_id):
             ScrutinAssessment.assessment_name,
             ScrutinTest.name,
             ScrutinTest.title,
+            ScrutinTest.level,
         )
         .where(ScrutinAssessment.name == assessment_id)
     )
@@ -211,6 +213,7 @@ def get_candidate_test_response_report(candidate_id):
         response.append({
             "test_name": test_name,
             "test_title": test["title"],
+            "test_level": test["level"],
             "questions": questions,
             "accuracy": accuracy,
             "total_questions": total_questions,
