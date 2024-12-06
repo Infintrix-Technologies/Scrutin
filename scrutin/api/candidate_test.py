@@ -615,4 +615,22 @@ def get_candidate_assessment_performance(candidate_id):
 
 
 
+#API that will change the status and rating of job applicant
+
+@frappe.whitelist()
+def change_status_and_rating(applicant_id, rating):
+    JobApplicant = DocType("Job Applicant")
+
+    (
+        frappe.qb.update(JobApplicant)
+        .set(
+            {'rating': rating}
+         )
+         .where(JobApplicant.name == applicant_id)
+    ).run()
+    frappe.db.commit()
+    return f"Status and rating for applicant {applicant_id} have been updated successfully."
+
+
+
 
