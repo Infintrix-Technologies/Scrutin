@@ -214,7 +214,7 @@ def get_candidate_test_response_report(candidate_id):
             "test_name": test_name,
             "test_title": test["title"],
             "test_level": test["level"],
-            "questions": questions,
+            # "questions": questions,
             "accuracy": accuracy,
             "total_questions": total_questions,
             "correct_count": correct_count,
