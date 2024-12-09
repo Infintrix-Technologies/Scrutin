@@ -51,14 +51,14 @@ def get_candidate_test_response_report(candidate_id):
             JobApplicant.email_id,
             JobApplicant.name,
             JobApplicant.applicant_rating,
+            ScrutinAssessment.assessment_name,
 
         )
         .where(ScrutinCandidate.name == candidate_id)
     ).run(as_dict=True)
     applicant_name = candidate_detail[0]["applicant_name"] if candidate_detail else None
     applicant_email = candidate_detail[0]["email_id"] if candidate_detail else None
-    applicant_id = candidate_detail[0]["name"] if candidate_detail else None
-    applicant_rating = candidate_detail[0]["applicant_rating"] if candidate_detail else None
+    assessment_name = candidate_detail[0]["assessment_name"] if candidate_detail else None
 
     # Fetch candidate's assessments
     query = (
@@ -214,7 +214,6 @@ def get_candidate_test_response_report(candidate_id):
             "test_name": test_name,
             "test_title": test["title"],
             "test_level": test["level"],
-            # "questions": questions,
             "accuracy": accuracy,
             "total_questions": total_questions,
             "correct_count": correct_count,
@@ -229,17 +228,11 @@ def get_candidate_test_response_report(candidate_id):
     total_tests = len(tests)
     assessment_average = total_accuracy / total_tests if total_tests else 0
 
-    # Update: Format the assessment_average for rating
-    rating = round(assessment_average / 100, 1)
-    update_job_applicant_rating(applicant_id, rating)
 
     return {
-        "candidate_id": candidate_id,
         "applicant_name": applicant_name,
-        "applicant_id": applicant_id,
         "applicant_email": applicant_email,
-        "applicant_rating": applicant_rating,
-        "assessment": assessment_id,
+        "assessment_name": assessment_name,
         "tests": response,
         "custom_questions": total_custom_questions,
         "assessment_average": assessment_average,

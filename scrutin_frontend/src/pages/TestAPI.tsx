@@ -541,7 +541,7 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
 
       <Button onClick={() => {
         update_job_applicant_rating.call({
-        applicant_id: "salmansaeed7272@gmail.com",
+        applicant_id: "ayeshamalik123@gmail.com",
         rating: 0.7,
         });
       }}>
