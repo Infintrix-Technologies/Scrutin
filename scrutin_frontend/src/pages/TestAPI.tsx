@@ -126,10 +126,10 @@ const get_question_with_answer_and_post_in_responses = useFrappePostCall("scruti
 const get_current_question = useFrappePostCall("scrutin.api.candidate_test.get_current_question")
 
 
-const update_assessment_started_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_started_time")
+const start_assessment = useFrappePostCall("scrutin.api.candidate_test.start_assessment")
 
 
-const update_assessment_completed_time = useFrappePostCall("scrutin.api.candidate_test.update_assessment_completed_time")
+const complete_assessment = useFrappePostCall("scrutin.api.candidate_test.complete_assessment")
 
 
 
@@ -428,7 +428,7 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
 
 
       <Button onClick={() => {
-        update_assessment_started_time.call({
+        start_assessment.call({
           candidate_id: '37hc0ipka2',
         });
       }}>
@@ -437,7 +437,7 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
 
 
       <Button onClick={() => {
-        update_assessment_completed_time.call({
+        complete_assessment.call({
           candidate_id: '37hc0ipka2',
         });
       }}>

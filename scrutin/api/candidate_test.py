@@ -51,7 +51,7 @@ def add_scrutin_question_response(candidate_id, question_id, answer):
 
 
 @frappe.whitelist()
-def update_assessment_started_time(candidate_id):
+def start_assessment(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
 
     # Query to check if assessment_started_at is already set
@@ -85,7 +85,7 @@ def update_assessment_started_time(candidate_id):
 
 
 @frappe.whitelist()
-def update_assessment_completed_time(candidate_id):
+def complete_assessment(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
 
     # Query to check if assessment_completed_at is already set
