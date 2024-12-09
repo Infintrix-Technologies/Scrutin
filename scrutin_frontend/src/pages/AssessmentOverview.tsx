@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { RxTimer } from "react-icons/rx";
@@ -226,15 +226,12 @@ export default function AssessmentOverview() {
                   </CardHeader>
                   <CardContent className="flex items-center space-x-6">
                     <Avatar className="h-20 w-20">
-                      <AvatarImage
-                        src={`https://api.dicebear.com/6.x/initials/svg?seed=${report_response_query.applicant_name}`}
-                        alt={report_response_query.applicant_name}
-                      />
+                      
                       <AvatarFallback>
-                        {report_response_query.applicant_name
+                        {(report_response_query?.applicant_name
                           .split(" ")
                           .map((n: number[]) => n[0])
-                          .join("")}
+                          .join("")|| "Name")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
