@@ -39,7 +39,7 @@ export default function AssessmentOverview() {
       candidate_id: candidate_id,
     }
   );
-  const report_response_query = report.message;
+  const report_response_query = report?.message;
   console.log(report, "reportreport");
 
   if (isLoading) return <p>Loading...</p>;
