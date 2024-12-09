@@ -193,6 +193,18 @@ def get_current_question(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinTestProgress = DocType("Scrutin Test Progress")
 
+    status_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.status)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_status_result = status_query.run(as_dict=True)
+    
+    if candidate_status_result:
+        candidate_status = candidate_status_result[0].get('status')
+        if candidate_status == "Open" or candidate_status != "Started":
+            raise frappe.PermissionError("Candidate status not valid for this operation: 403 Forbidden")
+
     exists_query = (
         frappe.qb.from_(ScrutinCandidate)
         .select(ScrutinCandidate.name)
