@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -8,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "react-hot-toast";
 import { useFrappePostCall } from "frappe-react-sdk";
-import { CurrentQuestionOption } from "@/components/Interfaces/Interface";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { CurrentQuestionOption } from "@/types/Interface";
+import { useNavigate, useParams } from "react-router-dom";
 import NotFound from "./NotFound";
 import { useGlobalState } from "@/utils/StateProvider";
 
@@ -23,14 +22,24 @@ const TestPage = () => {
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.add_scrutin_question_response"
   );
+  const { call: completeAssessment } = useFrappePostCall(
+    "scrutin.api.candidate_test.complete_assessment"
+  );
+
+  useEffect(() => {
+    if (question?.message?.completed) {
+      completeAssessment({
+        candidate_id,
+      }).then(() => {
+        navigate(`/candidacy/${candidate_id}/overview`);
+      });
+    }
+  }, [question?.message?.completed, candidate_id, completeAssessment, navigate]);
 
   useEffect(() => {
     updateCurrentQuestion(candidate_id);
   }, [candidate_id]);
 
-  // const handleNextQuestion = () => {
-  //   setTriggerReload((prev) => !prev);
-  // };
   const handleSubmit = async () => {
     if (
       !selectedOption ||
@@ -54,7 +63,6 @@ const TestPage = () => {
       if (question?.message?.test?.last_test_question) {
         navigate(`/candidacy/${candidate_id}/overview`);
       }
-
       // toast.success("Response submitted successfully!");
       setSelectedOption(null);
     } catch (error) {
@@ -79,9 +87,12 @@ const TestPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <NotFound />;
 
-  if (question?.message?.completed) {
-    return <Navigate to={`/candidacy/${candidate_id}/overview`} />;
-  }
+  // if (question?.message?.completed) {
+  //   complete_assessment.call({
+  //     candidate_id:candidate_id,
+  //   });
+  //   return <Navigate to={`/candidacy/${candidate_id}/overview`} />;
+  // }
 
   const test = question?.message?.test;
   const currentQuestion = test?.current_question;

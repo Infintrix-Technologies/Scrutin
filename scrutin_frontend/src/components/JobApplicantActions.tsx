@@ -9,7 +9,7 @@ import { useFrappeDeleteDoc } from "frappe-react-sdk";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
-import { JobApplicantActionsProps } from "./Interfaces/Interface";
+import { JobApplicantActionsProps } from "../types/Interface";
 
 
 

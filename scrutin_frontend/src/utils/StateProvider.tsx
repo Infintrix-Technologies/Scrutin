@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import { useRetrieveNextQuestion } from '@/hooks/post-hooks';
+import { StateProviderQuestion } from '@/types/Interface';
 import { Dispatch, FC, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
 import { createContext } from 'react'
 interface Modal {
@@ -15,7 +16,7 @@ interface GlobalStateContextProps {
     openModal : (modal_key:string, open_state :boolean) => void;
     triggerReload: boolean;
     setTriggerReload: Dispatch<SetStateAction<boolean>>;
-    question : object|undefined;
+    question : StateProviderQuestion
     updateCurrentQuestion : (candidate_id:string|undefined) => void;
     loading: boolean
     error: any | null
@@ -53,6 +54,8 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
         "choose_scoring_method" : { open: false},
         "communication_skills_assessment" : { open: false},
         "review_answer" : { open: false},
+        "test_resutls" : { open: false},
+
 
     })
 

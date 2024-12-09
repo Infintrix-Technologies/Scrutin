@@ -1,3 +1,49 @@
+export interface AssessmentType {
+  name: string;
+  assessment_name: string;
+  company: string;
+  language: string;
+  candidate_count: number;
+}
+
+export interface StateProviderQuestion {
+  message: {
+    test: {
+      test: {
+        name: string;
+        title: string;
+      };
+      current_question: {
+        name: string;
+        text: string;
+        type: string;
+        options: { value: string; label: string }[];
+      };
+      last_test_question: boolean;
+    };
+    completed?: boolean;
+  };
+}
+
+
+export interface TestResult {
+  test_title: string
+  test_level: string
+  accuracy: number
+  total_questions: number
+  correct_count: number
+  incorrect_count: number
+  total_duration: number
+  answered_questions: number
+  unanswered_questions: number
+  finished_time: string
+  applicant_name: string
+  applicant_email: string
+  applicant_rating: number
+}
+
+
+
 export interface ItemProps {
   name: string;
   quantity: string;
@@ -8,7 +54,7 @@ export interface Candidate {
   score: number;
   hired: boolean;
 }
-export interface CandidateList {
+export interface CandidateQueryData {
   email: string;
   status: string;
   invited_on: string;
@@ -18,8 +64,8 @@ export interface CandidateList {
   applicant_name: string;
   job_applicant: string;
   Assessments: number;
-  name:string;
-  score:number;
+  name: string;
+  score: number;
 }
 export interface Test {
   total_duration: number;
@@ -31,9 +77,9 @@ export interface Test {
 export interface AssessmentData {
   applicant_name: string;
   status: string;
-  assessment_name:string
-  total_duration_of_all_tests:number
-  total_number_of_tests:number
+  assessment_name: string;
+  total_duration_of_all_tests: number;
+  total_number_of_tests: number;
   invited_on: string;
   job_applicant: string;
   question: string;
@@ -51,7 +97,8 @@ export interface OverviewTest {
   total_duration: number;
   total_questions: number;
   index: number;
-  answered_questions:number
+  answered_questions: number;
+  unanswered_questions: number;
 }
 
 export interface CurrentQuestionOption {
@@ -89,14 +136,14 @@ export interface AssessmentTest {
   test: string;
   weight: string;
   title: string;
-  test_title:string
-  accuracy:number
-  correct_count:number
-  incorrect_count:number
-  answered_questions:number
-  unanswered_questions:number
-  total_duration:number
-  finished_time:string
+  test_title: string;
+  accuracy: number;
+  correct_count: number;
+  incorrect_count: number;
+  answered_questions: number;
+  unanswered_questions: number;
+  total_duration: number;
+  finished_time: string;
 }
 
 export interface Assessment {
@@ -114,7 +161,7 @@ export interface Assessment {
   mouse_always_in_assessment_window: number;
   questions: Question[];
   webcam_snapshots: (string | null)[];
-  assessment_completed_at:(string | null)
+  assessment_completed_at: string | null;
 }
 
 export interface CustomTest {
@@ -127,13 +174,13 @@ export interface JobApplication {
   job_applicant: string;
 }
 
-export interface  CustomQuestion {
-  question: string
-  type: string
-  duration: string
+export interface CustomQuestion {
+  question: string;
+  type: string;
+  duration: string;
 }
 
-export  interface Applicant {
+export interface Applicant {
   name: string;
   owner: string;
   creation: string;
@@ -161,18 +208,17 @@ export  interface Applicant {
   upper_range: number;
 }
 
-export  interface JobApplicantActionsProps {
+export interface JobApplicantActionsProps {
   applicant: Applicant;
 }
 
-export  interface ScrutinAssessment  {
+export interface ScrutinAssessment {
   assessment_name: string;
   company: string;
   language: string;
-};
+}
 
-
-export  interface  CandidateAct {
+export interface CandidateAct {
   candidate_id: string;
   assessment_name: string;
   assessment: string;
@@ -180,25 +226,24 @@ export  interface  CandidateAct {
   job_applicant: string;
   Assessments: number;
   invited_on: string;
-  name:string
+  name: string;
 }
 
-export  interface  CandidateActionsProps {
+export interface CandidateActionsProps {
   candidate: CandidateAct;
 }
 export interface TestResponseReport {
   tests: TestAssessments[];
   assessment_average: number;
 }
-export  interface  Assessment_Data {
-  assessment_name:string 
-  applicant_name:string
+export interface Assessment_Data {
+  assessment_name: string;
+  applicant_name: string;
   status: string;
   invited_on: string;
-  total_duration_of_all_tests:number
-  total_number_of_tests:number
+  total_duration_of_all_tests: number;
+  total_number_of_tests: number;
   test_response_report: TestResponseReport;
-
 }
 
 export interface TestAssessments {
@@ -207,11 +252,9 @@ export interface TestAssessments {
 }
 
 export interface AssessmentList {
-  
-    name: string,
-    assessment_name: string,
-    company: string,
-    language: string,
-    candidate_count: number
-  
+  name: string;
+  assessment_name: string;
+  company: string;
+  language: string;
+  candidate_count: number;
 }

@@ -65,7 +65,7 @@ import "dayjs/locale/en";
 import { useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
-import { Assessment_Data, AssessmentData, Test, TestAssessments } from "@/components/Interfaces/Interface";
+import { Assessment_Data, AssessmentData, Test, TestAssessments } from "@/types/Interface";
 import NotFound from "./NotFound";
 
 const AssessmentDetailPage = () => {

@@ -34,7 +34,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { JobApplicantActions } from "@/components/JobApplicantActions";
-import { JobApplication } from "@/components/Interfaces/Interface";
+import { JobApplication } from "@/types/Interface";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -102,7 +102,7 @@ import {
   Assessment,
   AssessmentTest,
   Question,
-} from "@/components/Interfaces/Interface";
+} from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
 
