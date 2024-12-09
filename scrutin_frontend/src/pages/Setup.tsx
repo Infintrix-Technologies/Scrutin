@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link, useParams } from "react-router-dom";
+// import { useGlobalState } from "@/utils/StateProvider";
 
 
   const Setup = () => {
@@ -30,6 +31,8 @@ import { Link, useParams } from "react-router-dom";
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // const {  updateCurrentQuestion } = useGlobalState();
 
   // Function to get the stream of the selected camera
   const startCamera = async (deviceId?: string) => {
@@ -180,7 +183,7 @@ import { Link, useParams } from "react-router-dom";
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Link to={`/candidacy/${candidate_id}/test/`}>
+        <Link to={`/candidacy/${candidate_id}/test`}>
               <Button className="text-end flex items-center">
                 Start Test
                 <ChevronRightIcon className="ml-2 h-4 w-4" />

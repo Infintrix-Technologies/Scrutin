@@ -44,8 +44,7 @@ export interface AssessmentData {
   title: string;
 }
 
-export interface OverViewPage {
-  id: number;
+export interface OverviewTest {
   assessment_name: string;
   name: string;
   title: string;
@@ -55,7 +54,7 @@ export interface OverViewPage {
   answered_questions:number
 }
 
-export interface Option {
+export interface CurrentQuestionOption {
   value: string;
   label: string;
 }
@@ -65,7 +64,7 @@ export interface Question {
   question_text: string;
   type: "Single Choice" | "Multiple Choice" | "Short Answer" | "Long Answer";
   question_duration: number;
-  options: Option[];
+  options: CurrentQuestionOption[];
 }
 
 export interface Tests {
@@ -205,4 +204,14 @@ export  interface  Assessment_Data {
 export interface TestAssessments {
   test_title: string;
   accuracy: number;
+}
+
+export interface AssessmentList {
+  
+    name: string,
+    assessment_name: string,
+    company: string,
+    language: string,
+    candidate_count: number
+  
 }
