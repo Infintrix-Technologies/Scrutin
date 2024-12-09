@@ -172,6 +172,15 @@ const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.
 
 
 
+const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_rating")
+
+
+
+const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
+
+
+
+const comparison_two_candidates_test_response_report = useFrappePostCall("scrutin.api.candidate_response_comparison.comparison_two_candidates_test_response_report")
 
 
 
@@ -507,7 +516,7 @@ const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.
           assessment_id: 'juocinh9un',
         });
       }}>
-        Assessment Data For Detail Page
+        Assessment Data For Assessment Detail Page
       </Button>
 
 
@@ -527,6 +536,36 @@ const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.
         });
       }}>
         Assessment List Page API
+      </Button>
+
+
+      <Button onClick={() => {
+        update_job_applicant_rating.call({
+        applicant_id: "salmansaeed7272@gmail.com",
+        rating: 0.7,
+        });
+      }}>
+        update job applicant rating
+      </Button>
+
+
+      <Button onClick={() => {
+        update_job_applicant_status.call({
+        applicant_id: "salmansaeed7272@gmail.com",
+        });
+      }}>
+        Update Job Applicant Status
+      </Button>
+
+
+
+      <Button onClick={() => {
+        comparison_two_candidates_test_response_report.call({
+        candidate_id: "k39k9ek7i1",
+        // candidate_id_2: "37hc0ipka2"
+        });
+      }}>
+        Compare Two Candidates Responses Reports
       </Button>
 
 

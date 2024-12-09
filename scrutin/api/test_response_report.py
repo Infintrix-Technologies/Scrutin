@@ -7,6 +7,7 @@ from frappe.query_builder import functions as fn
 
 
 # this api give all details about assessment tests and also give in what time candidate finished the test
+# this api is used on the candidate detail page 
 @frappe.whitelist()
 def get_candidate_test_response_report(candidate_id):
     # Define DocTypes
@@ -48,12 +49,16 @@ def get_candidate_test_response_report(candidate_id):
         .select(
             JobApplicant.applicant_name,
             JobApplicant.email_id,
+            JobApplicant.name,
+            JobApplicant.applicant_rating,
 
         )
         .where(ScrutinCandidate.name == candidate_id)
     ).run(as_dict=True)
     applicant_name = candidate_detail[0]["applicant_name"] if candidate_detail else None
     applicant_email = candidate_detail[0]["email_id"] if candidate_detail else None
+    applicant_id = candidate_detail[0]["name"] if candidate_detail else None
+    applicant_rating = candidate_detail[0]["applicant_rating"] if candidate_detail else None
 
     # Fetch candidate's assessments
     query = (
@@ -87,6 +92,7 @@ def get_candidate_test_response_report(candidate_id):
             ScrutinAssessment.assessment_name,
             ScrutinTest.name,
             ScrutinTest.title,
+            ScrutinTest.level,
         )
         .where(ScrutinAssessment.name == assessment_id)
     )
@@ -207,6 +213,7 @@ def get_candidate_test_response_report(candidate_id):
         response.append({
             "test_name": test_name,
             "test_title": test["title"],
+            "test_level": test["level"],
             "questions": questions,
             "accuracy": accuracy,
             "total_questions": total_questions,
@@ -222,15 +229,35 @@ def get_candidate_test_response_report(candidate_id):
     total_tests = len(tests)
     assessment_average = total_accuracy / total_tests if total_tests else 0
 
+    # Update: Format the assessment_average for rating
+    rating = round(assessment_average / 100, 1)
+    update_job_applicant_rating(applicant_id, rating)
+
     return {
         "candidate_id": candidate_id,
         "applicant_name": applicant_name,
+        "applicant_id": applicant_id,
         "applicant_email": applicant_email,
+        "applicant_rating": applicant_rating,
         "assessment": assessment_id,
         "tests": response,
         "custom_questions": total_custom_questions,
         "assessment_average": assessment_average,
     }
+
+
+#Update the job_applicant rating based on assessment_average
+def update_job_applicant_rating(applicant_id, rating):
+    if not (0 <= rating <= 1):
+        return f"Invalid rating value: {rating}. Rating must be between 0 and 1."
+
+    JobApplicant = DocType("Job Applicant")
+    (
+        frappe.qb.update(JobApplicant)
+        .set(JobApplicant.applicant_rating, rating)
+        .where(JobApplicant.name == applicant_id)
+    ).run()
+    return f"Rating for applicant {applicant_id} has been updated successfully."
 
 
 

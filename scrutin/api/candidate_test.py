@@ -616,20 +616,31 @@ def get_candidate_assessment_performance(candidate_id):
 
 
 #API that will change the status and rating of job applicant
-
 @frappe.whitelist()
-def change_status_and_rating(applicant_id, rating):
-    JobApplicant = DocType("Job Applicant")
+def update_job_applicant_rating(applicant_id, rating):
+    if not (0 <= rating <= 1):
+        return f"Invalid rating value: {rating}. Rating must be between 0 and 1."
 
+    JobApplicant = DocType("Job Applicant")
     (
         frappe.qb.update(JobApplicant)
-        .set(
-            {'rating': rating}
-         )
-         .where(JobApplicant.name == applicant_id)
+        .set(JobApplicant.applicant_rating, rating)
+        .where(JobApplicant.name == applicant_id)
     ).run()
-    frappe.db.commit()
-    return f"Status and rating for applicant {applicant_id} have been updated successfully."
+    return f"Rating for applicant {applicant_id} has been updated successfully."
+
+
+@frappe.whitelist()
+def update_job_applicant_status(applicant_id):
+
+    JobApplicant = DocType("Job Applicant")
+    (
+        frappe.qb.update(JobApplicant)
+        .set(JobApplicant.status, "Rejected")
+        .where(JobApplicant.name == applicant_id)
+    ).run()
+    return f"Status for applicant {applicant_id} has been updated successfully."
+
 
 
 
