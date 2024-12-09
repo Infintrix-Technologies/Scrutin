@@ -11,7 +11,7 @@ import { AssessmentActions } from "../components/AssessmentActions";
 import { Link } from "react-router-dom";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import NotFound from "./NotFound";
-import { AssessmentList } from "@/components/Interfaces/Interface";
+import { AssessmentList } from "@/types/Interface";
   
     const AssessmentsList = () => {
       const {data,isLoading,error} = useFrappeGetCall("scrutin.api.assessment_data.assessment_list_page_api")

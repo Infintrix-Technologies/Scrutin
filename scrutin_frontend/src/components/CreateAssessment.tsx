@@ -35,7 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { ScrutinAssessment } from "./Interfaces/Interface";
+import { ScrutinAssessment } from "../types/Interface";
 // import { RainbowButton } from "./ui/rainbow-button";
 
 

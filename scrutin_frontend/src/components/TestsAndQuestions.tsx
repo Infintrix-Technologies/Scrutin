@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Timer, Star } from 'lucide-react'
-import { CustomQuestion, CustomTest } from './Interfaces/Interface'
+import { CustomQuestion, CustomTest } from '../types/Interface'
 
 
 
