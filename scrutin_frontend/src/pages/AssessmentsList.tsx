@@ -37,12 +37,12 @@ import { AssessmentList } from "@/types/Interface";
         <TableBody>
           {assessments?.map((assessment:AssessmentList, index:number) => (            
             <TableRow key={index}>
-            <Link 
-            to={`/assessments/${assessment?.name}`}
-            >
-              <TableCell className="font-medium">{assessment.assessment_name}</TableCell>
+              <TableCell className="font-medium">
+            <Link to={`/assessments/${assessment?.name}`} >                
+                {assessment.assessment_name}                
             </Link>
-            <TableCell className="text-center">{assessment.candidate_count}</TableCell>
+                </TableCell>
+            <TableCell className="text-center">{assessment.candidate_count || 0}</TableCell>
               <TableCell>{assessment.company}</TableCell>              
               <TableCell>{assessment.language}</TableCell>
               <TableCell><AssessmentActions assessment={assessment}/></TableCell>

@@ -32,7 +32,6 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  // SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -57,21 +56,17 @@ import {
   FaMousePointer,
   FaVideo,
 } from "react-icons/fa";
-// import { AiOutlineBarChart } from "react-icons/ai";
 import { RxTimer } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
 import {
   Dialog,
   DialogClose,
-  // DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
-  // DialogFooter,
   DialogHeader,
   DialogTitle,
-  // DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -99,9 +94,8 @@ import { BsChevronDown } from "react-icons/bs";
 import {
   useFrappeGetCall,
   useFrappePostCall,
-  // useFrappePostCall
 } from "frappe-react-sdk";
-import { Assessment, AssessmentTest, Question } from "@/types/Interface";
+import { CandidateDetailAssessments, CandidateTestResponseReport, AssessmentCustomQuestion } from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
 
@@ -110,7 +104,7 @@ const CandidatesDetailPage: React.FC = () => {
   const [sliderValue, setSliderValue] = React.useState(0);
   const globalState = useGlobalState();
   const params = useParams();
-  const email = params?.email || null;
+  const email = params.email || null;
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
   };
@@ -120,18 +114,9 @@ const CandidatesDetailPage: React.FC = () => {
     { email: email }
   );
 
-  const candidate_details = data?.message?.candidate_assessment || [];
+  const candidate_details = data.message.candidate_assessment || [];
   console.log(candidate_details, "candidate_details");
-  const get_candidate_assessment_performance = useFrappeGetCall(
-    "scrutin.api.candidate_test.get_candidate_assessment_performance",
-    {
-      candidate_id: candidate_details[0]?.candidate_id,
-    }
-  );
-  console.log(
-    get_candidate_assessment_performance,
-    "get_candidate_assessment_performance"
-  );
+
   const send_email_to_candidate_test_response_report = useFrappePostCall(
     "scrutin.api.test_response_report.send_email_to_candidate_test_response_report"
   );
@@ -143,14 +128,14 @@ const CandidatesDetailPage: React.FC = () => {
     }
   );
 
-  console.log(
-    get_candidate_test_response_report,
-    "get_candidate_test_response_report"
-  );
+  // console.log(
+  //   get_candidate_test_response_report,
+  //   "get_candidate_test_response_report"
+  // );
 
   const candidate_test_response_report =
-    get_candidate_test_response_report?.data?.message || [];
-  console.log(candidate_test_response_report, "candidate_test_response_report");
+    get_candidate_test_response_report.data.message || [];
+  // console.log(candidate_test_response_report, "candidate_test_response_report");
 
   const handleRatingChange = (index: number) => {
     const updatedRatings = [...ratings];
@@ -166,7 +151,7 @@ const CandidatesDetailPage: React.FC = () => {
 
   return (
     <div className="px-14">
-      {candidate_details?.map((assessment: Assessment, i: number) => {
+      {candidate_details.map((assessment: CandidateDetailAssessments, i: number) => {
         return (
           <div key={i}>
             <header className="flex  justify-between px-4 py-3 border-b">
@@ -243,11 +228,11 @@ const CandidatesDetailPage: React.FC = () => {
                   <div className="flex items-center">
                     <h2 className="font-bold text-lg">Assessment</h2>
                     <span className="ml-2">
-                      {assessment?.assessment_title || "N/A"}
+                      {assessment.assessment_title || "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-start items-start gap-2">
-                    {ratings?.map((rating, index) => (
+                    {ratings.map((rating, index) => (
                       <FaStar
                         key={index}
                         className={`cursor-pointer ${
@@ -332,14 +317,14 @@ const CandidatesDetailPage: React.FC = () => {
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Invited</h3>
                       <p className="text-gray-300">
-                        {formatDate(assessment?.invited_on)}
+                        {formatDate(assessment.invited_on)}
                       </p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Completed</h3>
                       <p className="text-gray-300">
-                        {assessment?.assessment_completed_at || "Not Completed"}
+                        {assessment.assessment_completed_at || "Not Completed"}
                       </p>
                     </div>
 
@@ -406,13 +391,13 @@ const CandidatesDetailPage: React.FC = () => {
                       <div className="flex justify-between">
                         <div>
                           <Badge variant="outline">
-                            {candidate_test_response_report?.applicant_name}
+                            {candidate_test_response_report.applicant_name}
                           </Badge>
                         </div>
                         <div>
                           <h1 className="text-2xl font-bold">
                             {(
-                              candidate_test_response_report?.assessment_average ||
+                              candidate_test_response_report.assessment_average ||
                               0
                             ).toFixed(1)}
                             %
@@ -423,7 +408,7 @@ const CandidatesDetailPage: React.FC = () => {
                       <Progress
                         className="mt-4 h-3"
                         value={
-                          candidate_test_response_report?.assessment_average ||
+                          candidate_test_response_report.assessment_average ||
                           0
                         }
                         max={100}
@@ -471,49 +456,49 @@ const CandidatesDetailPage: React.FC = () => {
                         </div>
                       </div>
                       {candidate_test_response_report?.tests?.map(
-                        (test: AssessmentTest, index: number) => {
+                        (candidate_test: CandidateTestResponseReport, index: number) => {
                           return (
                             <Accordion key={index} type="single" collapsible>
                               <AccordionItem value={String(index)}>
                                 <AccordionTrigger className="flex">
                                   <span className="whitespace-nowrap">
-                                    {test.test_title}
+                                    {candidate_test.test_title}
                                   </span>
                                   <div className="flex justify-end items-center w-full space-x-1">
                                     <span>
                                       {" "}
-                                      {(test.accuracy || 0).toFixed(1)}%
+                                      {(candidate_test.accuracy || 0).toFixed(1)}%
                                     </span>
                                   </div>
                                 </AccordionTrigger>
                                 <Progress
                                   className="my-4"
-                                  value={test.accuracy || 0}
+                                  value={candidate_test.accuracy || 0}
                                   max={100}
                                 />
                                 <AccordionContent>
                                   <div className="block md:flex md:justify-between items-center">
                                     <p className="flex gap-2 items-center">
                                       <AiOutlineBarChart />
-                                      {test.test_level}
+                                      {candidate_test.test_level}
                                     </p>
 
-                                    {test.finished_time === null ? (
+                                    {candidate_test.finished_time === null ? (
                                       "Incomplete Test"
                                     ) : (
                                       <p className="flex gap-2 items-center">
                                         <RxTimer />
                                         Finished in{" "}
-                                        {test?.finished_time?.split(".")[0]} out
+                                        {candidate_test.finished_time.split(".")[0]} out
                                         of :{" "}
-                                        {test?.total_duration < 60
-                                          ? `${test.total_duration} seconds`
-                                          : `${Math?.floor(
-                                              test?.total_duration / 60
+                                        {candidate_test.total_duration < 60
+                                          ? `${candidate_test.total_duration} seconds`
+                                          : `${Math.floor(
+                                            candidate_test.total_duration / 60
                                             )} min${
-                                              test?.total_duration % 60 > 0
+                                              candidate_test.total_duration % 60 > 0
                                                 ? ` ${
-                                                    test?.total_duration % 60
+                                                  candidate_test.total_duration % 60
                                                   } sec`
                                                 : ""
                                             }`}{" "}
@@ -526,30 +511,30 @@ const CandidatesDetailPage: React.FC = () => {
                                       <ul className="space-y-6">
                                         <p className="text-sm">
                                           <div className="flex">
-                                            {test?.correct_count !== 0 && (
+                                            {candidate_test.correct_count !== 0 && (
                                               <div
                                                 className="bg-green-400   my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.correct_count || 0}
+                                                {candidate_test.correct_count || 0}
                                               </div>
                                             )}
-                                            {test?.incorrect_count !== 0 && (
+                                            {candidate_test.incorrect_count !== 0 && (
                                               <div
                                                 className="bg-red-300  my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.incorrect_count || 0}
+                                                {candidate_test.incorrect_count || 0}
                                               </div>
                                             )}
 
-                                            {test?.unanswered_questions !==
+                                            {candidate_test.unanswered_questions !==
                                               0 && (
                                               <div
                                                 className="bg-gray-300 my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.unanswered_questions ||
+                                                {candidate_test?.unanswered_questions ||
                                                   0}
                                               </div>
                                             )}
@@ -653,7 +638,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment?.filled_out_only_once_from_ip_address ===
+                            {assessment.filled_out_only_once_from_ip_address ===
                             0
                               ? "No"
                               : "Yes"}
@@ -691,7 +676,7 @@ const CandidatesDetailPage: React.FC = () => {
                           <Badge
                             variant="secondary"
                             className={`${
-                              assessment?.full_screen_mode_always_active === 0
+                              assessment.full_screen_mode_always_active === 0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
                             } cursor-pointer`}
@@ -702,7 +687,7 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment?.full_screen_mode_always_active === 0
+                            {assessment.full_screen_mode_always_active === 0
                               ? "No"
                               : "Yes"}
                           </Badge>
@@ -717,7 +702,7 @@ const CandidatesDetailPage: React.FC = () => {
                           <Badge
                             variant="secondary"
                             className={`${
-                              assessment?.mouse_always_in_assessment_window ===
+                              assessment.mouse_always_in_assessment_window ===
                               0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
@@ -729,20 +714,20 @@ const CandidatesDetailPage: React.FC = () => {
                               )
                             }
                           >
-                            {assessment?.mouse_always_in_assessment_window === 0
+                            {assessment.mouse_always_in_assessment_window === 0
                               ? "No"
                               : "Yes"}
                           </Badge>
                         </div>
                       </div>
                       <>
-                        {assessment?.webcam_snapshots?.length > 0 ? (
+                        {assessment.webcam_snapshots.length > 0 ? (
                           <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
                             <div className="flex h-full items-center justify-center">
                               {assessment.webcam_snapshots[sliderValue] ? (
                                 <img
                                   src={
-                                    assessment?.webcam_snapshots[sliderValue]
+                                    assessment.webcam_snapshots[sliderValue]
                                   }
                                   alt="Snapshot"
                                   className="h-[230px] w-[410px] rounded-lg"
@@ -759,7 +744,7 @@ const CandidatesDetailPage: React.FC = () => {
                         )}
                         <Slider
                           defaultValue={[0]}
-                          max={assessment?.webcam_snapshots?.length - 1}
+                          max={assessment.webcam_snapshots.length - 1}
                           step={1}
                           value={[sliderValue]}
                           onValueChange={(value) =>
@@ -791,7 +776,7 @@ const CandidatesDetailPage: React.FC = () => {
                   </TableHeader>
                   <TableBody className="">
                     {assessment?.questions?.map(
-                      (question: Question, index: number) => (
+                      (question: AssessmentCustomQuestion, index: number) => (
                         <TableRow key={index}>
                           {/* Question Column */}
 

@@ -3,7 +3,7 @@ import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import { CheckIcon, ChevronRightIcon, EyeIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import NotFound from "./NotFound";
-import { OverviewTest, TestResult } from "@/types/Interface";
+import { Specific_Assessment_Overview_Test, TestResponseResult } from "@/types/Interface";
 import { useGlobalState } from "@/utils/StateProvider";
 import {
   Dialog,
@@ -27,7 +27,7 @@ export default function AssessmentOverview() {
     "scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id",
     { candidate_id: candidate_id }
   );
-  const specific_assessment_tests = data?.message || [];
+  const specific_assessment_tests = data.message || [];
 
   const assessment_started = useFrappePostCall(
     "scrutin.api.candidate_test.start_assessment"
@@ -39,7 +39,7 @@ export default function AssessmentOverview() {
       candidate_id: candidate_id,
     }
   );
-  const report_response_query = report?.message;
+  const report_response_query = report.message;
   console.log(report, "reportreport");
 
   if (isLoading) return <p>Loading...</p>;
@@ -50,7 +50,7 @@ export default function AssessmentOverview() {
       <Card className="w-full">
         <CardContent className="p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4">
-            Hello {specific_assessment_tests?.applicant_name} Ready to showcase
+            Hello {specific_assessment_tests.applicant_name} Ready to showcase
             your skills?
           </h2>
           <p className="mb-2 text-sm sm:text-base">
@@ -67,8 +67,8 @@ export default function AssessmentOverview() {
               This assessment includes the following steps:
             </h3>
             <div className="lg:flex lg:justify-center grid grid-cols-2 md:grid-cols-3 sm:grid-cols-2 gap-6 lg:mt-4">
-              {specific_assessment_tests?.tests?.map(
-                (test: OverviewTest, index: number) => (
+              {specific_assessment_tests.tests?.map(
+                (test: Specific_Assessment_Overview_Test, index: number) => (
                   <div
                     className="flex flex-col items-center text-center text-black space-y-2"
                     key={index}
@@ -76,27 +76,27 @@ export default function AssessmentOverview() {
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
                       {/* <CheckIcon className="w-5 h-5 text-primary-foreground" /> */}
 
-                      {test?.answered_questions === test?.total_questions ? (
+                      {test.answered_questions === test.total_questions ? (
                         <CheckIcon className="w-8 h-8 text-primary-foreground" />
                       ) : (
                         <p className="text-lg font-bold">
-                          {test?.answered_questions} / {test?.total_questions}
+                          {test.answered_questions} / {test.total_questions}
                         </p>
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-white">{test?.title}</p>
+                      <p className="font-semibold text-white">{test.title}</p>
                       <p className="text-sm text-muted-foreground">
-                        {test?.total_questions}
-                        {test?.total_questions == 1
+                        {test.total_questions}
+                        {test.total_questions == 1
                           ? " Question "
                           : " Questions "}{" "}
                         •{" "}
-                        {test?.total_duration < 60
+                        {test.total_duration < 60
                           ? `${test.total_duration} seconds`
-                          : `${Math?.floor(test?.total_duration / 60)} min${
-                              test?.total_duration % 60 > 0
-                                ? ` ${test?.total_duration % 60} sec`
+                          : `${Math.floor(test.total_duration / 60)} min${
+                              test.total_duration % 60 > 0
+                                ? ` ${test.total_duration % 60} sec`
                                 : ""
                             }`}
                       </p>
@@ -104,7 +104,7 @@ export default function AssessmentOverview() {
                   </div>
                 )
               )}
-              {specific_assessment_tests?.custom_questions !== 0 && (
+              {specific_assessment_tests.custom_questions !== 0 && (
                 <div className="flex flex-col items-center text-center space-y-2">
                   <div className="w-12 h-12 text-black font-bold rounded-full cursor-pointer bg-primary flex items-center justify-center">
                     {/* <CheckIcon className="w-12 h-12 text-primary-foreground" /> */}
@@ -112,13 +112,13 @@ export default function AssessmentOverview() {
                   </div>
                   <div>
                     <p className="font-semibold">
-                      {specific_assessment_tests?.custom_questions === 1
+                      {specific_assessment_tests.custom_questions === 1
                         ? "Custom Question"
                         : "Custom Questions"}{" "}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {specific_assessment_tests?.custom_questions}
-                      {specific_assessment_tests?.custom_questions == 1
+                      {specific_assessment_tests.custom_questions}
+                      {specific_assessment_tests.custom_questions == 1
                         ? " Question "
                         : " Questions "}{" "}
                       • {" 0 min"}
@@ -228,7 +228,7 @@ export default function AssessmentOverview() {
                     <Avatar className="h-20 w-20">
                       
                       <AvatarFallback>
-                        {(report_response_query?.applicant_name
+                        {(report_response_query.applicant_name
                           .split(" ")
                           .map((n: number[]) => n[0])
                           .join("")|| "Name")}
@@ -276,7 +276,7 @@ export default function AssessmentOverview() {
                 </Card>
 
                 {report_response_query.tests.map(
-                  (test: TestResult, index: number) => (
+                  (test: TestResponseResult, index: number) => (
                     <Card key={index}>
                       <CardHeader>
                         <CardTitle>
@@ -289,13 +289,13 @@ export default function AssessmentOverview() {
                       {test.finished_time === null ? "Incomplete Test" :
                           <p className="flex gap-2 items-center">
                             <RxTimer />
-                            Finished in {test?.finished_time?.split(".")[0]} out
+                            Finished in {test.finished_time.split(".")[0]} out
                             of :{" "}
-                            {test?.total_duration < 60
+                            {test.total_duration < 60
                               ? `${test.total_duration} seconds`
-                              : `${Math?.floor(test?.total_duration / 60)} min${
-                                  test?.total_duration % 60 > 0
-                                    ? ` ${test?.total_duration % 60} sec`
+                              : `${Math.floor(test.total_duration / 60)} min${
+                                  test.total_duration % 60 > 0
+                                    ? ` ${test.total_duration % 60} sec`
                                     : ""
                                 }`}{" "}
                           </p>

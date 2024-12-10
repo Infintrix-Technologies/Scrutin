@@ -1,11 +1,3 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,6 +20,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -106,7 +106,7 @@ const JobApplicants = () => {
     asDict: true,
   });
   const assessments = assessments_query?.data || [];
-  console.log(assessments_query, "assessments_query")
+  // console.log(assessments_query, "assessments_query")
 
   const job_opening_query =  useFrappeGetDocList(
     'Job Opening',
@@ -120,7 +120,7 @@ const JobApplicants = () => {
     },
   );
   const job_opening = job_opening_query?.data || []
-  console.log(job_opening_query, "job_opening_query")
+  // console.log(job_opening_query, "job_opening_query")
   const job_openingMap = job_opening.reduce((map, jobopening) => {
     map[jobopening.name] = jobopening.job_title;
     return map;
@@ -246,12 +246,10 @@ const JobApplicants = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {job_applicants?.map((applicant) => (
-                        
-            <>
-            <TableRow key={applicant.name}>
+          {job_applicants?.map((applicant, index:number) => (            
+            <TableRow key={index} >
               <TableCell>{applicant.applicant_name}</TableCell>
-              <TableCell className="flex py-6">{renderStars(applicant?.applicant_rating)}</TableCell>
+              <TableCell className="flex py-6">{renderStars(applicant.applicant_rating)}</TableCell>
               <TableCell>{job_openingMap[applicant?.job_title] || 'N/A'}</TableCell>
               <TableCell>
               <div className="flex items-center gap-2">
@@ -285,7 +283,7 @@ const JobApplicants = () => {
               </TableCell>
               <TableCell><JobApplicantActions applicant={applicant}/></TableCell>
             </TableRow>
-            </>
+            
           ))}
         </TableBody>
         <TableFooter>
