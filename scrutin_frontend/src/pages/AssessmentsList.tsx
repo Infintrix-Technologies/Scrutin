@@ -16,7 +16,8 @@ import { AssessmentList } from "@/types/Interface";
     const AssessmentsList = () => {
       const {data,isLoading,error} = useFrappeGetCall("scrutin.api.assessment_data.assessment_list_page_api")
     
-    const assessments = data?.message || []
+    const assessments = data.message || []
+    // console.log(assessments,"assessments");
     
     if (isLoading) return <p>Loading...</p>;
     if (error) return <NotFound/>;
@@ -34,20 +35,18 @@ import { AssessmentList } from "@/types/Interface";
           </TableRow>
         </TableHeader>
         <TableBody>
-          {assessments?.map((assessment:AssessmentList) => (
-            <>
-            <TableRow key={assessment?.assessment_name}>
+          {assessments?.map((assessment:AssessmentList, index:number) => (            
+            <TableRow key={index}>
             <Link 
             to={`/assessments/${assessment?.name}`}
             >
-              <TableCell className="font-medium">{assessment?.assessment_name}</TableCell>
+              <TableCell className="font-medium">{assessment.assessment_name}</TableCell>
             </Link>
-            <TableCell className="text-center">{assessment?.candidate_count}</TableCell>
-              <TableCell>{assessment?.company}</TableCell>              
-              <TableCell>{assessment?.language}</TableCell>
+            <TableCell className="text-center">{assessment.candidate_count}</TableCell>
+              <TableCell>{assessment.company}</TableCell>              
+              <TableCell>{assessment.language}</TableCell>
               <TableCell><AssessmentActions assessment={assessment}/></TableCell>
-            </TableRow>
-            </>
+            </TableRow>           
           ))}
         </TableBody>
       </Table>

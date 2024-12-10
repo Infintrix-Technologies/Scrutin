@@ -134,6 +134,10 @@ export const router = createBrowserRouter(
             //   element: <CandidateDetail />,
             // },
             {
+              path: ":candidate_id",
+              element: <Navigate to="intro" />, 
+            },
+            {
               //replace assessment_id to candidate_id 
               path: ":candidate_id/intro",
               element: <Intro />,

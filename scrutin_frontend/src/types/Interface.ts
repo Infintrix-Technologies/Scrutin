@@ -144,6 +144,7 @@ export interface AssessmentTest {
   unanswered_questions: number;
   total_duration: number;
   finished_time: string;
+  test_level:string
 }
 
 export interface Assessment {
