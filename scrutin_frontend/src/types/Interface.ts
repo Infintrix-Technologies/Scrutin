@@ -74,16 +74,6 @@ export interface TestResponseReport {
   tests: TestAssessmentsAccuracy[];
   assessment_average: number;
 }
-// export interface Assessment_Data {
-//   assessment_name: string;
-//   applicant_name: string;
-//   status: string;
-//   invited_on: string;
-//   total_duration_of_all_tests: number;
-//   total_number_of_tests: number;
-//   test_response_report: TestResponseReport;
-// }
-
 export interface AssessmentDetailData {
   applicant_name: string;
   status: string;
@@ -174,7 +164,7 @@ export interface CandidateDetailAssessments {
   assessment_completed_at: string | null;
 }
 
-export interface CustomTest {
+export interface CustomTestQuestions {
   name: string;
   duration: string;
 }
@@ -222,13 +212,13 @@ export interface JobApplicantActionsProps {
   applicant: JobApplicant;
 }
 
-export interface ScrutinAssessment {
+export interface Create_Assessment {
   assessment_name: string;
   company: string;
   language: string;
 }
 
-export interface CandidateAct {
+export interface CandidateAction {
   candidate_id: string;
   assessment_name: string;
   assessment: string;
@@ -240,7 +230,7 @@ export interface CandidateAct {
 }
 
 export interface CandidateActionsProps {
-  candidate: CandidateAct;
+  candidate: CandidateAction;
 }
 
 

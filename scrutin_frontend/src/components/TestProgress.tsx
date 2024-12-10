@@ -2,16 +2,24 @@ import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Timer, HelpCircle } from "lucide-react";
 import { useFrappeGetCall } from "frappe-react-sdk";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function TestProgress() {
   const [searchParams] = useSearchParams();
+  const {candidate_id} = useParams()
+
   const questionIndex = parseInt(searchParams.get("question") || "1", 10);
 
   const { data } = useFrappeGetCall("scrutin.api.assessment_data.get_specific_test_details", {
     test_id: "f3988t64af",
   });
 
+  const {data:test_progress} = useFrappeGetCall("scrutin.api.test_duration.get_candidate_test_progress_for_test_page",{
+    candidate_id: candidate_id ,
+  })
+  const candidate_test_progress_query = test_progress?.message || {};
+
+console.log(test_progress,"test_progress")
   const specific_test_details = data?.message || {};
   const totalDuration = specific_test_details?.total_duration || 0;
   const totalQuestions = specific_test_details?.total_questions || 0;
@@ -50,7 +58,7 @@ export default function TestProgress() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <HelpCircle className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">{questionIndex}/{totalQuestions}</span>
+            <span className="text-sm font-medium">{candidate_test_progress_query[0]?.show_question}/{candidate_test_progress_query[0]?.total_questions}</span>
           </div>
           <Progress value={questionProgress} className="w-1/2" color="blue" />
         </div>

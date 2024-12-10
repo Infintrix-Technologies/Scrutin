@@ -576,7 +576,7 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
 
       <Button onClick={() => {
         get_candidate_test_progress_for_test_page.call({
-        candidate_id: "97c5oqlsf5",
+        candidate_id: "g4ckk5b9ml",
         });
       }}>
         get_candidate_test_progress_for_test_page

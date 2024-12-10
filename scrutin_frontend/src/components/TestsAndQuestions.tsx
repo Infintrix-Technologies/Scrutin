@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Timer, Star } from 'lucide-react'
-import { CustomQuestion, CustomTest } from '../types/Interface'
+import { CustomQuestion, CustomTestQuestions } from '../types/Interface'
 
 
 
-const tests: CustomTest[] = [
+const tests: CustomTestQuestions[] = [
   { name: "Problem Solving", duration: "9'" },
   { name: "Communication", duration: "8'" },
   { name: "Time Management", duration: "9'" },
