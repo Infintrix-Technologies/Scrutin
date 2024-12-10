@@ -11,24 +11,27 @@ from frappe.utils import now
 def assessment_list_page_api():
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinCandidate = DocType("Scrutin Candidate")
-
+    
+    candidate_count = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.assessment, fn.Count('*').as_('candidate_count'))
+        .groupby(ScrutinCandidate.assessment)
+    ).as_("candidate_count")
+    
     query = (
         frappe.qb.from_(ScrutinAssessment)
-        .inner_join(ScrutinCandidate)
-        .on(ScrutinAssessment.name == ScrutinCandidate.assessment)
+        .left_join(candidate_count).on(ScrutinAssessment.name == candidate_count.assessment)
         .select(
             ScrutinAssessment.name,
             ScrutinAssessment.assessment_name,
             ScrutinAssessment.company,
             ScrutinAssessment.language,
-            fn.Count(ScrutinCandidate.name).as_("candidate_count")
+            candidate_count.candidate_count
         )
-        .groupby(ScrutinAssessment.name)
     )
+    
     results = query.run(as_dict=True)
     return results
-
-
 
 
 #This API provide the Job_title for Job_applicant
@@ -1035,7 +1038,7 @@ def get_candidate_response_test(candidate_id):
 
 
 @frappe.whitelist()
-def get_candidate_test_progress(email):
+def get_candidate_test_progress(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinTest = DocType("Scrutin Test")
     ScrutinTestProgress = DocType("Scrutin Test Progress")
@@ -1053,7 +1056,7 @@ def get_candidate_test_progress(email):
             ScrutinTestProgress.started_at,
             ScrutinTestProgress.completed_at,
         )
-        .where(ScrutinCandidate.job_applicant == email)
+        .where(ScrutinCandidate.name == candidate_id)
     )
     results = query.run(as_dict=True)
     return results
