@@ -184,6 +184,11 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
 
 
 
+const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api.test_duration.get_candidate_test_progress_for_test_page")
+
+
+
+
 
 
 
@@ -261,7 +266,7 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
 
       <Button onClick={() => {
         get_candidate_test_progress.call({
-          email: 'abdulmuneeb123@gmail.com',
+          candidate_id: '97c5oqlsf5',
         });
       }}>
         get_candidate_test_progress
@@ -353,7 +358,7 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
 
       <Button onClick={() => {
         get_specific_assessment_tests_by_candidate_id.call({
-          candidate_id: 'k39k9ek7i1',
+          candidate_id: '97c5oqlsf5',
         });
       }}>
         get_specific_assessment_tests_by_candidate_id
@@ -566,6 +571,15 @@ const comparison_two_candidates_test_response_report = useFrappePostCall("scruti
         });
       }}>
         Compare Two Candidates Responses Reports
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_test_progress_for_test_page.call({
+        candidate_id: "97c5oqlsf5",
+        });
+      }}>
+        get_candidate_test_progress_for_test_page
       </Button>
 
 
