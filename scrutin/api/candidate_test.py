@@ -649,8 +649,8 @@ def get_current_question(candidate_id):
     current_question['options'] = options
 
     # Update ScrutinTestProgress completed_at if the current question is the last one
-    if last_test_question:
-        mark_test_completed(candidate_id, test_name)
+    # if last_test_question:
+    #     mark_test_completed(candidate_id, test_name)
 
     update_data = {
         'current_question': current_question['question'],
