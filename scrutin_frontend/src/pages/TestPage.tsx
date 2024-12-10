@@ -87,6 +87,12 @@ const TestPage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <NotFound />;
 
+  // if (error) {
+    // if (error.httpStatus === 403) return <Forbidden />;
+    // if (error.httpStatus === 404) return <NotFound />;
+    // return <p>Unexpected error occurred. Please try again later.</p>;
+  // }
+
   // if (question?.message?.completed) {
   //   complete_assessment.call({
   //     candidate_id:candidate_id,
