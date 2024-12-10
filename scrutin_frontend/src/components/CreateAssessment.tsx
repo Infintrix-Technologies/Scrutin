@@ -59,7 +59,7 @@ const CreateAssessment = () => {
         Create Assessment
         </RainbowButton> */}
         <Button>
-          <FaPlus />
+          <FaPlus className="mr-2" />
           Create Assessment
         </Button>
         {/* <Button variant="default">

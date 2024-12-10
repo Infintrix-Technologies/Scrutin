@@ -5,18 +5,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AssessmentType } from "@/types/Interface";
+import { AssessmentList } from "@/types/Interface";
 import { useFrappeDeleteDoc } from "frappe-react-sdk";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
 
+interface AssessmentActionsProps {
+  assessment: AssessmentList;
+}
 
-export const AssessmentActions = (assessment:AssessmentType )=> {
+export const AssessmentActions = ({ assessment }: AssessmentActionsProps) => {
   const delete_api = useFrappeDeleteDoc();
-
-  console.log(assessment,"0000000000004")
-
+  // console.log(assessment,"0000000000004")
   const handleDelete = (name: string) => {
     console.log(name,"name");
     delete_api?.deleteDoc('Scrutin Assessment', name);
@@ -25,10 +26,11 @@ export const AssessmentActions = (assessment:AssessmentType )=> {
   return (
     <div>
       
-        <div  style={{ marginBottom: "1rem" }}>
+        <div className="mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button style={{ background: "none", border: "none", color: "white", boxShadow: "none" }}>
+              <Button className="border-none text-white shadow-none" style={{ background: "none"}}
+              >
                 <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>

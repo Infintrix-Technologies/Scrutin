@@ -18,8 +18,8 @@ const Candidates = () => {
       <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Candidate</h1>
         <Button>
-          <FaPlus />
-          Create Assessment
+          <FaPlus className="mr-2" />
+          Create Candidate
         </Button>
       </div>
 

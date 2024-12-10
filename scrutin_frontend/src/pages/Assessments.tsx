@@ -10,9 +10,6 @@ const Assessments = () => {
 
   // const delete_api = useFrappeDeleteDoc()
 
-
-  
-
   const status = searchParams.get("status") || "active";
 
   return (
@@ -28,7 +25,7 @@ const Assessments = () => {
       <div className="my-3">
         <div className="block md:flex space-y-4 md:space-y-0 md:justify-between md:items-center">
           <Input placeholder="Search" className="w-48" />
-          <div>
+          <div className="flex gap-2">
             <Button
               variant={status === "active" ? "default" : "outline"}
               onClick={() => {

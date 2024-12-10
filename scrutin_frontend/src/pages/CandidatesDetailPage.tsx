@@ -86,6 +86,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaClock, FaLanguage, FaChartLine } from "react-icons/fa";
 import { MdCheckCircle, MdTimer } from "react-icons/md";
 import { VscTypeHierarchySuper } from "react-icons/vsc";
+import { AiOutlineBarChart } from "react-icons/ai";
 
 import {
   DropdownMenu,
@@ -95,17 +96,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaChevronLeft } from "react-icons/fa6";
 import { BsChevronDown } from "react-icons/bs";
-import { useFrappeGetCall, 
-  // useFrappePostCall
- } from "frappe-react-sdk";
 import {
-  Assessment,
-  AssessmentTest,
-  Question,
-} from "@/types/Interface";
+  useFrappeGetCall,
+  useFrappePostCall,
+  // useFrappePostCall
+} from "frappe-react-sdk";
+import { Assessment, AssessmentTest, Question } from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
-
 
 const CandidatesDetailPage: React.FC = () => {
   const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
@@ -117,14 +115,13 @@ const CandidatesDetailPage: React.FC = () => {
     setSliderValue(value);
   };
 
-  const {data,isLoading,error} = useFrappeGetCall(
+  const { data, isLoading, error } = useFrappeGetCall(
     "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
-    { email: email}
+    { email: email }
   );
 
-  const candidate_details =
-    data?.message?.candidate_assessment || [];
-  
+  const candidate_details = data?.message?.candidate_assessment || [];
+  console.log(candidate_details, "candidate_details");
   const get_candidate_assessment_performance = useFrappeGetCall(
     "scrutin.api.candidate_test.get_candidate_assessment_performance",
     {
@@ -134,6 +131,9 @@ const CandidatesDetailPage: React.FC = () => {
   console.log(
     get_candidate_assessment_performance,
     "get_candidate_assessment_performance"
+  );
+  const send_email_to_candidate_test_response_report = useFrappePostCall(
+    "scrutin.api.test_response_report.send_email_to_candidate_test_response_report"
   );
 
   const get_candidate_test_response_report = useFrappeGetCall(
@@ -162,7 +162,7 @@ const CandidatesDetailPage: React.FC = () => {
   };
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <NotFound/>;
+  if (error) return <NotFound />;
 
   return (
     <div className="px-14">
@@ -176,7 +176,10 @@ const CandidatesDetailPage: React.FC = () => {
                   size="icon"
                   className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
                 >
+                  
+                  <Link to={'/candidates'}>
                   <FaChevronLeft className="h-4 w-4" />
+                  </Link>
                   <span className="sr-only">Go back</span>
                 </Button>
 
@@ -290,7 +293,14 @@ const CandidatesDetailPage: React.FC = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-green-800">
+                        <button
+                          className="rounded-full border p-2 hover:bg-green-800"
+                          onClick={() => {
+                            send_email_to_candidate_test_response_report.call({
+                              candidate_id: candidate_details[0]?.candidate_id,
+                            });
+                          }}
+                        >
                           <FaEnvelope />
                         </button>
                       </TooltipTrigger>
@@ -318,15 +328,19 @@ const CandidatesDetailPage: React.FC = () => {
             <div className="container mx-auto pt-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
                 <div className="col-span-1">
-                  <div className="p-4 border rounded-md">
+                  <div className="p-4 border rounded-lg">
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Invited</h3>
-                      <p className="text-gray-300">{formatDate(assessment?.invited_on)}</p>
+                      <p className="text-gray-300">
+                        {formatDate(assessment?.invited_on)}
+                      </p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Completed</h3>
-                      <p className="text-gray-300">{assessment?.assessment_completed_at || "Not Completed"}</p>
+                      <p className="text-gray-300">
+                        {assessment?.assessment_completed_at || "Not Completed"}
+                      </p>
                     </div>
 
                     <div className="mb-2">
@@ -391,7 +405,9 @@ const CandidatesDetailPage: React.FC = () => {
                     <CardHeader>
                       <div className="flex justify-between">
                         <div>
-                          <Badge variant="outline">{candidate_test_response_report?.applicant_name}</Badge>
+                          <Badge variant="outline">
+                            {candidate_test_response_report?.applicant_name}
+                          </Badge>
                         </div>
                         <div>
                           <h1 className="text-2xl font-bold">
@@ -411,7 +427,7 @@ const CandidatesDetailPage: React.FC = () => {
                           0
                         }
                         max={100}
-                      />            
+                      />
                       <p
                         className="py-2 text-blue-600 cursor-pointer"
                         onClick={() =>
@@ -461,33 +477,48 @@ const CandidatesDetailPage: React.FC = () => {
                               <AccordionItem value={String(index)}>
                                 <AccordionTrigger className="flex">
                                   <span className="whitespace-nowrap">
-                                    {test?.test_title}
+                                    {test.test_title}
                                   </span>
                                   <div className="flex justify-end items-center w-full space-x-1">
                                     <span>
                                       {" "}
-                                      {(test?.accuracy || 0).toFixed(1)}%
+                                      {(test.accuracy || 0).toFixed(1)}%
                                     </span>
                                   </div>
                                 </AccordionTrigger>
                                 <Progress
                                   className="my-4"
-                                  value={test?.accuracy || 0}
+                                  value={test.accuracy || 0}
                                   max={100}
                                 />
                                 <AccordionContent>
-                                  <div className="flex justify-end items-center">
+                                  <div className="block md:flex md:justify-between items-center">
                                     <p className="flex gap-2 items-center">
-                                      <RxTimer />
-                                      Finished in {" "}
-                                      {test?.finished_time?.split(".")[0]} {" "}
-                                       out of : {test?.total_duration < 60
-                                          ? `${test.total_duration} seconds`
-                                          : `${Math?.floor(test?.total_duration / 60)} min${
-                                              test?.total_duration % 60 > 0 ? ` ${test?.total_duration % 60} sec` : ""
-                                            }`}                             
-                                              {" "}
+                                      <AiOutlineBarChart />
+                                      {test.test_level}
                                     </p>
+
+                                    {test.finished_time === null ? (
+                                      "Incomplete Test"
+                                    ) : (
+                                      <p className="flex gap-2 items-center">
+                                        <RxTimer />
+                                        Finished in{" "}
+                                        {test?.finished_time?.split(".")[0]} out
+                                        of :{" "}
+                                        {test?.total_duration < 60
+                                          ? `${test.total_duration} seconds`
+                                          : `${Math?.floor(
+                                              test?.total_duration / 60
+                                            )} min${
+                                              test?.total_duration % 60 > 0
+                                                ? ` ${
+                                                    test?.total_duration % 60
+                                                  } sec`
+                                                : ""
+                                            }`}{" "}
+                                      </p>
+                                    )}
                                   </div>
 
                                   <Card className="w-full max-w-2xl my-3">
@@ -508,7 +539,7 @@ const CandidatesDetailPage: React.FC = () => {
                                                 className="bg-red-300  my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.incorrect_count || 0 }
+                                                {test?.incorrect_count || 0}
                                               </div>
                                             )}
 
@@ -518,12 +549,12 @@ const CandidatesDetailPage: React.FC = () => {
                                                 className="bg-gray-300 my-4  text-black font-bold text-center"
                                                 style={{ width: "317px" }}
                                               >
-                                                {test?.unanswered_questions || 0}
+                                                {test?.unanswered_questions ||
+                                                  0}
                                               </div>
                                             )}
                                           </div>
                                         </p>
-                                       
                                       </ul>
                                       <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
                                         <div className="flex items-center">
@@ -686,7 +717,8 @@ const CandidatesDetailPage: React.FC = () => {
                           <Badge
                             variant="secondary"
                             className={`${
-                              assessment?.mouse_always_in_assessment_window === 0
+                              assessment?.mouse_always_in_assessment_window ===
+                              0
                                 ? "bg-red-100 text-red-700 hover:bg-red-100"
                                 : "bg-green-100 text-green-700 hover:bg-green-100"
                             } cursor-pointer`}
@@ -709,7 +741,9 @@ const CandidatesDetailPage: React.FC = () => {
                             <div className="flex h-full items-center justify-center">
                               {assessment.webcam_snapshots[sliderValue] ? (
                                 <img
-                                  src={assessment?.webcam_snapshots[sliderValue]}
+                                  src={
+                                    assessment?.webcam_snapshots[sliderValue]
+                                  }
                                   alt="Snapshot"
                                   className="h-[230px] w-[410px] rounded-lg"
                                 />
