@@ -6,7 +6,7 @@ export interface AssessmentType {
   candidate_count: number;
 }
 
-export interface StateProviderQuestion {
+export interface GlobalStateProviderQuestion {
   message: {
     test: {
       test: {
@@ -25,8 +25,7 @@ export interface StateProviderQuestion {
   };
 }
 
-
-export interface TestResult {
+export interface TestResponseResult {
   test_title: string
   test_level: string
   accuracy: number
@@ -39,14 +38,6 @@ export interface TestResult {
   finished_time: string
   applicant_name: string
   applicant_email: string
-  applicant_rating: number
-}
-
-
-
-export interface ItemProps {
-  name: string;
-  quantity: string;
 }
 
 export interface Candidate {
@@ -54,7 +45,7 @@ export interface Candidate {
   score: number;
   hired: boolean;
 }
-export interface CandidateQueryData {
+export interface CandidateListDetail {
   email: string;
   status: string;
   invited_on: string;
@@ -67,14 +58,33 @@ export interface CandidateQueryData {
   name: string;
   score: number;
 }
-export interface Test {
+export interface Assessment_Detail_Page_Test {
   total_duration: number;
   duration: number;
   weight: string;
   title: number;
   impact: string;
 }
-export interface AssessmentData {
+
+export interface TestAssessmentsAccuracy {
+  test_title: string;
+  accuracy: number;
+}
+export interface TestResponseReport {
+  tests: TestAssessmentsAccuracy[];
+  assessment_average: number;
+}
+// export interface Assessment_Data {
+//   assessment_name: string;
+//   applicant_name: string;
+//   status: string;
+//   invited_on: string;
+//   total_duration_of_all_tests: number;
+//   total_number_of_tests: number;
+//   test_response_report: TestResponseReport;
+// }
+
+export interface AssessmentDetailData {
   applicant_name: string;
   status: string;
   assessment_name: string;
@@ -88,9 +98,12 @@ export interface AssessmentData {
   overall: string;
   test_scores: string;
   title: string;
+  test_response_report: TestResponseReport;
+
 }
 
-export interface OverviewTest {
+
+export interface Specific_Assessment_Overview_Test {
   assessment_name: string;
   name: string;
   title: string;
@@ -106,7 +119,7 @@ export interface CurrentQuestionOption {
   label: string;
 }
 
-export interface Question {
+export interface AssessmentCustomQuestion {
   question: string;
   question_text: string;
   type: "Single Choice" | "Multiple Choice" | "Short Answer" | "Long Answer";
@@ -118,12 +131,8 @@ export interface Tests {
   test: string;
   title: string;
   weight: string;
-  questions: Question[];
+  questions: AssessmentCustomQuestion[];
   test_total_duration: number;
-}
-export interface Question {
-  question: string;
-  question_text: string;
 }
 
 export interface SkillData {
@@ -132,7 +141,7 @@ export interface SkillData {
   incorrect: number;
 }
 
-export interface AssessmentTest {
+export interface CandidateTestResponseReport {
   test: string;
   weight: string;
   title: string;
@@ -147,8 +156,8 @@ export interface AssessmentTest {
   test_level:string
 }
 
-export interface Assessment {
-  tests: AssessmentTest[];
+export interface CandidateDetailAssessments {
+  tests: CandidateTestResponseReport[];
   assessment_name: string;
   assessment_title: string;
   job_applicant: string;
@@ -160,7 +169,7 @@ export interface Assessment {
   web_cam_enabled: number;
   full_screen_mode_always_active: number;
   mouse_always_in_assessment_window: number;
-  questions: Question[];
+  questions: AssessmentCustomQuestion[];
   webcam_snapshots: (string | null)[];
   assessment_completed_at: string | null;
 }
@@ -181,7 +190,7 @@ export interface CustomQuestion {
   duration: string;
 }
 
-export interface Applicant {
+export interface JobApplicant {
   name: string;
   owner: string;
   creation: string;
@@ -210,7 +219,7 @@ export interface Applicant {
 }
 
 export interface JobApplicantActionsProps {
-  applicant: Applicant;
+  applicant: JobApplicant;
 }
 
 export interface ScrutinAssessment {
@@ -233,24 +242,8 @@ export interface CandidateAct {
 export interface CandidateActionsProps {
   candidate: CandidateAct;
 }
-export interface TestResponseReport {
-  tests: TestAssessments[];
-  assessment_average: number;
-}
-export interface Assessment_Data {
-  assessment_name: string;
-  applicant_name: string;
-  status: string;
-  invited_on: string;
-  total_duration_of_all_tests: number;
-  total_number_of_tests: number;
-  test_response_report: TestResponseReport;
-}
 
-export interface TestAssessments {
-  test_title: string;
-  accuracy: number;
-}
+
 
 export interface AssessmentList {
   name: string;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import { useRetrieveNextQuestion } from '@/hooks/post-hooks';
-import { StateProviderQuestion } from '@/types/Interface';
+import { GlobalStateProviderQuestion } from '@/types/Interface';
 import { Dispatch, FC, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
 import { createContext } from 'react'
 interface Modal {
@@ -16,7 +16,7 @@ interface GlobalStateContextProps {
     openModal : (modal_key:string, open_state :boolean) => void;
     triggerReload: boolean;
     setTriggerReload: Dispatch<SetStateAction<boolean>>;
-    question : StateProviderQuestion
+    question : GlobalStateProviderQuestion
     updateCurrentQuestion : (candidate_id:string|undefined) => void;
     loading: boolean
     error: any | null

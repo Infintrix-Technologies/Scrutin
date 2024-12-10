@@ -1,7 +1,6 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IoPersonAddSharp } from "react-icons/io5";
-import { LuSendHorizonal } from "react-icons/lu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FaSearch,
@@ -57,59 +56,41 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGlobalState } from "@/utils/StateProvider";
 import SetTestWeights from "@/components/Modal/SetTestWeights";
-import { MdAlternateEmail, MdOutlinePersonAddAlt } from "react-icons/md";
 import { StarIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { RxTimer } from "react-icons/rx";
 import { PiNotepadBold } from "react-icons/pi";
-import { Assessment_Data, AssessmentData, Test, TestAssessments } from "@/types/Interface";
+import {
+  AssessmentDetailData,
+  Assessment_Detail_Page_Test,
+  TestAssessmentsAccuracy,
+} from "@/types/Interface";
 import NotFound from "./NotFound";
 
 const AssessmentDetailPage = () => {
-  const [showWeights, setShowWeights] = useState(false);
-  const globalState = useGlobalState();
   const params = useParams();
+  const globalState = useGlobalState();
   const assessment_id = params?.assessment_id || null;
 
-  // const get_assessment_data = useFrappeGetCall(
-  //   "scrutin.api.assessment_data.get_assessment_data",
-  //   {
-  //     assessment_id: assessment_id,
-  //   }
-  // );
-  // console.log(get_assessment_data,"get_assessment_data");
-
-  const {data,isLoading,error} = useFrappeGetCall(
+  const { data, isLoading, error } = useFrappeGetCall(
     "scrutin.api.assessment_data.get_assessment_data_for_assessment_detail_page",
     {
       assessment_id: assessment_id,
     }
   );
-console.log(data,"get_assessment_data");
-
-  
   const assessment_data = data?.message || [];
+  console.log(assessment_data, "assessment_data");
 
   console.log(assessment_data, "assessment_data");
 
-  const get_specific_assessment_candidate_name = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_specific_assessment_candidate_name",
-    {
-      assessment_name: assessment_id,
-    }
-  );
-
-  const get_specific_assessment =
-    get_specific_assessment_candidate_name?.data?.message || [];
-    
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY  hh:mm A");
   };
 
-  const candidates = [
+  const feedback_modal_candidates_detail = [
     {
       name: "Abdul Muqeet",
       score: 11,
@@ -118,62 +99,64 @@ console.log(data,"get_assessment_data");
   ];
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <NotFound/>;
+  if (error) return <NotFound />;
 
   return (
     <>
       <hr />
       <div className="flex items-center justify-between px-4 py-2 mb-4 border-b">
         <div className="flex items-center gap-8">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Go back</span>
-          </Button>
-
-          {assessment_data?.assessment_data?.map((data: AssessmentData) => (
-            <div className="flex flex-col gap-1 ">
-              <div className="flex gap-2">
-                <h1 className="text-xl font-semibold">
-                  {data?.assessment_name || ""}
-                </h1>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full h-6 w-6"
-                >
-                  <Edit2 className="h-4 w-4" />
-                  <span className="sr-only">Edit title</span>
-                </Button>
-              </div>
-
-              <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <PiNotepadBold />
-                  <span>{data?.total_number_of_tests} tests</span>
+          <Link to="/assessments">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Go back</span>
+            </Button>
+          </Link>
+          {assessment_data?.assessment_data?.map((data: AssessmentDetailData, index: number) => (
+              <div className="flex flex-col gap-1 " key={index}>
+                <div className="flex gap-2">
+                  <h1 className="text-xl font-semibold">
+                    {data.assessment_name || ""}
+                  </h1>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full h-6 w-6"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                    <span className="sr-only">Edit title</span>
+                  </Button>
                 </div>
-                <div className="flex items-center gap-2">
-                  <RxTimer />
-                  <span>
-                    {data?.total_duration_of_all_tests < 60
-                      ? data.total_duration_of_all_tests > 0
-                        ? `${data.total_duration_of_all_tests} seconds`
-                        : ""
-                      : `${Math.floor(
-                          data.total_duration_of_all_tests / 60
-                        )} min${
-                          data.total_duration_of_all_tests % 60 > 0
-                            ? ` ${data.total_duration_of_all_tests % 60} sec`
-                            : ""
-                        }`}
-                  </span>
+
+                <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <PiNotepadBold />
+                    <span>{data?.total_number_of_tests} tests</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RxTimer />
+                    <span>
+                      {data?.total_duration_of_all_tests < 60
+                        ? data.total_duration_of_all_tests > 0
+                          ? `${data.total_duration_of_all_tests} seconds`
+                          : ""
+                        : `${Math.floor(
+                            data.total_duration_of_all_tests / 60
+                          )} min${
+                            data.total_duration_of_all_tests % 60 > 0
+                              ? ` ${data.total_duration_of_all_tests % 60} sec`
+                              : ""
+                          }`}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -213,116 +196,9 @@ console.log(data,"get_assessment_data");
       </div>
 
       <Card className="container mx-auto p-6">
-        <Card className="my-6 px-6">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>
-                Try the Assessment yourselef or invite your team members to
-                trail it.
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="flex items-center justify-between overflow-y-hidden">
-                  <h1 className="text-2xl font-semibold">Team members</h1>
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <FaSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        className="pl-10 w-[300px]"
-                        placeholder="Search users by name or email"
-                      />
-                    </div>
-
-                    <Select>
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="0-25">All Role</SelectItem>
-                        <SelectItem value="26-50">Owner</SelectItem>
-                        <SelectItem value="51-75">Admin</SelectItem>
-                        <SelectItem value="76-100">Recruiter</SelectItem>
-                        <SelectItem value="76-100">Hiring Manager</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <Table>
-                  <TableHeader>
-                    <TableRow className="whitespace-nowrap">
-                      <TableHead className="w-12">
-                        <Checkbox />
-                      </TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Invitation</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {get_specific_assessment.map((data: AssessmentData) => (
-                      <TableRow className="whitespace-nowrap ">
-                        <TableCell>
-                          <Checkbox />
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            {data?.applicant_name || "N/A"}
-                          </div>
-                        </TableCell>
-                        <TableCell>{data?.job_applicant}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant="secondary"
-                            className="bg-purple-100 text-purple-800"
-                          >
-                            Owner
-                          </Badge>
-                        </TableCell>
-                        <TableCell>Send</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <hr className="my-3" />
-                <div className="flex justify-between ">
-                  <div>
-                    <Button variant="outline" className="flex gap-2">
-                      <MdAlternateEmail />
-                      Customized Email
-                    </Button>{" "}
-                  </div>
-
-                  <div className="flex gap-3">
-                    <div className="">
-                      {" "}
-                      <Button
-                        variant="outline"
-                        className="flex gap-2"
-                        onClick={() =>
-                          globalState.openModal("add_team_member", true)
-                        }
-                      >
-                        <MdOutlinePersonAddAlt />
-                        Add Team Member
-                      </Button>
-                    </div>
-                    <div className="">
-                      {" "}
-                      <Button variant="outline" className="flex gap-2" disabled>
-                        <LuSendHorizonal />
-                        Send Invitations
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </Card>
         <Card>
           <div className="p-6 my-3 space-y-8">
-            <div className="flex items-center justify-between overflow-y-hidden">
+            <div className="flex items-center justify-between overflow-y-hidden gap-3">
               <h1 className="text-2xl font-semibold">Candidates</h1>
               <div className="flex items-center gap-4">
                 <div className="relative">
@@ -372,11 +248,12 @@ console.log(data,"get_assessment_data");
             </div>
 
             <div className="flex items-center gap-2">
-              <Switch checked={showWeights} onCheckedChange={setShowWeights} />
+              {/* <Switch checked={showWeights} onCheckedChange={setShowWeights} /> */}
               <span
-                className="text-sm font-medium cursor-pointer"
+                className="flex gap-3 text-sm font-medium cursor-pointer"
                 onClick={() => globalState.openModal("set_test_weights", true)}
               >
+                <Switch id="airplane-mode" disabled />
                 Set test weights
               </span>
               <Dialog
@@ -501,10 +378,10 @@ console.log(data,"get_assessment_data");
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {candidates?.map((candidate) => (
-                                    <TableRow key={candidate?.name}>
-                                      <TableCell>{candidate?.name}</TableCell>
-                                      <TableCell>{candidate?.score}</TableCell>
+                                  {feedback_modal_candidates_detail?.map((candidate) => (
+                                    <TableRow key={candidate.name}>
+                                      <TableCell>{candidate.name}</TableCell>
+                                      <TableCell>{candidate.score}</TableCell>
                                       <TableCell>
                                         <Checkbox
                                         // checked={candidate.hired}
@@ -571,7 +448,7 @@ console.log(data,"get_assessment_data");
                     <TableHead>Name</TableHead>
                     <TableHead>Overall</TableHead>
                     {assessment_data?.tests?.map(
-                      (test: Test, index: number) => (
+                      (test: Assessment_Detail_Page_Test, index: number) => (
                         <TableHead key={index}>{test.title}</TableHead>
                       )
                     )}
@@ -584,25 +461,28 @@ console.log(data,"get_assessment_data");
                 </TableHeader>
                 <TableBody>
                   {assessment_data?.candidate_name?.map(
-                    (data: Assessment_Data) => (
-                      <TableRow className="whitespace-nowrap ">
+                    (data: AssessmentDetailData, index: number) => (
+                      <TableRow className="whitespace-nowrap" key={index}>
                         <TableCell>
                           <Checkbox />
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            {data?.applicant_name || "N/A"}
-                            
+                            {data.applicant_name || "N/A"}
                           </div>
-                        </TableCell>                       
-                         <TableCell>
-                            {data?.test_response_report?.assessment_average?.toFixed(2) || "N/A"}
-                          </TableCell>
-                          {data?.test_response_report?.tests?.map((test: TestAssessments, index: number) => (
+                        </TableCell>
+                        <TableCell>
+                          {data.test_response_report.assessment_average.toFixed(
+                            2
+                          ) || "N/A"}
+                        </TableCell>
+                        {data?.test_response_report.tests.map(
+                          (test: TestAssessmentsAccuracy, index: number) => (
                             <TableCell key={index}>
                               {test.accuracy.toFixed(2)}%
                             </TableCell>
-                          ))}
+                          )
+                        )}
                         <TableCell>
                           <Select>
                             <SelectTrigger className="w-[200px]">
@@ -649,7 +529,15 @@ console.log(data,"get_assessment_data");
                         <TableCell>
                           <Badge
                             variant="secondary"
-                            // className="bg-purple-100 text-purple-800"
+                            className={
+                              data?.status === "Open"
+                                ? "bg-orange-100 text-orange-700 hover:bg-orange-100"
+                                : data?.status === "Completed"
+                                ? "bg-green-100 text-green-800 hover:bg-red-100"
+                                : data?.status === "Started"
+                                ? "bg-blue-100 text-blue-700 hover:bg-green-100"
+                                : ""
+                            }
                           >
                             {data?.status}
                           </Badge>{" "}
@@ -741,23 +629,23 @@ console.log(data,"get_assessment_data");
                     <div>Impact</div>
                     <div>Duration</div>
                   </div>
-                  {assessment_data?.tests?.map((data: Test, index: number) => (
+                  {assessment_data.tests.map((assessment_data: Assessment_Detail_Page_Test, index: number) => (
                     <div
                       key={index}
                       className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
                     >
-                      <div className="text-start">{data?.title}</div>
-                      <div>{data?.weight || "--"}</div>
-                      <div>{data?.impact || "--"}</div>
+                      <div className="text-start">{assessment_data?.title}</div>
+                      <div>{assessment_data.weight || "--"}</div>
+                      <div>{assessment_data.impact || "--"}</div>
                       <div className="flex items-end">
                         <Clock className="mr-2 h-4 w-4" />
-                        {data?.total_duration < 60
-                          ? data.total_duration > 0
-                            ? `${data.total_duration} seconds`
+                        {assessment_data.total_duration < 60
+                          ? assessment_data.total_duration > 0
+                            ? `${assessment_data.total_duration} seconds`
                             : ""
-                          : `${Math.floor(data.total_duration / 60)} min${
-                              data.total_duration % 60 > 0
-                                ? ` ${data.total_duration % 60} sec`
+                          : `${Math.floor(assessment_data.total_duration / 60)} min${
+                              assessment_data.total_duration % 60 > 0
+                                ? ` ${assessment_data.total_duration % 60} sec`
                                 : ""
                             }`}
                       </div>
@@ -783,8 +671,8 @@ console.log(data,"get_assessment_data");
                       <div>Duration</div>
                     </div>
                   </div>
-                  {assessment_data?.custom_questions?.map(
-                    (question: AssessmentData, index: number) => (
+                  {assessment_data.custom_questions.map(
+                    (question: AssessmentDetailData, index: number) => (
                       <div
                         key={index}
                         className="overflow-y-hidden grid grid-cols-2 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50"
@@ -804,13 +692,13 @@ console.log(data,"get_assessment_data");
                         <div className="grid grid-cols-2">
                           <div className="flex items-center">
                             <MessageSquare className="mr-2 h-4 w-4" />
-                            {question?.type}
+                            {question.type}
                           </div>
                           <div className="flex items-center m-auto">
                             {/* {question.duration !== "--" && ( */}
                             <Clock className="mr-2 h-4 w-4" />
                             {/* )} */}
-                            {question?.duration || 0}
+                            {question.duration || 0}
                           </div>
                         </div>
                       </div>

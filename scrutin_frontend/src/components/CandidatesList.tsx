@@ -11,10 +11,12 @@ import {
 import { useFrappeGetCall, useFrappeGetDocList } from "frappe-react-sdk";
 import { CandidateActions } from "./CandidateActions";
 import { useNavigate } from "react-router-dom";
-import { CandidateQueryData } from "../types/Interface";
+import { CandidateListDetail } from "../types/Interface";
 import dayjs from "dayjs";
 
 export const CandidatesList = () => {
+  const navigate = useNavigate();
+
   const candidates_query = useFrappeGetCall(
     "scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate"
   );
@@ -30,7 +32,14 @@ export const CandidatesList = () => {
     asDict: true,
   });
 
-  const navigate = useNavigate();
+  const applicants = job_applicant_query?.data || [];
+  console.log(applicants, "applicants");
+
+  const applicantMap = applicants.reduce((map, applicant) => {
+    map[applicant.email_id] = applicant.applicant_name;
+    return map;
+  }, {});
+
 
   const handleNavigate = (candidateEmail: string) => {
     console.log("Navigate to candidate details page");
@@ -39,14 +48,6 @@ export const CandidatesList = () => {
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY hh:mm A");
   };
-
-  const applicants = job_applicant_query?.data || [];
-  console.log(applicants, "applicants");
-
-  const applicantMap = applicants.reduce((map, applicant) => {
-    map[applicant.email_id] = applicant.applicant_name;
-    return map;
-  }, {});
 
   return (
     <Table>
@@ -61,9 +62,8 @@ export const CandidatesList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {candidates_query_data.map((candidate: CandidateQueryData) => (
-          <>
-            <TableRow key={candidate.email}>
+        {candidates_query_data.map((candidate: CandidateListDetail, index:number) => (          
+            <TableRow key={index}>
               <TableCell
                 className="cursor-pointer"
                 onClick={() => {
@@ -79,8 +79,7 @@ export const CandidatesList = () => {
               <TableCell>
                 <CandidateActions candidate={candidate} />
               </TableCell>
-            </TableRow>
-          </>
+            </TableRow>          
         ))}
       </TableBody>
       <TableFooter>
