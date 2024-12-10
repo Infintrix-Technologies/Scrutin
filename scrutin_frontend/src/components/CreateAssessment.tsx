@@ -35,7 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { ScrutinAssessment } from "../types/Interface";
+import { Create_Assessment } from "../types/Interface";
 // import { RainbowButton } from "./ui/rainbow-button";
 
 
@@ -81,7 +81,7 @@ const CreateAssessment = () => {
 };
 
 const AssessmentForm = () => {
-  const form = useForm<ScrutinAssessment>();
+  const form = useForm<Create_Assessment>();
 
   const globalState = useGlobalState();
   const assessments_query = useAssessmentsListQuery();
@@ -90,7 +90,7 @@ const AssessmentForm = () => {
 
   const create_frappe_doc = useFrappeCreateDoc();
 
-  const onSubmit = async (data: ScrutinAssessment) => {
+  const onSubmit = async (data: Create_Assessment) => {
     try {
       await create_frappe_doc.createDoc("Scrutin Assessment", data);
       assessments_query.mutate();

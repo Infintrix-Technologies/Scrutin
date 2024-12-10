@@ -39,7 +39,7 @@ export default function AssessmentOverview() {
       candidate_id: candidate_id,
     }
   );
-  const report_response_query = report.message;
+  const report_response_query = report?.message;
   console.log(report, "reportreport");
 
   if (isLoading) return <p>Loading...</p>;
@@ -228,7 +228,7 @@ export default function AssessmentOverview() {
                     <Avatar className="h-20 w-20">
                       
                       <AvatarFallback>
-                        {(report_response_query.applicant_name
+                        {(report_response_query?.applicant_name
                           .split(" ")
                           .map((n: number[]) => n[0])
                           .join("")|| "Name")}
@@ -236,16 +236,16 @@ export default function AssessmentOverview() {
                     </Avatar>
                     <div>
                       <h2 className="text-2xl font-bold">
-                        {report_response_query.applicant_name}
+                        {report_response_query?.applicant_name}
                       </h2>
                       <p className="text-gray-500">
-                        {report_response_query.applicant_email}
+                        {report_response_query?.applicant_email}
                       </p>
                       <div className="mt-2">
                         <Badge
                           variant={ "secondary"}
                         >
-                           {report_response_query.assessment_name}
+                           {report_response_query?.assessment_name}
                         </Badge>
                       </div>
                     </div>
@@ -262,7 +262,7 @@ export default function AssessmentOverview() {
                         <div>
                           <h1 className="text-2xl font-bold">
                             {(
-                              report_response_query.assessment_average ||
+                              report_response_query?.assessment_average ||
                               0
                             ).toFixed(1)}
                             %
@@ -271,11 +271,11 @@ export default function AssessmentOverview() {
                         </div>
                       </div>
 
-                    <Progress value={report_response_query.assessment_average} className="mt-3 w-full" />
+                    <Progress value={report_response_query?.assessment_average} className="mt-3 w-full" />
                     </div>
                 </Card>
 
-                {report_response_query.tests.map(
+                {report_response_query?.tests?.map(
                   (test: TestResponseResult, index: number) => (
                     <Card key={index}>
                       <CardHeader>
