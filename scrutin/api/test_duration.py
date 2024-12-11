@@ -27,11 +27,11 @@ def get_candidate_test_progress_for_test_page(candidate_id):
         .join(ScrutinTest)
         .on(ScrutinTestProgress.test == ScrutinTest.name)
         .select(
-            ScrutinCandidate.job_applicant,
+            # ScrutinCandidate.job_applicant,
             ScrutinTestProgress.test,
-            ScrutinTest.title,
-            ScrutinTestProgress.started_at,
-            ScrutinTestProgress.completed_at,
+            # ScrutinTest.title,
+            # ScrutinTestProgress.started_at,
+            # ScrutinTestProgress.completed_at,
         )
         .where(
             (ScrutinCandidate.name == candidate_id)
@@ -89,7 +89,7 @@ def get_candidate_test_progress_for_test_page(candidate_id):
         # Add total_duration, total_questions, and answered_questions to the result
         result['total_duration'] = total_duration
         result['total_questions'] = total_questions
-        result['answered_questions'] = answered_questions
+        # result['answered_questions'] = answered_questions
         result['show_question'] = show_question
 
     return results
