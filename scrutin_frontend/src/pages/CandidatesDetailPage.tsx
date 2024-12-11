@@ -114,7 +114,7 @@ const CandidatesDetailPage: React.FC = () => {
     { email: email }
   );
 
-  const candidate_details = data.message.candidate_assessment || [];
+  const candidate_details = data?.message?.candidate_assessment || [];
   console.log(candidate_details, "candidate_details");
 
   const send_email_to_candidate_test_response_report = useFrappePostCall(
@@ -134,7 +134,7 @@ const CandidatesDetailPage: React.FC = () => {
   // );
 
   const candidate_test_response_report =
-    get_candidate_test_response_report.data.message || [];
+    get_candidate_test_response_report?.data?.message || [];
   // console.log(candidate_test_response_report, "candidate_test_response_report");
 
   const handleRatingChange = (index: number) => {

@@ -242,3 +242,8 @@ export interface AssessmentList {
   language: string;
   candidate_count: number;
 }
+
+export interface StartAssessment_And_Continue_Button {
+  title: string;
+  test_completed: boolean;
+}

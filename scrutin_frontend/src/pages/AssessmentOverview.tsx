@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import NotFound from "./NotFound";
 import {
   Specific_Assessment_Overview_Test,
+  StartAssessment_And_Continue_Button,
   TestResponseResult,
 } from "@/types/Interface";
 import { useGlobalState } from "@/utils/StateProvider";
@@ -23,6 +24,7 @@ import { RxTimer } from "react-icons/rx";
 import { useEffect } from "react";
 
 export default function AssessmentOverview() {
+
   const params = useParams();
   const candidate_id = params?.candidate_id || null;
   const globalState = useGlobalState();
@@ -56,6 +58,10 @@ export default function AssessmentOverview() {
   const report_response_query = report?.message;
   console.log(report, "reportreport");
 
+  const allTestsIncomplete = specific_assessment_tests.tests?.every(
+    (test:StartAssessment_And_Continue_Button) => !test.test_completed
+  );
+  
   if (isLoading) return <p>Loading...</p>;
   if (error) return <NotFound />;
 
@@ -205,7 +211,7 @@ export default function AssessmentOverview() {
           </div>
 
           <div className="flex justify-end mt-6">
-            {specific_assessment_tests.assessment_completed !== true && (
+            {!specific_assessment_tests.assessment_completed && (
               <Link to={`/candidacy/${candidate_id}/setup`}>
                 <Button
                   className="text-end flex items-center"
@@ -215,7 +221,8 @@ export default function AssessmentOverview() {
                     });
                   }}
                 >
-                  Start Assessment
+                          {allTestsIncomplete ? "Start Assessment" : "Continue Assessment"}
+
                   <ChevronRightIcon className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
