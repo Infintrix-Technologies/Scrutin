@@ -22,22 +22,22 @@ const TestPage = () => {
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.add_scrutin_question_response"
   );
-  const { call: completeAssessment } = useFrappePostCall(
-    "scrutin.api.candidate_test.complete_assessment"
-  );
+  // const { call: completeAssessment } = useFrappePostCall(
+  //   "scrutin.api.candidate_test.complete_assessment"
+  // );
   const {call:mark_test_completed} = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed");
 
   useEffect(() => {
     updateCurrentQuestion(candidate_id);
   }, [candidate_id]);
 
-    if (question?.message?.completed) {
-      completeAssessment({
-        candidate_id,
-      }).then(() => {
-        navigate(`/candidacy/${candidate_id}/overview`);
-      });
-    }
+    // if (question?.message?.completed) {
+    //   // completeAssessment({
+    //   //   candidate_id,
+    //   // }).then(() => {
+    //     navigate(`/candidacy/${candidate_id}/overview`);
+    //   // });
+    // }
 
 
   const handleSubmit = async () => {
