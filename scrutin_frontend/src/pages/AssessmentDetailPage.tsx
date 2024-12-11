@@ -320,7 +320,7 @@ const AssessmentDetailPage = () => {
               </Dialog>
 
               <Dialog
-                open={globalState?.modals?.set_test_weights?.open}
+                open={globalState.modals.set_test_weights.open}
                 onOpenChange={(open) =>
                   globalState.openModal("set_test_weights", open)
                 }
@@ -335,7 +335,7 @@ const AssessmentDetailPage = () => {
                 </DialogContent>
               </Dialog>
               <Dialog
-                open={globalState?.modals?.feed_back?.open}
+                open={globalState.modals.feed_back.open}
                 onOpenChange={(open) =>
                   globalState.openModal("feed_back", open)
                 }

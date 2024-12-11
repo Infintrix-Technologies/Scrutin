@@ -27,7 +27,7 @@ export default function AssessmentOverview() {
     "scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id",
     { candidate_id: candidate_id }
   );
-  const specific_assessment_tests = data.message || [];
+  const specific_assessment_tests = data?.message || [];
 
   const assessment_started = useFrappePostCall(
     "scrutin.api.candidate_test.start_assessment"
