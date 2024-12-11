@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 import { CheckIcon, ChevronRightIcon, EyeIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import NotFound from "./NotFound";
-import { Specific_Assessment_Overview_Test, TestResponseResult } from "@/types/Interface";
+import {
+  Specific_Assessment_Overview_Test,
+  TestResponseResult,
+} from "@/types/Interface";
 import { useGlobalState } from "@/utils/StateProvider";
 import {
   Dialog,
@@ -17,20 +20,32 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { RxTimer } from "react-icons/rx";
+import { useEffect } from "react";
 
 export default function AssessmentOverview() {
   const params = useParams();
   const candidate_id = params?.candidate_id || null;
   const globalState = useGlobalState();
 
-  const { data, isLoading, error } = useFrappeGetCall(
-    "scrutin.api.assessment_data.test_details_for_overview_page",
+  const { data, isLoading, error } = useFrappeGetCall( "scrutin.api.assessment_data.test_details_for_overview_page",
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = data?.message || [];
+  const { call } = useFrappePostCall(
+    "scrutin.api.candidate_test.complete_assessment"
+  );
 
-  console.log(specific_assessment_tests,"specific_assessment_tests")
-  const assessment_started = useFrappePostCall( "scrutin.api.candidate_test.start_assessment" );
+  useEffect(() => {
+    if (specific_assessment_tests.assessment_completed === true) {
+      call({
+        candidate_id,
+      });
+    }
+  }, [specific_assessment_tests.assessment_completed, candidate_id, call]);
+
+  const assessment_started = useFrappePostCall(
+    "scrutin.api.candidate_test.start_assessment"
+  );
 
   const { data: report } = useFrappeGetCall(
     "scrutin.api.test_response_report.get_candidate_test_response_report",
@@ -191,19 +206,19 @@ export default function AssessmentOverview() {
 
           <div className="flex justify-end mt-6">
             {specific_assessment_tests.assessment_completed !== true && (
-            <Link to={`/candidacy/${candidate_id}/setup`}>
-              <Button
-                className="text-end flex items-center"
-                onClick={() => {
-                  assessment_started.call({
-                    candidate_id: candidate_id,
-                  });
-                }}
-              >
-                Start Assessment
-                <ChevronRightIcon className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              <Link to={`/candidacy/${candidate_id}/setup`}>
+                <Button
+                  className="text-end flex items-center"
+                  onClick={() => {
+                    assessment_started.call({
+                      candidate_id: candidate_id,
+                    });
+                  }}
+                >
+                  Start Assessment
+                  <ChevronRightIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             )}
           </div>
         </CardContent>
@@ -225,12 +240,11 @@ export default function AssessmentOverview() {
                   </CardHeader>
                   <CardContent className="flex items-center space-x-6">
                     <Avatar className="h-20 w-20">
-                      
                       <AvatarFallback>
-                        {(report_response_query?.applicant_name
+                        {report_response_query?.applicant_name
                           .split(" ")
                           .map((n: number[]) => n[0])
-                          .join("")|| "Name")}
+                          .join("") || "Name"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -241,37 +255,33 @@ export default function AssessmentOverview() {
                         {report_response_query?.applicant_email}
                       </p>
                       <div className="mt-2">
-                        <Badge
-                          variant={ "secondary"}
-                        >
-                           {report_response_query?.assessment_name}
+                        <Badge variant={"secondary"}>
+                          {report_response_query?.assessment_name}
                         </Badge>
                       </div>
                     </div>
-
-                    
-
                   </CardContent>
-                  <div className="space-y-4 m-4 ">            
-
-                         <div className="flex justify-between">
-                        <div>
-                          <Badge variant={ "secondary"}>Assessment Average</Badge>
-                        </div>
-                        <div>
-                          <h1 className="text-2xl font-bold">
-                            {(
-                              report_response_query?.assessment_average ||
-                              0
-                            ).toFixed(1)}
-                            %
-                          </h1>
-                          <p className="text-sm text-gray-500">out of 100 % </p>
-                        </div>
+                  <div className="space-y-4 m-4 ">
+                    <div className="flex justify-between">
+                      <div>
+                        <Badge variant={"secondary"}>Assessment Average</Badge>
                       </div>
-
-                    <Progress value={report_response_query?.assessment_average} className="mt-3 w-full" />
+                      <div>
+                        <h1 className="text-2xl font-bold">
+                          {(
+                            report_response_query?.assessment_average || 0
+                          ).toFixed(1)}
+                          %
+                        </h1>
+                        <p className="text-sm text-gray-500">out of 100 % </p>
+                      </div>
                     </div>
+
+                    <Progress
+                      value={report_response_query?.assessment_average}
+                      className="mt-3 w-full"
+                    />
+                  </div>
                 </Card>
 
                 {report_response_query?.tests?.map(
@@ -285,21 +295,22 @@ export default function AssessmentOverview() {
                       <CardContent className="space-y-4">
                         <div className="flex justify-between items-center">
                           <Badge>{test.test_level}</Badge>
-                      {test.finished_time === null ? "Incomplete Test" :
-                          <p className="flex gap-2 items-center">
-                            <RxTimer />
-                            Finished in {test.finished_time.split(".")[0]} out
-                            of :{" "}
-                            {test.total_duration < 60
-                              ? `${test.total_duration} seconds`
-                              : `${Math.floor(test.total_duration / 60)} min${
-                                  test.total_duration % 60 > 0
-                                    ? ` ${test.total_duration % 60} sec`
-                                    : ""
-                                }`}{" "}
-                          </p>
-                          }
-
+                          {test.finished_time === null ? (
+                            "Incomplete Test"
+                          ) : (
+                            <p className="flex gap-2 items-center">
+                              <RxTimer />
+                              Finished in {test.finished_time.split(".")[0]} out
+                              of :{" "}
+                              {test.total_duration < 60
+                                ? `${test.total_duration} seconds`
+                                : `${Math.floor(test.total_duration / 60)} min${
+                                    test.total_duration % 60 > 0
+                                      ? ` ${test.total_duration % 60} sec`
+                                      : ""
+                                  }`}{" "}
+                            </p>
+                          )}
                         </div>
                         <Progress value={test.accuracy} className="w-full" />
                         <div className="grid grid-cols-2 gap-4">
@@ -334,7 +345,9 @@ export default function AssessmentOverview() {
                             </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-500">Unanswered Questions</p>
+                            <p className="text-sm text-gray-500">
+                              Unanswered Questions
+                            </p>
                             <p className="text-lg font-semibold">
                               {test.unanswered_questions}
                             </p>
