@@ -462,39 +462,23 @@ def get_current_question(candidate_id):
         raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
 
     # Function to check if a test has already started for the candidate
-    def has_test_started(candidate_id, test_name):
+    def has_test_started(candidate_id, test_id):
         test_progress_query = (
             frappe.qb.from_(ScrutinTestProgress)
             .select(ScrutinTestProgress.name)
             .where(
                 (ScrutinTestProgress.parent == candidate_id) &
-                (ScrutinTestProgress.test == test_name)
+                (ScrutinTestProgress.test == test_id)
             )
         )
         test_progress = test_progress_query.run(as_dict=True)
         return bool(test_progress)
 
     # Function to mark a test as completed
-    def mark_test_completed(candidate_id, test_name):
-        test_progress_query = (
-            frappe.qb.from_(ScrutinTestProgress)
-            .select(ScrutinTestProgress.name, ScrutinTestProgress.completed_at)
-            .where(
-                (ScrutinTestProgress.parent == candidate_id) &
-                (ScrutinTestProgress.test == test_name)
-            )
-        )
-        test_progress = test_progress_query.run(as_dict=True)
-        if test_progress:
-            progress_entry = test_progress[0]
-            if not progress_entry['completed_at']:  # Only update if not already completed
-                frappe.db.set_value(
-                    "Scrutin Test Progress", progress_entry['name'], "completed_at", now()
-                )
-                frappe.db.commit()
+    
 
     # Helper function to check if all questions of a test are answered
-    def are_all_questions_answered(test_name, candidate_id):
+    def are_all_questions_answered(test_id, candidate_id):
         question_query = (
             frappe.qb.from_(ScrutinTestQuestion)
             .inner_join(ScrutinTest)
@@ -502,7 +486,7 @@ def get_current_question(candidate_id):
             .inner_join(ScrutinQuestion)
             .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
             .select(ScrutinTestQuestion.question)
-            .where(ScrutinTest.name == test_name)
+            .where(ScrutinTest.name == test_id)
         )
         questions = question_query.run(as_dict=True)
         
@@ -556,13 +540,13 @@ def get_current_question(candidate_id):
     current_test_index = 0
     while current_test_index < len(tests):
         current_test = tests[current_test_index]
-        test_name = current_test['test']
+        test_id = current_test['test']
 
-        if not has_test_started(candidate_id, test_name):
-            add_scrutin_test_progress(candidate_id, test_name, None)
+        if not has_test_started(candidate_id, test_id):
+            add_scrutin_test_progress(candidate_id, test_id, None)
 
-        if are_all_questions_answered(test_name, candidate_id):
-            mark_test_completed(candidate_id, test_name)
+        if are_all_questions_answered(test_id, candidate_id):
+            # mark_test_completed(candidate_id, test_id)
             current_test_index += 1
         else:
             break
@@ -573,7 +557,7 @@ def get_current_question(candidate_id):
             'completed': True
         }
 
-    test_name = tests[current_test_index]['test']
+    test_id = tests[current_test_index]['test']
     test_title = tests[current_test_index]['title']  
 
     question_query = (
@@ -587,7 +571,7 @@ def get_current_question(candidate_id):
             ScrutinQuestion.question.as_('question_text'),
             ScrutinQuestion.type.as_('question_type')
         )
-        .where(ScrutinTest.name == test_name)
+        .where(ScrutinTest.name == test_id)
     )
     questions = question_query.run(as_dict=True)
 
@@ -650,7 +634,7 @@ def get_current_question(candidate_id):
 
     # Update ScrutinTestProgress completed_at if the current question is the last one
     # if last_test_question:
-    #     mark_test_completed(candidate_id, test_name)
+    #     mark_test_completed(candidate_id, test_id)
 
     update_data = {
         'current_question': current_question['question'],
@@ -661,7 +645,7 @@ def get_current_question(candidate_id):
     return {
         'test': {
             'test': {
-                'name': current_test['test'],
+                'test_id': current_test['test'],
                 'title': test_title  
             },
             'current_question': {
@@ -673,6 +657,33 @@ def get_current_question(candidate_id):
             'last_test_question': last_test_question
         }
     }
+
+
+
+
+@frappe.whitelist()
+def mark_test_completed(candidate_id, test_id):
+        
+    ScrutinTestProgress = DocType("Scrutin Test Progress")
+    
+    test_progress_query = (
+        frappe.qb.from_(ScrutinTestProgress)
+        .select(ScrutinTestProgress.name, ScrutinTestProgress.completed_at)
+        .where(
+            (ScrutinTestProgress.parent == candidate_id) &
+            (ScrutinTestProgress.test == test_id)
+        )
+    )
+    test_progress = test_progress_query.run(as_dict=True)
+    if test_progress:
+        progress_entry = test_progress[0]
+        if not progress_entry['completed_at']:  # Only update if not already completed
+            frappe.db.set_value(
+                "Scrutin Test Progress", progress_entry['name'], "completed_at", now()
+            )
+            frappe.db.commit()
+
+
 
 
 
