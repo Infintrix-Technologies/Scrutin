@@ -16,7 +16,7 @@ import { AssessmentList } from "@/types/Interface";
     const AssessmentsList = () => {
       const {data,isLoading,error} = useFrappeGetCall("scrutin.api.assessment_data.assessment_list_page_api")
     
-    const assessments = data.message || []
+    const assessments = data?.message || []
     // console.log(assessments,"assessments");
     
     if (isLoading) return <p>Loading...</p>;
