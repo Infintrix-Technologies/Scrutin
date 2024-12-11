@@ -14,19 +14,23 @@ import { useGlobalState } from "@/utils/StateProvider";
 
 const TestPage = () => {
   const { candidate_id } = useParams();
+  const navigate = useNavigate(); 
 
   const { question, updateCurrentQuestion, error, loading } = useGlobalState();
-  const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState <string | string[] | null >(null);
-
+  // console.log(question,"questionquestion")
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.add_scrutin_question_response"
   );
   const { call: completeAssessment } = useFrappePostCall(
     "scrutin.api.candidate_test.complete_assessment"
   );
+  const {call:mark_test_completed} = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed");
 
   useEffect(() => {
+    updateCurrentQuestion(candidate_id);
+  }, [candidate_id]);
+
     if (question?.message?.completed) {
       completeAssessment({
         candidate_id,
@@ -34,11 +38,7 @@ const TestPage = () => {
         navigate(`/candidacy/${candidate_id}/overview`);
       });
     }
-  }, [question?.message?.completed, candidate_id, completeAssessment, navigate]);
 
-  useEffect(() => {
-    updateCurrentQuestion(candidate_id);
-  }, [candidate_id]);
 
   const handleSubmit = async () => {
     if (
@@ -61,6 +61,10 @@ const TestPage = () => {
       });
 
       if (question?.message?.test?.last_test_question) {
+        mark_test_completed({
+          candidate_id,
+          test_id: question.message.test.test.test_id
+        })
         navigate(`/candidacy/${candidate_id}/overview`);
       }
       // toast.success("Response submitted successfully!");
@@ -91,13 +95,6 @@ const TestPage = () => {
     // if (error.httpStatus === 403) return <Forbidden />;
     // if (error.httpStatus === 404) return <NotFound />;
     // return <p>Unexpected error occurred. Please try again later.</p>;
-  // }
-
-  // if (question?.message?.completed) {
-  //   complete_assessment.call({
-  //     candidate_id:candidate_id,
-  //   });
-  //   return <Navigate to={`/candidacy/${candidate_id}/overview`} />;
   // }
 
   const test = question?.message?.test;

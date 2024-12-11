@@ -10,19 +10,19 @@ export default function TestProgress() {
 
   const questionIndex = parseInt(searchParams.get("question") || "1", 10);
 
-  const { data } = useFrappeGetCall("scrutin.api.assessment_data.get_specific_test_details", {
-    test_id: "f3988t64af",
-  });
+  // const { data } = useFrappeGetCall("scrutin.api.assessment_data.get_specific_test_details", {
+  //   test_id: "f3988t64af",
+  // });
 
   const {data:test_progress} = useFrappeGetCall("scrutin.api.test_duration.get_candidate_test_progress_for_test_page",{
     candidate_id: candidate_id ,
   })
   const candidate_test_progress_query = test_progress?.message || {};
-
-console.log(test_progress,"test_progress")
-  const specific_test_details = data?.message || {};
-  const totalDuration = specific_test_details?.total_duration || 0;
-  const totalQuestions = specific_test_details?.total_questions || 0;
+  console.log(candidate_test_progress_query,"candidate_test_progress_query")
+  console.log(test_progress,"test_progress")
+  const specific_test_details = test_progress?.message || {};
+  const totalDuration = specific_test_details[0]?.total_duration || 0;
+  const totalQuestions = specific_test_details[0]?.total_questions || 0;
 
   const [timeLeft, setTimeLeft] = useState(totalDuration);
 
