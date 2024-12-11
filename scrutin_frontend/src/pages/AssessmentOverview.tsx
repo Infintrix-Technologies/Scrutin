@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
+import { Button } from "@/components/ui/button";
 import { CheckIcon, ChevronRightIcon, EyeIcon } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import NotFound from "./NotFound";
@@ -24,14 +24,13 @@ export default function AssessmentOverview() {
   const globalState = useGlobalState();
 
   const { data, isLoading, error } = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id",
+    "scrutin.api.assessment_data.test_details_for_overview_page",
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = data?.message || [];
 
-  const assessment_started = useFrappePostCall(
-    "scrutin.api.candidate_test.start_assessment"
-  );
+  console.log(specific_assessment_tests,"specific_assessment_tests")
+  const assessment_started = useFrappePostCall( "scrutin.api.candidate_test.start_assessment" );
 
   const { data: report } = useFrappeGetCall(
     "scrutin.api.test_response_report.get_candidate_test_response_report",
@@ -191,7 +190,7 @@ export default function AssessmentOverview() {
           </div>
 
           <div className="flex justify-end mt-6">
-            {/* {!allTestsCompleted && ( */}
+            {specific_assessment_tests.assessment_completed !== true && (
             <Link to={`/candidacy/${candidate_id}/setup`}>
               <Button
                 className="text-end flex items-center"
@@ -205,7 +204,7 @@ export default function AssessmentOverview() {
                 <ChevronRightIcon className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            {/* )} */}
+            )}
           </div>
         </CardContent>
       </Card>
