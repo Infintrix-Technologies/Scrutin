@@ -1,16 +1,37 @@
+import time
+
+# def countdown_timer(seconds):
+#     time_updates = []
+#     for remaining in range(seconds, 0, -1):
+#         mins, secs = divmod(remaining, 60)
+#         timeformat = '{:02d}:{:02d}'.format(mins, secs)
+#         time_updates.append(timeformat)
+#         print(timeformat, end='\r', flush=True) 
+#         time.sleep(1)
+#     time_updates.append("00:00\nTime's up!")
+#     print("00:00\nTime's up!") 
+#     return time_updates
+
+# countdown_timer(20)
+
+
+
+import time
 import frappe
-from frappe import _
-from datetime import datetime
-from frappe.utils import now
-from frappe.query_builder import DocType
-from frappe.query_builder import functions as fn
+from frappe.query_builder import DocType, fn
 
+def countdown_timer(total_duration):
+    time_updates = []
+    for remaining in range(total_duration, 0, -1):
+        mins, secs = divmod(remaining, 60)
+        timeformat = '{:02d}:{:02d}'.format(mins, secs)
+        time_updates.append(timeformat)
+        print(timeformat, end='\r', flush=True)  # Print in real-time
+        time.sleep(1)
+    time_updates.append("00:00\nTime's up!")
+    print("00:00\nTime's up!")  # Final message
+    return time_updates
 
-
-
-
-# This API will give the total duration and total number of questions of current test on Test Page
-@frappe.whitelist()
 def get_candidate_test_progress_for_test_page(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinTest = DocType("Scrutin Test")
@@ -28,7 +49,6 @@ def get_candidate_test_progress_for_test_page(candidate_id):
         .on(ScrutinTestProgress.test == ScrutinTest.name)
         .select(
             ScrutinTestProgress.test,
-            
         )
         .where(
             (ScrutinCandidate.name == candidate_id)
@@ -38,7 +58,7 @@ def get_candidate_test_progress_for_test_page(candidate_id):
     )
     results = query.run(as_dict=True)
     
-    # Iterate over results to add total_duration, total_questions, and answered_questions
+    # Iterate over results to add total_duration, total_questions, answered_questions, and countdown_timer
     for result in results:
         test_id = result['test']
 
@@ -88,8 +108,10 @@ def get_candidate_test_progress_for_test_page(candidate_id):
         result['total_questions'] = total_questions
         result['show_question'] = show_question
 
+        # Generate countdown timer updates
+        result['countdown_timer'] = countdown_timer(total_duration)
+
     return results
 
 
-
-
+get_candidate_test_progress_for_test_page("97c5oqlsf5")

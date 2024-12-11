@@ -183,6 +183,9 @@ const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_tes
 const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
 
 
+const countdown_timer = useFrappePostCall("scrutin.api.candidate_test.countdown_timer")
+
+
 
 
 const comparison_two_candidates_test_response_report = useFrappePostCall("scrutin.api.candidate_response_comparison.comparison_two_candidates_test_response_report")
@@ -595,6 +598,15 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
         });
       }}>
         mark_test_completed
+      </Button>
+
+
+      <Button onClick={() => {
+        countdown_timer.call({
+        seconds: 10
+        });
+      }}>
+        Timer
       </Button>
 
 
