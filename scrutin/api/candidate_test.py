@@ -473,8 +473,6 @@ def get_current_question(candidate_id):
         )
         test_progress = test_progress_query.run(as_dict=True)
         return bool(test_progress)
-
-    # Function to mark a test as completed
     
 
     # Helper function to check if all questions of a test are answered
@@ -550,12 +548,6 @@ def get_current_question(candidate_id):
             current_test_index += 1
         else:
             break
-    
-    if current_test_index >= len(tests):
-        return {
-            'message': 'All tests are completed',
-            'completed': True
-        }
 
     test_id = tests[current_test_index]['test']
     test_title = tests[current_test_index]['title']  
@@ -631,10 +623,6 @@ def get_current_question(candidate_id):
     )
     options = option_query.run(as_dict=True)
     current_question['options'] = options
-
-    # Update ScrutinTestProgress completed_at if the current question is the last one
-    # if last_test_question:
-    #     mark_test_completed(candidate_id, test_id)
 
     update_data = {
         'current_question': current_question['question'],

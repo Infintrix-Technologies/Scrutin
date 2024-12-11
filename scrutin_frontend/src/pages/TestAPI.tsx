@@ -93,7 +93,7 @@ const get_candidate_detail_for_intro = useFrappePostCall("scrutin.api.assessment
 
 
 
-const get_specific_assessment_tests_by_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_tests_by_candidate_id")
+const test_details_for_overview_page = useFrappePostCall("scrutin.api.assessment_data.test_details_for_overview_page")
 
 
 
@@ -362,11 +362,11 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
 
 
       <Button onClick={() => {
-        get_specific_assessment_tests_by_candidate_id.call({
-          candidate_id: '97c5oqlsf5',
+        test_details_for_overview_page.call({
+          candidate_id: '37hc0ipka2',
         });
       }}>
-        get_specific_assessment_tests_by_candidate_id
+        test_details_for_overview_page
       </Button>
 
 
