@@ -114,8 +114,6 @@ const get_candidate_questions_answer_responses = useFrappePostCall("scrutin.api.
 
 
 
-
-
 // TEST PAGE API
 const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_test.get_question_with_navigation")
 
@@ -177,14 +175,6 @@ const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_tes
 
 
 const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
-
-
-
-const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
-
-
-const countdown_timer = useFrappePostCall("scrutin.api.candidate_test.countdown_timer")
-
 
 
 
@@ -588,25 +578,6 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
         });
       }}>
         get_candidate_test_progress_for_test_page
-      </Button>
-
-
-      <Button onClick={() => {
-        mark_test_completed.call({
-        candidate_id: "v4qp61h4m8",
-        test_id: "36se65gll1"
-        });
-      }}>
-        mark_test_completed
-      </Button>
-
-
-      <Button onClick={() => {
-        countdown_timer.call({
-        seconds: 10
-        });
-      }}>
-        Timer
       </Button>
 
 

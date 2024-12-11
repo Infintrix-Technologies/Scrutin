@@ -200,7 +200,7 @@ def get_candidate_test_response_report(candidate_id):
                 correct_count += 1
 
         total_test_questions = len(questions)
-        accuracy = (correct_count / total_test_questions * 100) if total_test_questions else 0
+        accuracy = (correct_count / total_questions) * 100
         total_accuracy += accuracy
 
         # Update test details
