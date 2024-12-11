@@ -1,4 +1,5 @@
 import frappe 
+import time
 from frappe.query_builder import DocType
 from frappe.utils import now
 
@@ -906,4 +907,16 @@ def update_job_applicant_status(applicant_id):
 
 
 
+@frappe.whitelist()
+def countdown_timer(seconds):
+    time_updates = []
+    for remaining in range(seconds, 0, -1):
+        mins, secs = divmod(remaining, 60)
+        timeformat = '{:02d}:{:02d}'.format(mins, secs)
+        time_updates.append(timeformat)
+        print(timeformat, end='\r', flush=True)  # Print in real-time
+        time.sleep(1)
+    time_updates.append("00:00\nTime's up!")
+    print("00:00\nTime's up!")  # Final message
+    return time_updates
 
