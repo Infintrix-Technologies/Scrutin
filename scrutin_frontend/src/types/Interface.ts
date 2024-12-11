@@ -10,7 +10,7 @@ export interface GlobalStateProviderQuestion {
   message: {
     test: {
       test: {
-        name: string;
+        test_id: string;
         title: string;
       };
       current_question: {

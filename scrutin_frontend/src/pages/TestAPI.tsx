@@ -590,8 +590,8 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
 
       <Button onClick={() => {
         mark_test_completed.call({
-        candidate_id: "97c5oqlsf5",
-        test_name: "36se65gll1"
+        candidate_id: "v4qp61h4m8",
+        test_id: "36se65gll1"
         });
       }}>
         mark_test_completed
