@@ -417,6 +417,7 @@ def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
     else:
         assessment_id = None
 
+        
 
     tests_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
@@ -456,6 +457,16 @@ def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
         )
         questions = question_query.run(as_dict=True)
 
+        question_count_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .select(fn.Count(ScrutinTestQuestion.question).as_("total_questions"))
+            .where(ScrutinTest.name == test_name)
+        )
+        question_count_result = question_count_query.run(as_dict=True)
+        total_questions = question_count_result[0]['total_questions'] if question_count_result else 0
+
         # Check correctness and calculate statistics
         correct_count = 0
         for question in questions:
@@ -463,8 +474,7 @@ def get_candidate_test_response_report_for_assessment_detail_page(candidate_id):
             if question["is_correct"]:
                 correct_count += 1
 
-        total_test_questions = len(questions)
-        accuracy = (correct_count / total_test_questions * 100) if total_test_questions else 0
+        accuracy = (correct_count / total_questions * 100) 
         total_accuracy += accuracy
 
         # Append test result to response
