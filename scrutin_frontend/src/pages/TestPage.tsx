@@ -11,6 +11,7 @@ import { CurrentQuestionOption } from "@/types/Interface";
 import { useNavigate, useParams } from "react-router-dom";
 import NotFound from "./NotFound";
 import { useGlobalState } from "@/utils/StateProvider";
+import Forbidden from "./Forbidden";
 
 const TestPage = () => {
   const { candidate_id } = useParams();
@@ -22,23 +23,11 @@ const TestPage = () => {
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.add_scrutin_question_response"
   );
-  // const { call: completeAssessment } = useFrappePostCall(
-  //   "scrutin.api.candidate_test.complete_assessment"
-  // );
   const {call:mark_test_completed} = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed");
 
   useEffect(() => {
     updateCurrentQuestion(candidate_id);
   }, [candidate_id]);
-
-    // if (question?.message?.completed) {
-    //   // completeAssessment({
-    //   //   candidate_id,
-    //   // }).then(() => {
-    //     navigate(`/candidacy/${candidate_id}/overview`);
-    //   // });
-    // }
-
 
   const handleSubmit = async () => {
     if (
@@ -89,13 +78,9 @@ const TestPage = () => {
   };
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <NotFound />;
-
-  // if (error) {
-    // if (error.httpStatus === 403) return <Forbidden />;
-    // if (error.httpStatus === 404) return <NotFound />;
-    // return <p>Unexpected error occurred. Please try again later.</p>;
-  // }
+  if (error?.httpStatus === 403) return <Forbidden />;
+  if (error?.httpStatus === 404) return <NotFound />;
+ 
 
   const test = question?.message?.test;
   const currentQuestion = test?.current_question;
