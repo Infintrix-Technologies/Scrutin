@@ -40,7 +40,7 @@ const TestPage = () => {
 
     try {
       const sortedAnswer = Array.isArray(selectedOption)
-        ? JSON.stringify(selectedOption.map(Number).sort((a, b) => a - b))
+        ? JSON.stringify(selectedOption?.map(Number).sort((a, b) => a - b))
         : selectedOption;
 
       await call({
