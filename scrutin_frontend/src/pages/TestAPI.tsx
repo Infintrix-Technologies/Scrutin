@@ -190,6 +190,21 @@ const add_scrutin_test_progress_duration = useFrappePostCall("scrutin.api.test_d
 
 
 
+const get_test_templete_data = useFrappePostCall("scrutin.api.test_template.get_test_templete_data")
+
+
+
+const get_test_details = useFrappePostCall("scrutin.api.test_template.get_test_details")
+
+
+
+const create_scrutin_test_from_template = useFrappePostCall("scrutin.api.test_template.create_scrutin_test_from_template")
+
+
+
+
+
+
 
 
 
@@ -591,6 +606,33 @@ const add_scrutin_test_progress_duration = useFrappePostCall("scrutin.api.test_d
         });
       }}>
         add_scrutin_test_progress_duration
+      </Button>
+
+
+      <Button onClick={() => {
+        get_test_templete_data.call({
+        template_id: "nja77nc2mg",
+        });
+      }}>
+        get_test_templete_data
+      </Button>
+
+
+      <Button onClick={() => {
+        get_test_details.call({
+        test_id: "k9o3uoe1ob",
+        });
+      }}>
+        get_test_details
+      </Button>
+
+
+      <Button onClick={() => {
+        create_scrutin_test_from_template.call({
+        template_id: "nja77nc2mg",
+        });
+      }}>
+        create_scrutin_test_from_template
       </Button>
 
 
