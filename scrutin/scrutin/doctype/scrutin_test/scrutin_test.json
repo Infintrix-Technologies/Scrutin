@@ -1,15 +1,13 @@
 {
- "_comments": "[]",
- "_liked_by": "[]",
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:title",
  "creation": "2024-09-30 17:46:47.103197",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "title",
   "test_questions",
-  "duration",
   "status",
   "job_role",
   "language",
@@ -22,18 +20,14 @@
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "Title"
+   "label": "Title",
+   "unique": 1
   },
   {
    "fieldname": "test_questions",
    "fieldtype": "Table",
    "label": "Test Questions",
    "options": "Scrutin Test Question"
-  },
-  {
-   "fieldname": "duration",
-   "fieldtype": "Duration",
-   "label": "Duration"
   },
   {
    "default": "Draft",
@@ -82,10 +76,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-01 19:20:58.473180",
+ "modified": "2024-12-12 14:27:14.584443",
  "modified_by": "Administrator",
  "module": "Scrutin",
  "name": "Scrutin Test",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
