@@ -72,7 +72,7 @@ def create_scrutin_test_from_template(template_id):
     scrutin_test.insert()
     
     # Parse test_questions JSON
-    test_questions = frappe.parse_json(template['test_questions'])['candidate_ids']
+    test_questions = frappe.parse_json(template['test_questions'])['question_ids']
     
     # Add each question to Scrutin Test Question doctype
     for question_id in test_questions:

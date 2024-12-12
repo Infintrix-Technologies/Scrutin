@@ -188,6 +188,11 @@ from frappe.query_builder import functions as fn
 #     return results
 
 
+
+
+
+
+#this both API are used for the duration and count of the questions show on the test page
 @frappe.whitelist(allow_guest=True)
 def add_scrutin_test_progress_duration(candidate_id):
     try:
@@ -219,8 +224,6 @@ def add_scrutin_test_progress_duration(candidate_id):
     except Exception as e:
         frappe.db.rollback()
         return f"An error occurred: {e}"
-
-
 
 
 
