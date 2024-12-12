@@ -247,7 +247,7 @@ const JobApplicants = () => {
         </TableHeader>
         <TableBody>
           {job_applicants?.map((applicant, index:number) => (            
-            <TableRow key={index} >
+            <TableRow key={index} >   {/*key={applicant.name}   */}
               <TableCell>{applicant.applicant_name}</TableCell>
               <TableCell className="flex py-6">{renderStars(applicant.applicant_rating)}</TableCell>
               <TableCell>{job_openingMap[applicant?.job_title] || 'N/A'}</TableCell>
