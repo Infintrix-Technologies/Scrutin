@@ -34,7 +34,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { JobApplicantActions } from "@/components/JobApplicantActions";
-import { JobApplication } from "@/types/Interface";
+import { JobApplicant, JobApplication } from "@/types/Interface";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -246,7 +246,7 @@ const JobApplicants = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {job_applicants?.map((applicant, index:number) => (            
+          {job_applicants?.map((applicant:JobApplicant, index:number) => (            
             <TableRow key={index} >   {/*key={applicant.name}   */}
               <TableCell>{applicant.applicant_name}</TableCell>
               <TableCell className="flex py-6">{renderStars(applicant.applicant_rating)}</TableCell>

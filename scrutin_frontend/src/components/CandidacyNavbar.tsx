@@ -1,9 +1,9 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import TestProgress from "./TestProgress";
-import { Button } from "./ui/button";
 import { useGlobalState } from "@/utils/StateProvider";
 import { useFrappePostCall } from "frappe-react-sdk";
 import { toast, Toaster } from "react-hot-toast";
+import { RainbowButton } from "./ui/rainbow-button";
 
 const CandidacyNavbar = () => {
   const location = useLocation();
@@ -49,11 +49,12 @@ const CandidacyNavbar = () => {
 
   return (
     <div className="w-full py-2 flex justify-around items-center">
-      <div className="text-xl">Infintrix Technologies</div>
+      <div className="text-xl font-bold">Infintrix Technologies</div>
       {location?.pathname?.includes("/test") && (
         <>
           <TestProgress />
-          <Button onClick={handleNext}>Next</Button>
+          <RainbowButton onClick={handleNext}>Next</RainbowButton>
+          
         </>
       )}
     <Toaster position="top-center" reverseOrder={false} />

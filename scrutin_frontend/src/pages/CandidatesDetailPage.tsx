@@ -98,9 +98,12 @@ import {
 import { CandidateDetailAssessments, CandidateTestResponseReport, AssessmentCustomQuestion } from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+
 
 const CandidatesDetailPage: React.FC = () => {
-  const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
+  // const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
   const [sliderValue, setSliderValue] = React.useState(0);
   const globalState = useGlobalState();
   const params = useParams();
@@ -127,24 +130,110 @@ const CandidatesDetailPage: React.FC = () => {
       candidate_id: candidate_details[0]?.candidate_id,
     }
   );
-
-  // console.log(
-  //   get_candidate_test_response_report,
-  //   "get_candidate_test_response_report"
-  // );
-
+ 
   const candidate_test_response_report =
     get_candidate_test_response_report?.data?.message || [];
-  // console.log(candidate_test_response_report, "candidate_test_response_report");
 
-  const handleRatingChange = (index: number) => {
-    const updatedRatings = [...ratings];
-    updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
-    setRatings(updatedRatings);
-  };
+  // const handleRatingChange = (index: number) => {
+  //   const updatedRatings = [...ratings];
+  //   updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
+  //   setRatings(updatedRatings);
+  // };
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY hh:mm A");
   };
+
+
+  const handleDownloadPDF = () => {
+    const candidateDetails = candidate_details[0];
+    const responseReport = get_candidate_test_response_report?.data?.message;
+  
+    if (!candidateDetails || !responseReport) {
+      alert("No data available to download.");
+      return;
+    }
+  
+  const doc = new jsPDF();
+  
+    doc.setFontSize(16);
+    doc.text("Candidate Assessment Report", 10, 10);
+    doc.setFontSize(12);
+
+    doc.setFont("helvetica", "normal");
+    doc.text("Candidate Name : ", 10, 20);
+  
+    doc.setFont("helvetica", "bold");
+    doc.text(`${candidateDetails.candidate_name}`, 50, 20);
+    
+    doc.setFont("helvetica", "normal");
+    doc.text("Candidate Email : ", 10, 30);
+    
+    doc.setFont("helvetica", "bold");
+    doc.text(`${candidateDetails.job_applicant}`, 50, 30);
+  
+    doc.setFont("helvetica", "normal");
+    doc.text("Assessment Name : ", 10, 40);
+  
+    doc.setFont("helvetica", "bold");
+    doc.text(`${candidateDetails.assessment_title}`, 50, 40);
+  
+    doc.setFont("helvetica", "normal");
+    doc.text("Assessment Average : ", 10, 50);
+  
+    doc.setFont("helvetica", "bold");
+    doc.text(`${responseReport.assessment_average.toFixed(0)} %`, 55, 50);
+  
+    doc.setFont("helvetica", "normal");
+    doc.text("Assessment Status : ", 10, 60);
+  
+    doc.setFont("helvetica", "bold");
+    doc.text(`${candidateDetails.status || "Not Completed"}`, 50, 60);
+  
+    doc.line(10, 65, 200, 65);
+  
+    const testTableData = candidate_details.map((assessments:CandidateDetailAssessments) => [
+      formatDate(assessments.invited_on || "N/A"),
+      formatDate(assessments.assessment_completed_at || "Not Completed"),
+      "desktop",
+      "Lahore",
+      assessments.filled_out_only_once_from_ip_address === 0 ? "No" : "Yes",
+      assessments.web_cam_enabled === 0 ? "No" : "Yes",
+      assessments.full_screen_mode_always_active === 0 ? "No" : "Yes",
+      assessments.mouse_always_in_assessment_window === 0 ? "No" : "Yes",
+    ]);
+  
+    
+    autoTable(doc, {
+      head: [["Invited_on", "Completed at", "Device Used", "Location", "Filled only once IP", "Webcam", "Full-screen","Mouse always in window"]],
+      body: testTableData,
+      startY: 70,
+      styles: { fontSize: 10, cellPadding: 4 },
+      theme: "grid",
+    });
+  
+   
+    const testTableData2 = responseReport.tests.map((test:CandidateTestResponseReport, index:number) => [
+      index + 1,
+      test.test_title,
+      test.test_level,
+      test.total_questions,
+      test.correct_count,
+      test.incorrect_count,
+      test.unanswered_questions,
+      `${test.accuracy.toFixed(0)}%`,
+    ]);
+  
+    autoTable(doc, {
+      head: [["#", "Test Title", "Level", "Total Questions", "Correct", "Incorrect","unanswered" ,"Accuracy"]],
+      body: testTableData2,
+      startY: 120,
+      styles: { fontSize: 10, cellPadding: 4 },
+      theme: "grid",
+    });
+  
+    doc.save(`Assessment_Report_${candidateDetails.candidate_name}.pdf`);
+  };
+  
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <NotFound />;
@@ -232,15 +321,7 @@ const CandidatesDetailPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-start items-start gap-2">
-                    {ratings.map((rating, index) => (
-                      <FaStar
-                        key={index}
-                        className={`cursor-pointer ${
-                          rating === 1 ? "text-yellow-500" : "text-gray-400"
-                        }`}
-                        onClick={() => handleRatingChange(index)}
-                      />
-                    ))}
+                    
                   </div>
                 </div>
                 <div className="flex space-x-4">
@@ -266,7 +347,7 @@ const CandidatesDetailPage: React.FC = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="rounded-full border p-2 hover:bg-green-800">
-                          <FaDownload />
+                          <FaDownload onClick={handleDownloadPDF}/>
                         </button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -324,7 +405,7 @@ const CandidatesDetailPage: React.FC = () => {
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Completed</h3>
                       <p className="text-gray-300">
-                        {assessment.assessment_completed_at || "Not Completed"}
+                        {formatDate(assessment.assessment_completed_at || "Not Completed")}
                       </p>
                     </div>
 

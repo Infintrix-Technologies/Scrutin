@@ -56,7 +56,6 @@ export default function AssessmentOverview() {
     }
   );
   const report_response_query = report?.message;
-  console.log(report, "reportreport");
 
   const allTestsIncomplete = specific_assessment_tests?.tests?.every(
     (test:StartAssessment_And_Continue_Button) => !test.test_completed
@@ -94,7 +93,6 @@ export default function AssessmentOverview() {
                     key={index}
                   >
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      {/* <CheckIcon className="w-5 h-5 text-primary-foreground" /> */}
 
                       {test.answered_questions === test.total_questions ? (
                         <CheckIcon className="w-8 h-8 text-primary-foreground" />
@@ -261,11 +259,15 @@ export default function AssessmentOverview() {
                       <p className="text-gray-500">
                         {report_response_query?.applicant_email}
                       </p>
-                      <div className="mt-2">
+                      <div className="mt-2 flex justify-between items-center">
                         <Badge variant={"secondary"}>
                           {report_response_query?.assessment_name}
                         </Badge>
+                          {/* <FaDownload className="cursor-pointer" 
+                          onClick={generatePDF}
+                          /> */}
                       </div>
+                     
                     </div>
                   </CardContent>
                   <div className="space-y-4 m-4 ">

@@ -40,11 +40,6 @@ export interface TestResponseResult {
   applicant_email: string
 }
 
-export interface Candidate {
-  name: string;
-  score: number;
-  hired: boolean;
-}
 export interface CandidateListDetail {
   email: string;
   status: string;
@@ -71,7 +66,7 @@ export interface TestAssessmentsAccuracy {
   accuracy: number;
 }
 export interface TestResponseReport {
-  tests: TestAssessmentsAccuracy[];
+  tests: TestResponseResult[];
   assessment_average: number;
 }
 export interface AssessmentDetailData {
@@ -89,7 +84,6 @@ export interface AssessmentDetailData {
   test_scores: string;
   title: string;
   test_response_report: TestResponseReport;
-
 }
 
 
@@ -144,6 +138,7 @@ export interface CandidateTestResponseReport {
   total_duration: number;
   finished_time: string;
   test_level:string
+  total_questions:number
 }
 
 export interface CandidateDetailAssessments {
@@ -218,19 +213,9 @@ export interface Create_Assessment {
   language: string;
 }
 
-export interface CandidateAction {
-  candidate_id: string;
-  assessment_name: string;
-  assessment: string;
-  applicant_name: string;
-  job_applicant: string;
-  Assessments: number;
-  invited_on: string;
-  name: string;
-}
 
 export interface CandidateActionsProps {
-  candidate: CandidateAction;
+  candidate: CandidateListDetail;
 }
 
 
