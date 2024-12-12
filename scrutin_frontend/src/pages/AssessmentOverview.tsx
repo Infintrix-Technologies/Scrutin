@@ -38,7 +38,7 @@ export default function AssessmentOverview() {
   );
 
   useEffect(() => {
-    if (specific_assessment_tests.assessment_completed === true) {
+    if (specific_assessment_tests?.assessment_completed === true) {
       call({
         candidate_id,
       });
@@ -58,7 +58,7 @@ export default function AssessmentOverview() {
   const report_response_query = report?.message;
   console.log(report, "reportreport");
 
-  const allTestsIncomplete = specific_assessment_tests.tests?.every(
+  const allTestsIncomplete = specific_assessment_tests?.tests?.every(
     (test:StartAssessment_And_Continue_Button) => !test.test_completed
   );
   

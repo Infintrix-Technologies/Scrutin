@@ -20,7 +20,7 @@ export const CandidatesList = () => {
   const candidates_query = useFrappeGetCall(
     "scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate"
   );
-  const candidates_query_data = candidates_query.data.message || [];
+  const candidates_query_data = candidates_query?.data?.message || [];
   console.log(candidates_query_data, "get_candidate_details");
 
   const job_applicant_query = useFrappeGetDocList("Job Applicant", {
@@ -62,7 +62,7 @@ export const CandidatesList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {candidates_query_data.map((candidate: CandidateListDetail, index:number) => (          
+        {candidates_query_data?.map((candidate: CandidateListDetail, index:number) => (          
             <TableRow key={index}>
               <TableCell
                 className="cursor-pointer"

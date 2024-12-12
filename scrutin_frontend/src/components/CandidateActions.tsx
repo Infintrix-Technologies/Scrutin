@@ -18,7 +18,7 @@ export const CandidateActions: React.FC<CandidateActionsProps> = ({ candidate })
 
   const handleDelete = (name: string) => {
     console.log(name,"name=============");
-    delete_api?.deleteDoc('Scrutin Candidate', name);
+    delete_api.deleteDoc('Scrutin Candidate', name);
   };
 
   return (
