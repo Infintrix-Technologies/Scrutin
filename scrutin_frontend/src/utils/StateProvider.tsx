@@ -20,6 +20,8 @@ interface GlobalStateContextProps {
     updateCurrentQuestion : (candidate_id:string|undefined) => void;
     loading: boolean
     error: any | null
+    selectedOption: string | string[] | null;
+    setSelectedOption: Dispatch<SetStateAction<string | string[] | null>>;
     
 }
 
@@ -33,6 +35,8 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
     const question = next_question_api.result
     const loading = next_question_api.loading
     const error = next_question_api.error
+    const [selectedOption, setSelectedOption] = useState<string | string[] | null>(null);
+
     // const { candidate_id } = useParams();
 
     const updateCurrentQuestion = async (candidate_id:string|null=null) => {
@@ -67,9 +71,23 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
 
 
     return (
-        <GlobalStateContext.Provider value={{ modals, setModals,openModal, triggerReload, setTriggerReload , question,updateCurrentQuestion,loading ,error}}>
-            {children}
-        </GlobalStateContext.Provider>
+        <GlobalStateContext.Provider
+        value={{
+            modals,
+            setModals,
+            openModal,
+            triggerReload,
+            setTriggerReload,
+            question,
+            updateCurrentQuestion,
+            loading,
+            error,
+            selectedOption,
+            setSelectedOption,
+        }}
+    >
+        {children}
+    </GlobalStateContext.Provider>
     )
 }
 
