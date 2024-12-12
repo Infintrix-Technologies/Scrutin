@@ -3,6 +3,7 @@ import TestProgress from "./TestProgress";
 import { Button } from "./ui/button";
 import { useGlobalState } from "@/utils/StateProvider";
 import { useFrappePostCall } from "frappe-react-sdk";
+import { toast, Toaster } from "react-hot-toast";
 
 const CandidacyNavbar = () => {
   const location = useLocation();
@@ -14,7 +15,7 @@ const CandidacyNavbar = () => {
 
   const handleNext = async () => {
     if (!selectedOption || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
-      // toast.error("Select an option before proceeding.");
+      toast.error("Select an option before submitting.");
       return;
     }
 
@@ -36,10 +37,10 @@ const CandidacyNavbar = () => {
         });
         navigate(`/candidacy/${candidate_id}/overview`);
       } else {
-        updateCurrentQuestion(candidate_id); // Move to the next question
+        updateCurrentQuestion(candidate_id); 
       }
 
-      setSelectedOption(null); // Reset the selected option
+      setSelectedOption(null); 
     } catch (error) {
       console.log(error, "error");
       // toast.error("There was an issue submitting your response. Please try again.");
@@ -55,6 +56,7 @@ const CandidacyNavbar = () => {
           <Button onClick={handleNext}>Next</Button>
         </>
       )}
+    <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };
