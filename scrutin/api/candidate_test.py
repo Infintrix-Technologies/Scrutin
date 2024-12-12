@@ -2,6 +2,7 @@ import frappe
 import time
 from frappe.query_builder import DocType
 from frappe.utils import now
+from frappe.query_builder import functions as fn
 
 
 
@@ -10,6 +11,22 @@ from frappe.utils import now
 @frappe.whitelist(allow_guest=True)
 def add_scrutin_test_progress(candidate_id, test_name, started_at):
     try:
+        ScrutinTest = DocType("Scrutin Test")
+        ScrutinTestQuestion = DocType("Scrutin Test Question")
+        ScrutinQuestion = DocType("Scrutin Question")
+
+        # Query to get the total duration of the test
+        duration_query = (
+            frappe.qb.from_(ScrutinTestQuestion)
+            .inner_join(ScrutinTest)
+            .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+            .inner_join(ScrutinQuestion)
+            .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+            .select(fn.Sum(ScrutinQuestion.duration).as_("total_duration"))
+            .where(ScrutinTest.name == test_name)
+        )
+        duration_result = duration_query.run(as_dict=True)
+        total_duration = duration_result[0]['total_duration'] if duration_result else 0
         # Fetch the Scrutin Candidate document
         candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
         
@@ -17,6 +34,7 @@ def add_scrutin_test_progress(candidate_id, test_name, started_at):
         candidate.append("test_progress", {
             "test": test_name,
             "started_at": started_at or now(),
+            "duration": total_duration,
         })
 
         # Save the document to commit the changes

@@ -1,4 +1,6 @@
 import time
+import frappe
+from datetime import datetime, timedelta
 
 def countdown_timer(seconds):
     time_updates = []
@@ -15,3 +17,30 @@ def countdown_timer(seconds):
 countdown_timer(20)
 
 
+
+
+
+#Example Function how to start a timer in frappe framework
+def start_timer(duration):
+    # Save the timer start time and duration
+    timer_doc = frappe.get_doc({
+        "doctype": "Timer",
+        "start_time": datetime.now(),
+        "duration": duration
+    })
+    timer_doc.insert()
+    return timer_doc.name
+
+@frappe.whitelist()
+def get_timer_status(timer_name):
+    # Fetch the timer details
+    timer_doc = frappe.get_doc("Timer", timer_name)
+    start_time = timer_doc.start_time
+    duration = timer_doc.duration
+    end_time = start_time + timedelta(seconds=duration)
+    remaining_time = (end_time - datetime.now()).total_seconds()
+    return {
+        "start_time": start_time,
+        "duration": duration,
+        "remaining_time": max(0, remaining_time)
+    }

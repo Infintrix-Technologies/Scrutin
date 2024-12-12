@@ -186,6 +186,9 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
 
 
 
+const add_scrutin_test_progress_duration = useFrappePostCall("scrutin.api.test_duration.add_scrutin_test_progress_duration")
+
+
 
 
 
@@ -578,6 +581,16 @@ const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api
         });
       }}>
         get_candidate_test_progress_for_test_page
+      </Button>
+
+
+
+      <Button onClick={() => {
+        add_scrutin_test_progress_duration.call({
+        candidate_id: "97c5oqlsf5",
+        });
+      }}>
+        add_scrutin_test_progress_duration
       </Button>
 
 
