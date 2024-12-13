@@ -563,7 +563,6 @@ def get_current_question(candidate_id):
             add_scrutin_test_progress(candidate_id, test_id, None)
 
         if are_all_questions_answered(test_id, candidate_id):
-            # mark_test_completed(candidate_id, test_id)
             current_test_index += 1
         else:
             break
