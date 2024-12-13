@@ -232,3 +232,16 @@ export interface StartAssessment_And_Continue_Button {
   title: string;
   test_completed: boolean;
 }
+
+export interface TestProgressResult {
+  test: string;
+  duration: number;  
+  started_at: string;  
+  remaining_time: number; 
+  total_questions: number;
+  show_question: number;
+}
+export interface Test_Time_and_Questions {
+  message: TestProgressResult[];
+}
+

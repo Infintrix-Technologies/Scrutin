@@ -146,7 +146,7 @@ export default function AssessmentOverview() {
               )}
               <div
                 className="flex flex-col items-center text-center space-y-2"
-                onClick={() => globalState.openModal("test_resutls", true)}
+                onClick={() => globalState.openModal("test_resutls", specific_assessment_tests.assessment_completed == true)}
               >
                 <div className="w-12 h-12 rounded-full cursor-pointer bg-secondary flex items-center justify-center">
                   <EyeIcon className="w-8 h-8 text-secondary-foreground" />
