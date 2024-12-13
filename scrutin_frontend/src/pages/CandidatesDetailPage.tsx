@@ -123,6 +123,8 @@ const CandidatesDetailPage: React.FC = () => {
   const send_email_to_candidate_test_response_report = useFrappePostCall(
     "scrutin.api.test_response_report.send_email_to_candidate_test_response_report"
   );
+  const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
+
 
   const get_candidate_test_response_report = useFrappeGetCall(
     "scrutin.api.test_response_report.get_candidate_test_response_report",
@@ -379,7 +381,13 @@ const CandidatesDetailPage: React.FC = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-green-800">
+                        <button className="rounded-full border p-2 hover:bg-green-800"
+                        onClick={() => {
+                          update_job_applicant_status.call({
+                          applicant_id: email,
+                          });
+                        }}
+                        >
                           <FaUserTimes />
                         </button>
                       </TooltipTrigger>

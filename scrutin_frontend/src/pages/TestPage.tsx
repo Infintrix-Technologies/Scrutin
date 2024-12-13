@@ -13,7 +13,7 @@ import Forbidden from "./Forbidden";
 const TestPage = () => {
   const { candidate_id } = useParams();
   const { question, selectedOption, setSelectedOption, error, loading,updateCurrentQuestion } = useGlobalState();
-  
+  console.log(question,"question")
   useEffect(() => {
     updateCurrentQuestion(candidate_id);
   }, [candidate_id]);

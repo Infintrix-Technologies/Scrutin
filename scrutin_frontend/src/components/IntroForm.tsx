@@ -112,7 +112,7 @@ export default function IntroForm() {
                 I have read and I accept the{" "}
                 <Link
                   to="#"
-                  target="_blank"
+                  // target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
                 >
@@ -121,7 +121,7 @@ export default function IntroForm() {
                 and{" "}
                 <Link
                   to="#"
-                  target="_blank"
+                  // target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
                 >
