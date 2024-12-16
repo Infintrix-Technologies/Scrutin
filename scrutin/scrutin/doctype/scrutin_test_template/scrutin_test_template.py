@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class TestTemplate(Document):
+class ScrutinTestTemplate(Document):
 	pass
