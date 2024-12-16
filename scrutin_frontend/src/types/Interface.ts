@@ -8,7 +8,9 @@ export interface AssessmentType {
 
 export interface GlobalStateProviderQuestion {
   message: {
+    message:string,
     test: {
+      remaining_time: number;
       test: {
         test_id: string;
         title: string;
@@ -20,6 +22,8 @@ export interface GlobalStateProviderQuestion {
         options: { value: string; label: string }[];
       };
       last_test_question: boolean;
+      show_no_of_test_question:number
+      total_no_of_question:number
     };
     completed?: boolean;
   };
@@ -245,3 +249,6 @@ export interface Test_Time_and_Questions {
   message: TestProgressResult[];
 }
 
+export interface AssessmentsListProps {
+  search: string; 
+}

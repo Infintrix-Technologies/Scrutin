@@ -242,9 +242,6 @@ const CandidatesDetailPage: React.FC = () => {
 
   return (
     <div className="px-14">
-      {candidate_details.map((assessment: CandidateDetailAssessments, i: number) => {
-        return (
-          <div key={i}>
             <header className="flex  justify-between px-4 py-3 border-b">
               <div className="flex items-center gap-3">
                 <Button
@@ -261,14 +258,14 @@ const CandidatesDetailPage: React.FC = () => {
 
                 <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
                   <h1 className="text-base font-semibold">
-                    {assessment.candidate_name}
+                    {candidate_details[0].candidate_name}
                   </h1>
                   <Link
                     // to="mailto:muqeet@infintrotech.com"
                     to="#"
                     className="text-sm text-muted-foreground hover:underline"
                   >
-                    {assessment.job_applicant}
+                    {candidate_details[0].job_applicant}
                   </Link>
                 </div>
               </div>
@@ -312,19 +309,25 @@ const CandidatesDetailPage: React.FC = () => {
                 </div>
               </div>
             </header>
+       
 
+      {candidate_details.map((assessment: CandidateDetailAssessments, i: number) => {
+        console.log(candidate_details.length,"assessmentassessment")
+        return (
+          <div key={i}>
+         
             <Card className="container m-auto p-5 mt-4">
-              <div className="flex justify-between items-center">
+              <div className="block md:flex justify-between items-center">
                 <div className="flex flex-col justify-center">
-                  <div className="flex items-center">
-                    <h2 className="font-bold text-lg">Assessment</h2>
-                    <span className="ml-2">
+                  <div className="flex whitespace-nowrap text-sm md:text-lg items-center justify-center gap-3">
+                    <h2 className="font-bold text-lg">Assessment : </h2>
+                    <span className="">
                       {assessment.assessment_title || "N/A"}
                     </span>
                   </div>
-                  <div className="flex justify-start items-start gap-2">
+                  {/* <div className="flex justify-start items-start gap-2">
                     
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex space-x-4">
                   <TooltipProvider>
@@ -847,7 +850,7 @@ const CandidatesDetailPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="container mx-auto p-6 space-y-6">
+            <div className="container mx-auto py-6 space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Custom questions</CardTitle>

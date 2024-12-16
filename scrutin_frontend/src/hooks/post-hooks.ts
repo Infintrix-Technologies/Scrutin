@@ -9,7 +9,8 @@ export interface UseRetrieveNextQuestion<T> {
     reset: () => void;
 }
 export const useRetrieveNextQuestion = () => {
-  return useFrappePostCall("scrutin.api.candidate_test.get_current_question",
+  return useFrappePostCall("scrutin.api.get_current_question.get_current_question",
+  // return useFrappePostCall("scrutin.api.candidate_test.get_current_question",
     
   );
 };
