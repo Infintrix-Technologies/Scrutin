@@ -203,7 +203,7 @@ const create_scrutin_test_from_template = useFrappePostCall("scrutin.api.test_te
 
 
 
-const get_current_question_for_testing = useFrappePostCall("scrutin.api.timer.get_current_question")
+const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_current_question.get_current_question")
 
 
 
