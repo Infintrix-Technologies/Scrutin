@@ -480,6 +480,7 @@ def get_current_question(candidate_id):
 
     # Fetch test progress details including remaining time and question counts
     test_progress_details = get_candidate_test_progress_for_test_page(candidate_id)
+    duration = 0
     remaining_time = 0
     total_no_of_question = 0
     show_no_of_test_question = 0
@@ -490,6 +491,7 @@ def get_current_question(candidate_id):
                 remaining_time = progress.get('remaining_time', 0)
                 total_no_of_question = progress.get('total_questions', 0)
                 show_no_of_test_question = progress.get('show_question', 0)
+                duration = progress.get('duration', 0)
                 break
 
     update_data = {
@@ -513,7 +515,8 @@ def get_current_question(candidate_id):
             'last_test_question': last_test_question,
             'total_no_of_question': total_no_of_question,
             'show_no_of_test_question': show_no_of_test_question,
-            'remaining_time': remaining_time
+            'remaining_time': remaining_time,
+            "total_duration": duration
         }
     }
 
