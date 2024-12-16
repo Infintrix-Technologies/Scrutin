@@ -923,7 +923,9 @@ def update_job_applicant_status(applicant_id):
     
     # Check if the status is already "Rejected"
     if current_status and current_status[0].get("status") == "Rejected":
-        return f"Status for applicant {applicant_id} is already 'Rejected'."
+        return {"message": f"Status for applicant {applicant_id} is already 'Rejected'.",
+                "rejected": True
+                }
     
     # Update the status to "Rejected"
     (
