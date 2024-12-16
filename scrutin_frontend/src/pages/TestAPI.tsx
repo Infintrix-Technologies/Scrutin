@@ -203,6 +203,7 @@ const create_scrutin_test_from_template = useFrappePostCall("scrutin.api.test_te
 
 
 
+const get_current_question_for_testing = useFrappePostCall("scrutin.api.timer.get_current_question")
 
 
 
@@ -633,6 +634,16 @@ const create_scrutin_test_from_template = useFrappePostCall("scrutin.api.test_te
         });
       }}>
         create_scrutin_test_from_template
+      </Button>
+
+
+
+      <Button onClick={() => {
+        get_current_question_for_testing.call({
+        candidate_id: "97c5oqlsf5",
+        });
+      }}>
+        Testing if time is complete then it will show the next test
       </Button>
 
 
