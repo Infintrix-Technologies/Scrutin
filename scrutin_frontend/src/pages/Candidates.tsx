@@ -10,9 +10,28 @@ import { FaPlus } from "react-icons/fa6";
 import { Input } from "@/components/ui/input";
 import { CandidatesList } from "@/components/CandidatesList";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 
 const Candidates = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || ""); 
+
+    // Update the search parameters when the search term changes
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setSearch(value);
+  
+      // Update the URL with the search term
+      if (value) {
+        searchParams.set("search", value);
+      } else {
+        searchParams.delete("search");
+      }
+      setSearchParams(searchParams);
+    };
+  
   return (
     <div className="px-32">
       <div className="flex justify-between mt-10">
@@ -25,7 +44,12 @@ const Candidates = () => {
 
       <div className="my-3 flex justify-between">
         <div>
-        <Input placeholder="Search" className="w-48"/>
+        <Input
+            placeholder="Search"
+            className="w-48"
+            value={search}
+            onChange={handleSearchChange}
+          />
         </div>
         <div className="flex gap-3">
           <Select>
@@ -84,7 +108,7 @@ const Candidates = () => {
         </div>
       </div>
       <div>
-        <CandidatesList/>
+        <CandidatesList search={search}/>
       </div>
     </div>
   );

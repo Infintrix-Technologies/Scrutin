@@ -640,7 +640,7 @@ const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_curr
 
       <Button onClick={() => {
         get_current_question_for_testing.call({
-        candidate_id: "97c5oqlsf5",
+        candidate_id: "k3jas5g82l",
         });
       }}>
         Testing if time is complete then it will show the next test

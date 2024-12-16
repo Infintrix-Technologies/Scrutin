@@ -11,43 +11,49 @@ import {
 import { useFrappeGetCall, useFrappeGetDocList } from "frappe-react-sdk";
 import { CandidateActions } from "./CandidateActions";
 import { useNavigate } from "react-router-dom";
-import { CandidateListDetail } from "../types/Interface";
+import { AssessmentsListProps, CandidateListDetail } from "../types/Interface";
 import dayjs from "dayjs";
 
-export const CandidatesList = () => {
+export const CandidatesList: React.FC<AssessmentsListProps> = ({ search }) => {
   const navigate = useNavigate();
 
-  const candidates_query = useFrappeGetCall(
-    "scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate"
-  );
-  const candidates_query_data = candidates_query?.data?.message || [];
-  console.log(candidates_query_data, "get_candidate_details");
+  const { data: candidatesQuery, isLoading: candidatesLoading } =
+    useFrappeGetCall(
+      "scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate"
+    );
+  const candidatesQueryData = candidatesQuery?.message || [];
 
-  const job_applicant_query = useFrappeGetDocList("Job Applicant", {
-    fields: ["email_id", "applicant_name"],
-    orderBy: {
-      field: "creation",
-      order: "desc",
-    },
-    asDict: true,
-  });
+  const { data: jobApplicants, isLoading: jobApplicantsLoading } =
+    useFrappeGetDocList("Job Applicant", {
+      fields: ["email_id", "applicant_name"],
+      orderBy: {
+        field: "creation",
+        order: "desc",
+      },
+      asDict: true,
+    });
 
-  const applicants = job_applicant_query?.data || [];
-  console.log(applicants, "applicants");
-
-  const applicantMap = applicants.reduce((map, applicant) => {
+  const applicantMap = (jobApplicants || []).reduce((map, applicant) => {
     map[applicant.email_id] = applicant.applicant_name;
     return map;
   }, {});
 
-
   const handleNavigate = (candidateEmail: string) => {
-    console.log("Navigate to candidate details page");
     navigate(`/candidates/${candidateEmail}`);
   };
-  const formatDate = (dateString: string) => {
-    return dayjs(dateString).format("DD-MM-YY hh:mm A");
-  };
+
+  const formatDate = (dateString: string) =>
+    dayjs(dateString).format("DD-MM-YY hh:mm A");
+
+  const filteredCandidates = candidatesQueryData.filter((candidate:CandidateListDetail) =>
+    `${candidate.assessment_name} ${candidate.job_applicant}`
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
+
+  if (candidatesLoading || jobApplicantsLoading) {
+    return <div>Loading candidates...</div>;
+  }
 
   return (
     <Table>
@@ -57,35 +63,40 @@ export const CandidatesList = () => {
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Assessments</TableHead>
-          <TableHead>invited_on</TableHead>
+          <TableHead>Invited On</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {candidates_query_data?.map((candidate: CandidateListDetail, index:number) => (          
+        {filteredCandidates.length > 0 ? (
+          filteredCandidates.map((candidate: CandidateListDetail, index: number) => (
             <TableRow key={index}>
               <TableCell
                 className="cursor-pointer"
-                onClick={() => {
-                  handleNavigate(candidate.job_applicant);
-                }}
+                onClick={() => handleNavigate(candidate.job_applicant)}
               >
                 {applicantMap[candidate.job_applicant] || "N/A"}
               </TableCell>
               <TableCell>{candidate.job_applicant}</TableCell>
               <TableCell>{candidate.Assessments}</TableCell>
-
               <TableCell>{formatDate(candidate.invited_on)}</TableCell>
               <TableCell>
                 <CandidateActions candidate={candidate} />
               </TableCell>
-            </TableRow>          
-        ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center">
+              No candidates found.
+            </TableCell>
+          </TableRow>
+        )}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={4}>
-            Total candidates: {candidates_query_data.length}
+          <TableCell colSpan={5}>
+            Total candidates: {candidatesQueryData.length}
           </TableCell>
         </TableRow>
       </TableFooter>
