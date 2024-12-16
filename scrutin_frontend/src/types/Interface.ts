@@ -161,6 +161,7 @@ export interface CandidateDetailAssessments {
   questions: AssessmentCustomQuestion[];
   webcam_snapshots: (string | null)[];
   assessment_completed_at: string | null;
+  applicant_rating:number
 }
 
 export interface CustomTestQuestions {

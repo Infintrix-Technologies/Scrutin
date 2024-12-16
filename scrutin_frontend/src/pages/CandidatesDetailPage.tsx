@@ -44,6 +44,8 @@ import {
   FaUserTimes,
   FaStar,
   FaChevronRight,
+  FaStarHalfAlt,
+  FaRegStar,
 } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Link, useParams } from "react-router-dom";
@@ -100,6 +102,7 @@ import dayjs from "dayjs";
 import NotFound from "./NotFound";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import toast, { Toaster } from "react-hot-toast";
 
 
 const CandidatesDetailPage: React.FC = () => {
@@ -141,8 +144,46 @@ const CandidatesDetailPage: React.FC = () => {
   //   updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
   //   setRatings(updatedRatings);
   // };
+
+  const renderStars = (rating: number) => {
+    const stars = [];
+    const fullStar = <FaStar className="text-yellow-300"/>;
+    const halfStar = <FaStarHalfAlt className="text-yellow-300"/>;
+    const emptyStar = <FaRegStar className="text-yellow-300"/>;
+
+    const convertedRating = Math.round(rating * 10);
+    const fullStarsCount = Math.floor(convertedRating / 2);
+    const halfStarCount = convertedRating % 2;
+    const emptyStarsCount = 5 - (fullStarsCount + halfStarCount);
+    for (let i = 0; i < fullStarsCount; i++) {
+        stars.push(fullStar);
+    }
+    if (halfStarCount === 1) {
+        stars.push(halfStar);
+    }
+    for (let i = 0; i < emptyStarsCount; i++) {
+        stars.push(emptyStar);
+    }
+
+    return stars;
+};
+
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY hh:mm A");
+  };
+
+  const handleReject = async () => {
+    try {
+      const response = await update_job_applicant_status.call({ applicant_id: email });
+      if (response.message.rejected) {
+        toast.error(response.message.message || 'The applicant has already been rejected.');
+      } else {
+        toast.success('The applicant status has been updated successfully.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('An error occurred while updating the status.');
+    }
   };
 
 
@@ -311,11 +352,10 @@ const CandidatesDetailPage: React.FC = () => {
             </header>
        
 
-      {candidate_details.map((assessment: CandidateDetailAssessments, i: number) => {
-        console.log(candidate_details.length,"assessmentassessment")
+      {candidate_details.map((assessment: CandidateDetailAssessments, index: number) => {
+        // console.log(candidate_details.length,"assessmentassessment")
         return (
-          <div key={i}>
-         
+          <div key={index}>         
             <Card className="container m-auto p-5 mt-4">
               <div className="block md:flex justify-between items-center">
                 <div className="flex flex-col justify-center">
@@ -325,9 +365,9 @@ const CandidatesDetailPage: React.FC = () => {
                       {assessment.assessment_title || "N/A"}
                     </span>
                   </div>
-                  {/* <div className="flex justify-start items-start gap-2">
-                    
-                  </div> */}
+                  <div className="flex justify-start items-start gap-2">
+                  {renderStars(assessment.applicant_rating)}
+                  </div>
                 </div>
                 <div className="flex space-x-4">
                   <TooltipProvider>
@@ -385,11 +425,9 @@ const CandidatesDetailPage: React.FC = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button className="rounded-full border p-2 hover:bg-green-800"
-                        onClick={() => {
-                          update_job_applicant_status.call({
-                          applicant_id: email,
-                          });
-                        }}
+                        
+                          onClick={handleReject}
+
                         >
                           <FaUserTimes />
                         </button>
@@ -399,6 +437,8 @@ const CandidatesDetailPage: React.FC = () => {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
+                  <Toaster position="top-center" reverseOrder={false} />
+
                 </div>
               </div>
             </Card>
