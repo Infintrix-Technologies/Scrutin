@@ -288,26 +288,26 @@ def get_current_question(candidate_id):
     ScrutinTestProgress = DocType("Scrutin Test Progress")
 
     # Check candidate status
-    # status_query = (
-    #     frappe.qb.from_(ScrutinCandidate)
-    #     .select(ScrutinCandidate.status)
-    #     .where(ScrutinCandidate.name == candidate_id)
-    # )
-    # candidate_status_result = status_query.run(as_dict=True)
-    # if candidate_status_result:
-    #     candidate_status = candidate_status_result[0].get('status')
-    #     if candidate_status == "Open" or candidate_status != "Started":
-    #         raise frappe.PermissionError("Candidate status not valid for this operation: 403 Forbidden")
+    status_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.status)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_status_result = status_query.run(as_dict=True)
+    if candidate_status_result:
+        candidate_status = candidate_status_result[0].get('status')
+        if candidate_status == "Open" or candidate_status != "Started":
+            raise frappe.PermissionError("Candidate status not valid for this operation: 403 Forbidden")
 
     # Check if candidate exists
-    # exists_query = (
-    #     frappe.qb.from_(ScrutinCandidate)
-    #     .select(ScrutinCandidate.name)
-    #     .where(ScrutinCandidate.name == candidate_id)
-    # )
-    # candidate_exists = exists_query.run(as_dict=True)
-    # if not candidate_exists:
-    #     raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
+    exists_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.name)
+        .where(ScrutinCandidate.name == candidate_id)
+    )
+    candidate_exists = exists_query.run(as_dict=True)
+    if not candidate_exists:
+        raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
 
     # Helper functions
     def has_test_started(candidate_id, test_id):
