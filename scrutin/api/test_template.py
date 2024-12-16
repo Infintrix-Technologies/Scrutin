@@ -134,7 +134,7 @@ def create_test_template_from_test(test_id):
     test_data = test_details[0]
     
     # Collect question IDs
-    question_ids = [q['name'] for q in test_details]
+    question_ids = [q['question'] for q in test_details]
     test_questions_json = json.dumps({"question_ids": question_ids})
     
     # Create the new document in "Scrutin Test Template" DocType
