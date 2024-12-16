@@ -288,26 +288,26 @@ def get_current_question(candidate_id):
     ScrutinTestProgress = DocType("Scrutin Test Progress")
 
     # Check candidate status
-    status_query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .select(ScrutinCandidate.status)
-        .where(ScrutinCandidate.name == candidate_id)
-    )
-    candidate_status_result = status_query.run(as_dict=True)
-    if candidate_status_result:
-        candidate_status = candidate_status_result[0].get('status')
-        if candidate_status == "Open" or candidate_status != "Started":
-            raise frappe.PermissionError("Candidate status not valid for this operation: 403 Forbidden")
+    # status_query = (
+    #     frappe.qb.from_(ScrutinCandidate)
+    #     .select(ScrutinCandidate.status)
+    #     .where(ScrutinCandidate.name == candidate_id)
+    # )
+    # candidate_status_result = status_query.run(as_dict=True)
+    # if candidate_status_result:
+    #     candidate_status = candidate_status_result[0].get('status')
+    #     if candidate_status == "Open" or candidate_status != "Started":
+    #         raise frappe.PermissionError("Candidate status not valid for this operation: 403 Forbidden")
 
-    # Check if candidate exists
-    exists_query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .select(ScrutinCandidate.name)
-        .where(ScrutinCandidate.name == candidate_id)
-    )
-    candidate_exists = exists_query.run(as_dict=True)
-    if not candidate_exists:
-        raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
+    # # Check if candidate exists
+    # exists_query = (
+    #     frappe.qb.from_(ScrutinCandidate)
+    #     .select(ScrutinCandidate.name)
+    #     .where(ScrutinCandidate.name == candidate_id)
+    # )
+    # candidate_exists = exists_query.run(as_dict=True)
+    # if not candidate_exists:
+    #     raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
 
     # Helper functions
     def has_test_started(candidate_id, test_id):
@@ -480,6 +480,7 @@ def get_current_question(candidate_id):
 
     # Fetch test progress details including remaining time and question counts
     test_progress_details = get_candidate_test_progress_for_test_page(candidate_id)
+    duration = 0
     remaining_time = 0
     total_no_of_question = 0
     show_no_of_test_question = 0
@@ -490,6 +491,7 @@ def get_current_question(candidate_id):
                 remaining_time = progress.get('remaining_time', 0)
                 total_no_of_question = progress.get('total_questions', 0)
                 show_no_of_test_question = progress.get('show_question', 0)
+                duration = progress.get('duration', 0)
                 break
 
     update_data = {
@@ -513,7 +515,8 @@ def get_current_question(candidate_id):
             'last_test_question': last_test_question,
             'total_no_of_question': total_no_of_question,
             'show_no_of_test_question': show_no_of_test_question,
-            'remaining_time': remaining_time
+            'remaining_time': remaining_time,
+            "total_duration": duration
         }
     }
 

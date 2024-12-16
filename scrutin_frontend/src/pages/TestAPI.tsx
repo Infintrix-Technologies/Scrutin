@@ -202,6 +202,10 @@ const create_scrutin_test_from_template = useFrappePostCall("scrutin.api.test_te
 
 
 
+const create_test_template_from_scrutin_test = useFrappePostCall("scrutin.api.test_template.create_test_template_from_test")
+
+
+
 
 const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_current_question.get_current_question")
 
@@ -634,6 +638,16 @@ const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_curr
         });
       }}>
         create_scrutin_test_from_template
+      </Button>
+
+
+
+      <Button onClick={() => {
+        create_test_template_from_scrutin_test.call({
+        test_id: "goodt6rf6d",
+        });
+      }}>
+        create_test_template_from_scrutin_test
       </Button>
 
 

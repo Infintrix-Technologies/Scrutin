@@ -1,14 +1,15 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-12-12 14:36:09.469063",
+ "creation": "2024-12-16 14:28:20.350833",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "title",
   "language",
   "level",
-  "import_test",
+  "test_format",
+  "status",
   "test_questions",
   "description"
  ],
@@ -16,7 +17,6 @@
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Title"
   },
   {
@@ -33,6 +33,20 @@
    "options": "Beginner\nIntermediate\nExpert"
   },
   {
+   "default": "Multiple-choice",
+   "fieldname": "test_format",
+   "fieldtype": "Select",
+   "label": "Test Format",
+   "options": "Multiple-choice\nCoding\nTyping\nQuestionnaire\nSimulation\u00a0\u00a0(0)"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Published\nDraft"
+  },
+  {
    "fieldname": "test_questions",
    "fieldtype": "JSON",
    "label": "Test Questions"
@@ -41,20 +55,14 @@
    "fieldname": "description",
    "fieldtype": "Long Text",
    "label": "Description"
-  },
-  {
-   "default": "0",
-   "fieldname": "import_test",
-   "fieldtype": "Check",
-   "label": "Import as Scrutin Test"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-12 19:54:14.022365",
+ "modified": "2024-12-16 14:33:15.185803",
  "modified_by": "Administrator",
  "module": "Scrutin",
- "name": "Test Template",
+ "name": "Scrutin Test Template",
  "owner": "Administrator",
  "permissions": [
   {

@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestTestTemplate(FrappeTestCase):
+class TestScrutinTestTemplate(FrappeTestCase):
 	pass
