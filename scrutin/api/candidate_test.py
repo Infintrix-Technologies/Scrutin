@@ -912,14 +912,28 @@ def update_job_applicant_rating(applicant_id, rating):
 
 @frappe.whitelist()
 def update_job_applicant_status(applicant_id):
-
     JobApplicant = DocType("Job Applicant")
+    
+    # Fetch the current status of the applicant
+    current_status = (
+        frappe.qb.from_(JobApplicant)
+        .select(JobApplicant.status)
+        .where(JobApplicant.name == applicant_id)
+    ).run(as_dict=True)
+    
+    # Check if the status is already "Rejected"
+    if current_status and current_status[0].get("status") == "Rejected":
+        return f"Status for applicant {applicant_id} is already 'Rejected'."
+    
+    # Update the status to "Rejected"
     (
         frappe.qb.update(JobApplicant)
         .set(JobApplicant.status, "Rejected")
         .where(JobApplicant.name == applicant_id)
     ).run()
+    
     return f"Status for applicant {applicant_id} has been updated successfully."
+
 
 
 
