@@ -533,7 +533,7 @@ def get_combined_candidate_detail_with_snapshot(email):
             ScrutinCandidate.job_applicant,
             ScrutinCandidate.name.as_("candidate_id"),
             JobApplicant.applicant_name.as_("candidate_name"),
-            JobApplicant.rating,
+            JobApplicant.applicant_rating,
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
             ScrutinCandidate.assessment_completed_at,
