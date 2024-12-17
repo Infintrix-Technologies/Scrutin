@@ -185,13 +185,8 @@ def create_candidate(assessment, job_applicant):
         )
     )
     existing_candidate = existing_candidate_query.run(as_dict=True)
-
-    if existing_candidate:
-        existing_candidate_doc = frappe.get_doc("Scrutin Candidate", existing_candidate[0]["name"])
-        
-        job_applicant_doc = frappe.get_doc("Job Applicant", job_applicant)
-        if existing_candidate_doc.status == job_applicant_doc.status:
-            return {"message": _("Candidate with the same email and status already exists."), "candidate": existing_candidate_doc}
+    if existing_candidate and existing_candidate[0]["name"]:
+        return {"message": _("Candidate with the same email and status already exists.")}
     
     # Create a new Scrutin Candidate
     scrutin_candidate = frappe.get_doc(
@@ -228,7 +223,7 @@ def create_candidate(assessment, job_applicant):
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Failed to send email to candidate")
     
-    return {"message": message, "candidate": scrutin_candidate}
+    return "Candidate Create Successfully"
 
 
 
