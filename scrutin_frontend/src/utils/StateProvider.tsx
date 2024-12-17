@@ -50,6 +50,8 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
         "communication_skills_assessment": { open: false },
         "review_answer": { open: false },
         "test_resutls": { open: false },
+        "candidate_send_invite": { open: false },
+
   });
 
   const [triggerReload, setTriggerReload] = useState(false);
