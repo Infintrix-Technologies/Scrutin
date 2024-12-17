@@ -35,7 +35,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import { Badge } from "@/components/ui/badge";
 import {
   FaQuestionCircle,
@@ -60,7 +59,7 @@ import {
 } from "react-icons/fa";
 import { RxTimer } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
-import { Pencil1Icon, StarIcon } from "@radix-ui/react-icons";
+import { Pencil1Icon } from "@radix-ui/react-icons";
 import {
   Dialog,
   DialogClose,
@@ -72,19 +71,16 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Eye } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useGlobalState } from "@/utils/StateProvider";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaClock, FaLanguage, FaChartLine } from "react-icons/fa";
 import { MdCheckCircle, MdTimer } from "react-icons/md";
 import { VscTypeHierarchySuper } from "react-icons/vsc";
 import { AiOutlineBarChart } from "react-icons/ai";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,18 +102,20 @@ import toast, { Toaster } from "react-hot-toast";
 
 
 const CandidatesDetailPage: React.FC = () => {
-  // const [ratings, setRatings] = React.useState<number[]>(Array(5).fill(0));
   const [sliderValue, setSliderValue] = React.useState(0);
+  const [updatedRatings, setUpdatedRatings] = React.useState<{ [key: string]: number }>({});
+  const [ratingUpdated, setRatingUpdated] = React.useState(false); 
   const globalState = useGlobalState();
   const params = useParams();
   const email = params.email || null;
+
   const handleSliderChange = (value: number) => {
     setSliderValue(value);
   };
 
   const { data, isLoading, error } = useFrappeGetCall(
     "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
-    { email: email }
+    { email: email , ratingUpdated: ratingUpdated}
   );
 
   const candidate_details = data?.message?.candidate_assessment || [];
@@ -138,41 +136,84 @@ const CandidatesDetailPage: React.FC = () => {
  
   const candidate_test_response_report =
     get_candidate_test_response_report?.data?.message || [];
-
-  // const handleRatingChange = (index: number) => {
-  //   const updatedRatings = [...ratings];
-  //   updatedRatings[index] = updatedRatings[index] === 0 ? 1 : 0;
-  //   setRatings(updatedRatings);
-  // };
-
-  const renderStars = (rating: number) => {
+  const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_rating")
+  const renderStars = (
+    rating: number,
+    onClickHandler?: (rating: number) => void
+  ) => {
     const stars = [];
-    const fullStar = <FaStar className="text-yellow-300"/>;
-    const halfStar = <FaStarHalfAlt className="text-yellow-300"/>;
-    const emptyStar = <FaRegStar className="text-yellow-300"/>;
+    const fullStar = <FaStar className="text-yellow-300" />;
+    const halfStar = <FaStarHalfAlt className="text-yellow-300" />;
+    const emptyStar = <FaRegStar className="text-yellow-300" />;
 
     const convertedRating = Math.round(rating * 10);
     const fullStarsCount = Math.floor(convertedRating / 2);
     const halfStarCount = convertedRating % 2;
     const emptyStarsCount = 5 - (fullStarsCount + halfStarCount);
+
     for (let i = 0; i < fullStarsCount; i++) {
-        stars.push(fullStar);
+      stars.push(
+        <span
+          key={`full-${i}`}
+          onClick={() => onClickHandler && onClickHandler((i + 1) * 0.2)}
+        >
+          {fullStar}
+        </span>
+      );
     }
     if (halfStarCount === 1) {
-        stars.push(halfStar);
+      stars.push(
+        <span
+          key="half"
+          onClick={() => onClickHandler && onClickHandler(fullStarsCount * 0.2 + 0.1)}
+        >
+          {halfStar}
+        </span>
+      );
     }
     for (let i = 0; i < emptyStarsCount; i++) {
-        stars.push(emptyStar);
+      stars.push(
+        <span
+          key={`empty-${i}`}
+          onClick={() =>
+            onClickHandler &&
+            onClickHandler((fullStarsCount + i + 1) * 0.2)
+          }
+        >
+          {emptyStar}
+        </span>
+      );
     }
 
     return stars;
-};
+  };
+  const handleRatingUpdate = async (assessmentId: string, rating: number) => {
+    try {
+      const roundedRating = Math.round(rating * 10) / 10;
 
+      const response = await update_job_applicant_rating.call({
+        applicant_id: email,
+        rating: roundedRating,
+      });
+
+      if (response.message) {
+        toast.success(response.message);
+
+        setUpdatedRatings((prevRatings) => ({
+          ...prevRatings,
+          [assessmentId]: roundedRating,
+        }));
+        setRatingUpdated(true);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update rating!");
+    }
+  };
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY hh:mm A");
   };
-
-  const handleReject = async () => {
+  const handleRejectApplicant = async () => {
     try {
       const response = await update_job_applicant_status.call({ applicant_id: email });
       if (response.message.rejected) {
@@ -185,8 +226,6 @@ const CandidatesDetailPage: React.FC = () => {
       toast.error('An error occurred while updating the status.');
     }
   };
-
-
   const handleDownloadPDF = () => {
     const candidateDetails = candidate_details[0];
     const responseReport = get_candidate_test_response_report?.data?.message;
@@ -277,83 +316,81 @@ const CandidatesDetailPage: React.FC = () => {
     doc.save(`Assessment_Report_${candidateDetails.candidate_name}.pdf`);
   };
   
-
   if (isLoading) return <p>Loading...</p>;
   if (error) return <NotFound />;
 
   return (
     <div className="px-14">
-            <header className="flex  justify-between px-4 py-3 border-b">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
-                >
-                  
-                  <Link to={'/candidates'}>
-                  <FaChevronLeft className="h-4 w-4" />
-                  </Link>
-                  <span className="sr-only">Go back</span>
-                </Button>
+      <header className="flex  justify-between px-4 py-3 border-b">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
+          >
+            
+            <Link to={'/candidates'}>
+            <FaChevronLeft className="h-4 w-4" />
+            </Link>
+            <span className="sr-only">Go back</span>
+          </Button>
 
-                <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
-                  <h1 className="text-base font-semibold">
-                    {candidate_details[0].candidate_name}
-                  </h1>
-                  <Link
-                    // to="mailto:muqeet@infintrotech.com"
-                    to="#"
-                    className="text-sm text-muted-foreground hover:underline"
-                  >
-                    {candidate_details[0].job_applicant}
-                  </Link>
-                </div>
-              </div>
+          <div className="flex flex-col sm:flex-col px-2 gap-0 sm:gap-2">
+            <h1 className="text-base font-semibold">
+              {candidate_details[0].candidate_name}
+            </h1>
+            <Link
+              // to="mailto:muqeet@infintrotech.com"
+              to="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
+              {candidate_details[0].job_applicant}
+            </Link>
+          </div>
+        </div>
 
-              <div className="flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="hidden sm:flex items-center gap-2"
-                    >
-                      Invite for an assessment
-                      <BsChevronDown className="h-4 w-4 opacity-50" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Technical Assessment</DropdownMenuItem>
-                    <DropdownMenuItem>Coding Challenge</DropdownMenuItem>
-                    <DropdownMenuItem>System Design</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden sm:flex items-center gap-2"
+              >
+                Invite for an assessment
+                <BsChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Technical Assessment</DropdownMenuItem>
+              <DropdownMenuItem>Coding Challenge</DropdownMenuItem>
+              <DropdownMenuItem>System Design</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-                <Button
-                  size="sm"
-                  className="bg-[#E31B88] hover:bg-[#C41875] text-white"
-                >
-                  Invite
-                </Button>
+          <Button
+            size="sm"
+            className="bg-[#E31B88] hover:bg-[#C41875] text-white"
+          >
+            Invite
+          </Button>
 
-                <div className="hidden sm:flex items-center gap-2 ml-2 text-sm text-muted-foreground">
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <FaChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">Previous</span>
-                  </Button>
-                  <span>1/1</span>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <FaChevronRight className="h-4 w-4" />
-                    <span className="sr-only">Next</span>
-                  </Button>
-                </div>
-              </div>
-            </header>
-       
-
+          <div className="hidden sm:flex items-center gap-2 ml-2 text-sm text-muted-foreground">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <FaChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Previous</span>
+            </Button>
+            <span>1/1</span>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <FaChevronRight className="h-4 w-4" />
+              <span className="sr-only">Next</span>
+            </Button>
+          </div>
+        </div>
+      </header>       
       {candidate_details.map((assessment: CandidateDetailAssessments, index: number) => {
-        // console.log(candidate_details.length,"assessmentassessment")
+        console.log(assessment,"assessmentassessment")
+        const currentRating = updatedRatings[assessment.candidate_id] || assessment.applicant_rating;
         return (
           <div key={index}>         
             <Card className="container m-auto p-5 mt-4">
@@ -366,7 +403,7 @@ const CandidatesDetailPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-start items-start gap-2">
-                  {renderStars(assessment.applicant_rating)}
+                  {renderStars(currentRating)}
                   </div>
                 </div>
                 <div className="flex space-x-4">
@@ -424,10 +461,8 @@ const CandidatesDetailPage: React.FC = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-green-800"
-                        
-                          onClick={handleReject}
-
+                        <button className="rounded-full border p-2 hover:bg-green-800"                        
+                          onClick={handleRejectApplicant}
                         >
                           <FaUserTimes />
                         </button>
@@ -966,9 +1001,11 @@ const CandidatesDetailPage: React.FC = () => {
                       on your impressions and interactions with him or her.
                     </p>
                     <div className="flex items-center gap-1 mt-2">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon key={i} className="w-6 h-6 text-gray-300" />
-                      ))}
+                
+                    {renderStars(
+                  currentRating,
+                  (rating: number) => handleRatingUpdate(assessment.candidate_id, rating)
+                )}
                     </div>
                   </CardHeader>
                   <CardContent className="flex-1">
