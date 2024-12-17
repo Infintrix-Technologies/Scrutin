@@ -211,6 +211,20 @@ const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_curr
 
 
 
+const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite")
+
+
+const assessment_list = useFrappePostCall("scrutin.api.send_invite.assessment_list")
+
+
+
+const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_cheating_checks")
+
+
+
+
+
+
 
 
 // const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
@@ -658,6 +672,40 @@ const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_curr
         });
       }}>
         Testing if time is complete then it will show the next test
+      </Button>
+
+
+
+      <Button onClick={() => {
+        send_invite.call({
+        assessment: "b5498ajbrs",
+        email_id: "ayeshamalik123@gmail.com"
+        });
+      }}>
+        Send Invite
+      </Button>
+
+
+
+      <Button onClick={() => {
+        assessment_list.call({
+        });
+      }}>
+        Assessment List
+      </Button>
+
+
+
+      <Button onClick={() => {
+        anti_cheating_checks.call({
+          candidate_id: "97c5oqlsf5",
+          ip_address: 1,
+          web_cam: 0,
+          full_screen: 0,
+          mouse: 1,
+        });
+      }}>
+        Anti Cheating Checks
       </Button>
 
 
