@@ -38,50 +38,6 @@ import { JobApplicant, JobApplication } from "@/types/Interface";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  // const renderStars = (rating: number) => {
-  //   let stars = [];
-  //   const fullStar = <FaStar className="text-yellow-300"/>;
-  //   const halfStar = <FaStarHalfAlt className="text-yellow-300"/>;
-  //   const emptyStar = <FaRegStar className="text-yellow-300"/>;
-  
-  //   switch (rating) {
-  //     case 1:
-  //       stars = [fullStar, fullStar, fullStar, fullStar, fullStar];
-  //       break;
-  //     case 0.1:
-  //       stars = [halfStar, emptyStar, emptyStar, emptyStar, emptyStar];
-  //       break;
-  //     case 0.2:
-  //       stars = [fullStar, emptyStar, emptyStar, emptyStar, emptyStar];
-  //       break;
-  //     case 0.3:
-  //       stars = [fullStar, halfStar, emptyStar, emptyStar, emptyStar];
-  //       break;
-  //     case 0.4:
-  //       stars = [fullStar, fullStar, emptyStar, emptyStar, emptyStar];
-  //       break;
-  //     case 0.5:
-  //       stars = [fullStar, fullStar, halfStar, emptyStar, emptyStar];
-  //       break;
-  //     case 0.6:
-  //       stars = [fullStar, fullStar, fullStar, emptyStar, emptyStar];
-  //       break;
-  //     case 0.7:
-  //       stars = [fullStar, fullStar, fullStar, halfStar, emptyStar];
-  //       break;
-  //     case 0.8:
-  //       stars = [fullStar, fullStar, fullStar, fullStar, emptyStar];
-  //       break;
-  //     case 0.9:
-  //       stars = [fullStar, fullStar, fullStar, fullStar, halfStar];
-  //       break;
-  //     default:
-  //       stars = [emptyStar, emptyStar, emptyStar, emptyStar, emptyStar];
-  //   }
-  
-  //   return stars;
-  // };
-  
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStar = <FaStar className="text-yellow-300"/>;
@@ -104,7 +60,6 @@ const JobApplicants = () => {
 
     return stars;
 };
-
 
   const send_invite = useFrappePostCall(
     "scrutin.api.candidate.create_candidate"

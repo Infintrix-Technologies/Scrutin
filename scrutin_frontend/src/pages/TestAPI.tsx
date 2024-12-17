@@ -678,8 +678,8 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 
       <Button onClick={() => {
         send_invite.call({
-        assessment: "b5498ajbrs",
-        email_id: "ayeshamalik123@gmail.com"
+        assessment: "6475tpkkla",
+        email_id: "khawarshadzad856@gmail.com"
         });
       }}>
         Send Invite

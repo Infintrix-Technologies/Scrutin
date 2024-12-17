@@ -31,6 +31,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -45,6 +46,7 @@ import {
   FaChevronRight,
   FaStarHalfAlt,
   FaRegStar,
+  FaPaperPlane,
 } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { Link, useParams } from "react-router-dom";
@@ -81,19 +83,12 @@ import { FaClock, FaLanguage, FaChartLine } from "react-icons/fa";
 import { MdCheckCircle, MdTimer } from "react-icons/md";
 import { VscTypeHierarchySuper } from "react-icons/vsc";
 import { AiOutlineBarChart } from "react-icons/ai";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { FaChevronLeft } from "react-icons/fa6";
-import { BsChevronDown } from "react-icons/bs";
 import {
   useFrappeGetCall,
   useFrappePostCall,
 } from "frappe-react-sdk";
-import { CandidateDetailAssessments, CandidateTestResponseReport, AssessmentCustomQuestion } from "@/types/Interface";
+import { CandidateDetailAssessments, CandidateTestResponseReport, AssessmentCustomQuestion, JobApplicantSelectAssessment } from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
 import { jsPDF } from "jspdf";
@@ -105,6 +100,7 @@ const CandidatesDetailPage: React.FC = () => {
   const [sliderValue, setSliderValue] = React.useState(0);
   const [updatedRatings, setUpdatedRatings] = React.useState<{ [key: string]: number }>({});
   const [ratingUpdated, setRatingUpdated] = React.useState(false); 
+  const [selectedAssessment, setSelectedAssessment] = React.useState<string | null>(null);
   const globalState = useGlobalState();
   const params = useParams();
   const email = params.email || null;
@@ -119,14 +115,17 @@ const CandidatesDetailPage: React.FC = () => {
   );
 
   const candidate_details = data?.message?.candidate_assessment || [];
-  console.log(candidate_details, "candidate_details");
+  // console.log(candidate_details, "candidate_details");
 
   const send_email_to_candidate_test_response_report = useFrappePostCall(
     "scrutin.api.test_response_report.send_email_to_candidate_test_response_report"
   );
   const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
 
-
+  const assessment_list_page_api = useFrappeGetCall("scrutin.api.assessment_data.assessment_list_page_api")
+  const assessment_list_query =
+  assessment_list_page_api?.data?.message || [];
+  // console.log(assessment_list_query,"assessment_list_query")
   const get_candidate_test_response_report = useFrappeGetCall(
     "scrutin.api.test_response_report.get_candidate_test_response_report",
     {
@@ -137,6 +136,40 @@ const CandidatesDetailPage: React.FC = () => {
   const candidate_test_response_report =
     get_candidate_test_response_report?.data?.message || [];
   const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_rating")
+
+   const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite");
+
+   const handleSendInvite = async (event: React.FormEvent) => {
+    event.preventDefault();
+  
+    if (!selectedAssessment) {
+      toast.error("Please select an assessment.");
+      return;
+    }
+  
+    if (!email) {
+      toast.error("Email is not available.");
+      return; 
+    }
+  
+    try {
+      const response = await send_invite.call({
+        assessment: selectedAssessment,
+        email_id: email,
+      });
+  
+      if (response.message.message) {
+        toast.success(response.message.message);
+        globalState.openModal("candidate_send_invite", false);
+        send_invite.reset()
+      }
+    } catch (error) {
+      console.error("Error sending invite:", error);
+      toast.error("Failed to send invite. Please try again.");
+    }
+  };
+  
+
   const renderStars = (
     rating: number,
     onClickHandler?: (rating: number) => void
@@ -197,8 +230,7 @@ const CandidatesDetailPage: React.FC = () => {
       });
 
       if (response.message) {
-        toast.success(response.message);
-
+        // toast.success(response.message);
         setUpdatedRatings((prevRatings) => ({
           ...prevRatings,
           [assessmentId]: roundedRating,
@@ -320,7 +352,7 @@ const CandidatesDetailPage: React.FC = () => {
   if (error) return <NotFound />;
 
   return (
-    <div className="px-14">
+    <div className="">
       <header className="flex  justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-3">
           <Button
@@ -350,29 +382,18 @@ const CandidatesDetailPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="hidden sm:flex items-center gap-2"
-              >
-                Invite for an assessment
-                <BsChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Technical Assessment</DropdownMenuItem>
-              <DropdownMenuItem>Coding Challenge</DropdownMenuItem>
-              <DropdownMenuItem>System Design</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+         
 
           <Button
             size="sm"
-            className="bg-[#E31B88] hover:bg-[#C41875] text-white"
+            className="bg-[#E31B88] hover:bg-[#C41875] text-white flex gap-3"
+            onClick={() =>
+              globalState.openModal("candidate_send_invite", true)
+            }
           >
-            Invite
+           Send Invite 
+            <FaPaperPlane />
+            
           </Button>
 
           <div className="hidden sm:flex items-center gap-2 ml-2 text-sm text-muted-foreground">
@@ -389,10 +410,10 @@ const CandidatesDetailPage: React.FC = () => {
         </div>
       </header>       
       {candidate_details.map((assessment: CandidateDetailAssessments, index: number) => {
-        console.log(assessment,"assessmentassessment")
+        // console.log(assessment,"assessmentassessment")
         const currentRating = updatedRatings[assessment.candidate_id] || assessment.applicant_rating;
         return (
-          <div key={index}>         
+          <div key={index} className="px-4 md:px-14">         
             <Card className="container m-auto p-5 mt-4">
               <div className="block md:flex justify-between items-center">
                 <div className="flex flex-col justify-center">
@@ -1680,6 +1701,65 @@ const CandidatesDetailPage: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+       {/* Send invite to candidate Modal */}
+       <Dialog
+         open={globalState.modals.candidate_send_invite.open}
+         onOpenChange={(open) => {
+           globalState.openModal("candidate_send_invite", open);
+           if (open) {
+             setSelectedAssessment(null); 
+           }
+         }}
+      >
+        
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Send Invitation</DialogTitle>
+            <hr />
+            <DialogDescription>
+              Select any Assessment and click on invite button, send it to the
+              candidate.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSendInvite}>
+
+            <div className="grid gap-4 py-4">
+              
+              <div className="flex justify-between items-center gap-4">
+               
+                <Select
+                    onValueChange={(value) => setSelectedAssessment(value)}>
+                  <SelectTrigger className="">
+                    <SelectValue placeholder="Select Assessment" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {assessment_list_query.map((assessment:JobApplicantSelectAssessment) => (
+                        <SelectItem 
+                        key={assessment.name}
+                          value={assessment.name}
+                        >
+                          {assessment.assessment_name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+               
+                <Button type="submit">
+                Send Invite
+              </Button>
+              </div>
+            </div>
+
+            
+          </form>
+          
+        </DialogContent>
+
+      </Dialog>
+
     </div>
   );
 };
