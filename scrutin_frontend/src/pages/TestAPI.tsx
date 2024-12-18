@@ -223,6 +223,12 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 
 
 
+const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
+
+
+
+const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
+
 
 
 
@@ -706,6 +712,25 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
         });
       }}>
         Anti Cheating Checks
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_webcam_snapshot.call({
+          candidate_id: "97c5oqlsf5",
+        });
+      }}>
+        Candidate Snapshot
+      </Button>
+
+
+      <Button onClick={() => {
+        upload_image.call({
+          candidate_name: "97c5oqlsf5",
+          image_file: "https://cdn.ferrari.com/cms/network/media/img/resize/667401a0cc30da0012c7bb67-laferrari_20240627_cover_768x1024_v4?width=768&height=1024"
+        });
+      }}>
+        Upload Image
       </Button>
 
 
