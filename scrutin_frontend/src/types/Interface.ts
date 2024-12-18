@@ -253,3 +253,16 @@ export interface Test_Time_and_Questions {
 export interface AssessmentsListProps {
   search: string; 
 }
+
+
+export interface JobApplicantSelectAssessment {
+  name: string;
+  assessment_name: string;
+  company: string;
+  language: string;
+  candidate_count: number;
+}
+
+export interface JobApplicantSelectAssessmentResponse {
+  message: JobApplicantSelectAssessment[];
+}

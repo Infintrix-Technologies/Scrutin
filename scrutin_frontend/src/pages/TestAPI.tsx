@@ -679,8 +679,8 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
 
       <Button onClick={() => {
         send_invite.call({
-        assessment: "b5498ajbrs",
-        email_id: "ayeshamalik123@gmail.com"
+        assessment: "6475tpkkla",
+        email_id: "khawarshadzad856@gmail.com"
         });
       }}>
         Send Invite
