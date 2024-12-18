@@ -223,6 +223,7 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 
 
 
+const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
 
 
 
@@ -706,6 +707,15 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
         });
       }}>
         Anti Cheating Checks
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_webcam_snapshot.call({
+          candidate_id: "97c5oqlsf5",
+        });
+      }}>
+        Candidate Snapshot
       </Button>
 
 
