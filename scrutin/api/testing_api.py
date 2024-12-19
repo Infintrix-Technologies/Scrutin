@@ -88,3 +88,51 @@ def upload_image(filedata, candidate_id):
         frappe.log_error(frappe.get_traceback(), 'upload_image')
         return {'status': 'error', 'message': str(e)}
 
+
+
+
+
+@frappe.whitelist()
+def get_file_data(file_id):
+    File = DocType("File")
+
+    file_query = (
+        frappe.qb.from_(File)
+            .select(File.name,
+                    File.file_name,
+                    File.file_size,
+                    File.file_type,
+                    File.is_private,
+                    File.attached_to_doctype,
+                    File.attached_to_name,
+                    File.attached_to_field
+            )
+            .where(File.name == file_id)
+                    
+        )
+    
+    file_data = file_query.run(as_dict=True)
+    return file_data
+
+
+
+
+@frappe.whitelist()
+def add_webcam_snapshot(candidate_id, image):
+    try:
+        # file_doc = save_file('image.png', filedata, 'Scrutin Candidate', candidate_id, is_private=1)
+
+        candidate = frappe.get_doc("Scrutin Candidate", candidate_id)
+        
+        candidate.append("web_cam_snapshots", {
+            "image": image,
+        })
+
+        candidate.save()
+        frappe.db.commit()
+        return f"Webcam snapshots added successfully for candidate {candidate_id}"
+    
+    except Exception as e:
+        frappe.db.rollback()
+        return f"An error occurred: {e}"
+

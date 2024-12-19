@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
-// import LogImg from "../../../scrutin/public/images/bike12.png"
+import LogImg from "../../../scrutin/public/images/ferrari 5.jpg"
 // import { Image } from "@radix-ui/react-avatar";
 //  assets/scrutin/images/bike12.png
 
@@ -222,12 +222,16 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 
 
 
-
 const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
 
 
+const get_file_data = useFrappePostCall("scrutin.api.testing_api.get_file_data")
 
-const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
+
+const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_local_image")
+
+
+
 
 
 
@@ -607,8 +611,8 @@ const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.uplo
 
       <Button onClick={() => {
         comparison_two_candidates_test_response_report.call({
-        candidate_id: "k39k9ek7i1",
-        // candidate_id_2: "37hc0ipka2"
+        candidate_id_1: "k39k9ek7i1",
+        candidate_id_2: "37hc0ipka2"
         });
       }}>
         Compare Two Candidates Responses Reports
@@ -674,7 +678,7 @@ const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.uplo
 
       <Button onClick={() => {
         get_current_question_for_testing.call({
-        candidate_id: "k3jas5g82l",
+        candidate_id: "97c5oqlsf5",
         });
       }}>
         Testing if time is complete then it will show the next test
@@ -706,9 +710,9 @@ const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.uplo
         anti_cheating_checks.call({
           candidate_id: "97c5oqlsf5",
           ip_address: 1,
-          web_cam: 0,
-          full_screen: 0,
-          mouse: 1,
+          web_cam_always_enable: 0,
+          full_screen_always_active: 0,
+          mouse_always_in_test_window: 1,
         });
       }}>
         Anti Cheating Checks
@@ -725,12 +729,21 @@ const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.uplo
 
 
       <Button onClick={() => {
-        upload_image.call({
-          candidate_name: "97c5oqlsf5",
-          image_file: "https://cdn.ferrari.com/cms/network/media/img/resize/667401a0cc30da0012c7bb67-laferrari_20240627_cover_768x1024_v4?width=768&height=1024"
+        get_file_data.call({
+          file_id: "79fc188cb7",
         });
       }}>
-        Upload Image
+        File Data
+      </Button>
+
+
+      <Button onClick={() => {
+        upload_local_image.call({
+          // url: "https://png.pngtree.com/png-clipart/20231210/original/pngtree-black-color-r15-bike-png-image_13809969.png",
+          file_path: "/assets/scrutin/images/ferrari 5.jpg"
+        });
+      }}>
+        Upload Image Into File DocType
       </Button>
 
 
