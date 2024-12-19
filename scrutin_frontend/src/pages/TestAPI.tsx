@@ -228,9 +228,18 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
 const get_file_data = useFrappePostCall("scrutin.api.testing_api.get_file_data")
 
 
-const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_local_image")
+const upload_image_from_url_or_base64 = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
 
 
+const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
+
+
+
+const get_candidate_test_progress_remaining_time = useFrappePostCall("scrutin.api.testing_api.get_candidate_test_progress_remaining_time")
+
+
+
+const test_details_for_overview_page_with_remaining_time = useFrappePostCall("scrutin.api.testing_api.test_details_for_overview_page_with_remaining_time")
 
 
 
@@ -403,7 +412,7 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
 
       <Button onClick={() => {
         test_details_for_overview_page.call({
-          candidate_id: 'g4ckk5b9ml',
+          candidate_id: '97c5oqlsf5',
         });
       }}>
         test_details_for_overview_page
@@ -738,9 +747,44 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
 
 
       <Button onClick={() => {
-        upload_local_image.call({
+        mark_test_completed.call({
+          candidate_id: "97c5oqlsf5",
+          test_id: "goodt6rf6d"
+        });
+      }}>
+        mark_test_completed
+      </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_test_progress_remaining_time.call({
+          candidate_id: "97c5oqlsf5"
+        });
+      }}>
+        get_candidate_test_progress_remaining_time
+      </Button>
+
+
+      <Button onClick={() => {
+        test_details_for_overview_page_with_remaining_time.call({
+          candidate_id: 'k3jas5g82l',
+        });
+      }}>
+        test_details_for_overview_page_with_remaining_time
+      </Button>
+
+
+      <Button onClick={() => {
+        upload_image_from_url_or_base64.call({
           // url: "https://png.pngtree.com/png-clipart/20231210/original/pngtree-black-color-r15-bike-png-image_13809969.png",
-          file_path: "/assets/scrutin/images/ferrari 5.jpg"
+          // file_path: "/assets/scrutin/images/ferrari 5.jpg"
+          data : "http://localhost:8001/files/flower1.png",
+          file_name : "Salman 5ee41c.png",
+          file_type : "PNG",
+          attached_to_doctype : "Scrutin Candidate",
+          attached_to_name : "97c5oqlsf5",
+          // attached_to_field : "image",
+          is_private : 0
         });
       }}>
         Upload Image Into File DocType
@@ -762,3 +806,24 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
 }
 
 export default TestAPI
+
+
+
+
+
+
+
+
+// cmd = uploadfile&
+
+//       doctype=[mydoctype]&
+
+//       isprivate=[0/1]&
+      
+//       docname=[myDocName]&
+
+//       filename=[myFileName]&
+
+//       filedata=[myBase64File]&
+
+//       from_form=1
