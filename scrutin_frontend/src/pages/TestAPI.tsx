@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
-// import LogImg from "../../../scrutin/public/images/bike12.png"
+import LogImg from "../../../scrutin/public/images/ferrari 5.jpg"
 // import { Image } from "@radix-ui/react-avatar";
 //  assets/scrutin/images/bike12.png
 
@@ -223,6 +223,14 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 
 
 const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
+
+
+const get_file_data = useFrappePostCall("scrutin.api.testing_api.get_file_data")
+
+
+const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_local_image")
+
+
 
 
 
@@ -603,8 +611,8 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
 
       <Button onClick={() => {
         comparison_two_candidates_test_response_report.call({
-        candidate_id: "k39k9ek7i1",
-        // candidate_id_2: "37hc0ipka2"
+        candidate_id_1: "k39k9ek7i1",
+        candidate_id_2: "37hc0ipka2"
         });
       }}>
         Compare Two Candidates Responses Reports
@@ -670,7 +678,7 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
 
       <Button onClick={() => {
         get_current_question_for_testing.call({
-        candidate_id: "k3jas5g82l",
+        candidate_id: "97c5oqlsf5",
         });
       }}>
         Testing if time is complete then it will show the next test
@@ -717,6 +725,25 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
         });
       }}>
         Candidate Snapshot
+      </Button>
+
+
+      <Button onClick={() => {
+        get_file_data.call({
+          file_id: "79fc188cb7",
+        });
+      }}>
+        File Data
+      </Button>
+
+
+      <Button onClick={() => {
+        upload_local_image.call({
+          // url: "https://png.pngtree.com/png-clipart/20231210/original/pngtree-black-color-r15-bike-png-image_13809969.png",
+          file_path: "/assets/scrutin/images/ferrari 5.jpg"
+        });
+      }}>
+        Upload Image Into File DocType
       </Button>
 
 
