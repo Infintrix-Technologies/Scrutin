@@ -101,6 +101,10 @@ export interface Specific_Assessment_Overview_Test {
   index: number;
   answered_questions: number;
   unanswered_questions: number;
+
+  test_completed: boolean,
+  remaining_time: null | number,
+  time_completed: boolean
 }
 
 export interface CurrentQuestionOption {
