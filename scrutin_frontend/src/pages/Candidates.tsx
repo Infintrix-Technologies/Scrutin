@@ -10,7 +10,7 @@ import { FaPlus } from "react-icons/fa6";
 import { Input } from "@/components/ui/input";
 import { CandidatesList } from "@/components/CandidatesList";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
 
@@ -36,10 +36,18 @@ const Candidates = () => {
     <div className="px-32">
       <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Candidate</h1>
+        <div className="flex gap-3">
+
+        <Link to="/candidates/candidate_comparison">
+        <Button>
+          Candidate Comparison
+        </Button>
+        </Link>
         <Button>
           <FaPlus className="mr-2" />
           Create Candidate
         </Button>
+        </div>
       </div>
 
       <div className="my-3 flex justify-between">

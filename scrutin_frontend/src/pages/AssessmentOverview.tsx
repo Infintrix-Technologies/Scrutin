@@ -33,12 +33,13 @@ export default function AssessmentOverview() {
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = data?.message || [];
+  console.log(specific_assessment_tests,"specific_assessment_tests")
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.complete_assessment"
   );
 
   useEffect(() => {
-    if (specific_assessment_tests?.assessment_completed === true) {
+    if (specific_assessment_tests?.assessment_completed === true  ) {
       call({
         candidate_id,
       });
@@ -146,7 +147,8 @@ export default function AssessmentOverview() {
               )}
               <div
                 className="flex flex-col items-center text-center space-y-2"
-                onClick={() => globalState.openModal("test_resutls", specific_assessment_tests.assessment_completed == true)}
+                //when assessment is completed then the results modal is open otherwise not
+                onClick={() => globalState.openModal("test_resutls", specific_assessment_tests.assessment_completed == true)} //open
               >
                 <div className="w-12 h-12 rounded-full cursor-pointer bg-secondary flex items-center justify-center">
                   <EyeIcon className="w-8 h-8 text-secondary-foreground" />

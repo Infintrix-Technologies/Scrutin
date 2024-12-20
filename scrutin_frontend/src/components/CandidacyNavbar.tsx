@@ -9,10 +9,15 @@ const CandidacyNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate(); 
   const { candidate_id } = useParams();
-  const { selectedOption, setSelectedOption, updateCurrentQuestion, updateQuestionAndTime, question } = useGlobalState();
+  const { selectedOption, setSelectedOption, updateCurrentQuestion, question } = useGlobalState();
   const { call } = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_question_response");
   const mark_test_completed  = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed");
 
+
+  // const candidate_test_progress_query = question?.message?.test || [];
+  // const specific_test_details = candidate_test_progress_query || {};
+  // const remainingTime = Math.round(specific_test_details?.remaining_time || 0);
+  
   const handleNext = async () => {
     if (!selectedOption || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
       toast.error("Select an option before submitting.");
@@ -38,7 +43,7 @@ const CandidacyNavbar = () => {
         navigate(`/candidacy/${candidate_id}/overview`);
       } else {
         updateCurrentQuestion(candidate_id); 
-        updateQuestionAndTime(candidate_id);
+        // updateQuestionAndTime(candidate_id);
       }
 
       setSelectedOption(null); 
