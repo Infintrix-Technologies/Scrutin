@@ -192,6 +192,10 @@ const test_list_for_search = useFrappePostCall("scrutin.api.search_api.test_list
 const candidate_list_api = useFrappePostCall("scrutin.api.search_api.candidate_list_api")
 
 
+const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api.search_candidate_based_on_test")
+
+
+
 
   return (
     <div style={{display:"flex",
@@ -731,10 +735,19 @@ const candidate_list_api = useFrappePostCall("scrutin.api.search_api.candidate_l
 
       <Button onClick={() => {
         candidate_list_api.call({
-          assessment_id: "ju7mgf9ceg"
+          // assessment_id: "ju7mgf9ceg"
         });
       }}>
         Candidates of selected assessment
+      </Button>
+
+
+      <Button onClick={() => {
+        search_candidate_based_on_test.call({
+          test_id: "f3988t64af"
+        });
+      }}>
+        Search Candidates based on test
       </Button>
 
 
@@ -748,21 +761,3 @@ export default TestAPI
 
 
 
-
-
-
-
-
-// cmd = uploadfile&
-
-//       doctype=[mydoctype]&
-
-//       isprivate=[0/1]&
-      
-//       docname=[myDocName]&
-
-//       filename=[myFileName]&
-
-//       filedata=[myBase64File]&
-
-//       from_form=1
