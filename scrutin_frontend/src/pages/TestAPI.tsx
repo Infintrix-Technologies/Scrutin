@@ -171,7 +171,7 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
 
 
-const get_file_data = useFrappePostCall("scrutin.api.testing_api.get_file_data")
+const webcam_snapshot_api = useFrappePostCall("scrutin.api.testing_api.webcam_snapshot_api")
 
 
 const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
@@ -680,9 +680,8 @@ const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api
 
 
       <Button onClick={() => {
-        get_file_data.call({
-          doctype: "Scrutin Candidate",
-          docname: "k3jas5g82l"
+        webcam_snapshot_api.call({
+          candidate_id: "k3jas5g82l"
         });
       }}>
         File Data
