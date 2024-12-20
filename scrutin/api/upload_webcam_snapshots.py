@@ -65,40 +65,4 @@ def upload_image(data, file_name, attached_to_doctype, attached_to_name,  is_pri
 
 
 
-# @frappe.whitelist()
-# def upload_webcam_snapshot(file, parent_docname):
-#     # Ensure the file is uploaded
-#     if not file:
-#         frappe.throw("File is required")
-
-#     # Save the file and link it to the parent DocType (Scrutin Candidate)
-#     try:
-#         # Save the file in the system
-#         uploaded_file = save_file(
-#             file_name=file.filename,
-#             content=file.stream.read(),
-#             dt="Scrutin Candidate",
-#             dn=parent_docname,
-#             is_private=1
-#         )
-
-#         # Add a new row to the Webcam Snapshots child table
-#         parent_doc = frappe.get_doc("Scrutin Candidate", parent_docname)
-#         parent_doc.append("web_cam_snapshots", {
-#             "image": uploaded_file.file_url
-#         })
-#         parent_doc.save()
-
-#         return {
-#             "status": "success",
-#             "file_url": uploaded_file.file_url
-#         }
-#     except Exception as e:
-#         frappe.throw(f"File upload failed: {str(e)}")
-
-
-
-
-
-
 
