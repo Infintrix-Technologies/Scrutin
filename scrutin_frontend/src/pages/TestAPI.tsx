@@ -13,8 +13,8 @@ const get_applicant_jobtitle = useFrappeGetCall("scrutin.api.assessment_data.get
 console.log(get_applicant_jobtitle, "get_applicant_jobtitle");
 
 //this api give the name of job_applicant_name and assessment_name for Candidate
-const get_candidate_details = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate")
-console.log(get_candidate_details, "get_candidate_details");
+const candidate_detail_list = useFrappeGetCall("scrutin.api.assessment_data.candidate_list_api")
+console.log(candidate_detail_list, "get_candidate_details");
 
 
 const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment_data.specific_assessment_candidates")
@@ -189,7 +189,7 @@ const assessment_list_for_search = useFrappePostCall("scrutin.api.search_api.ass
 const test_list_for_search = useFrappePostCall("scrutin.api.search_api.test_list")
 
 
-const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_api.candidates_of_selected_assessment")
+const candidate_list_api = useFrappePostCall("scrutin.api.search_api.candidate_list_api")
 
 
 
@@ -730,7 +730,7 @@ const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_
 
 
       <Button onClick={() => {
-        candidates_of_selected_assessment.call({
+        candidate_list_api.call({
           assessment_id: "ju7mgf9ceg"
         });
       }}>
