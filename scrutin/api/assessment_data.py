@@ -55,7 +55,7 @@ def get_applicant_jobtitle():
 
 #this api give the candidate Job_applicant_name and Assessment_name and also give the assessment count that one candidate have
 @frappe.whitelist()
-def get_applicant_name_assessment_name_for_candidate():
+def candidate_list_api():
 
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
