@@ -19,7 +19,7 @@ export const CandidatesList: React.FC<AssessmentsListProps> = ({ search }) => {
 
   const { data: candidatesQuery, isLoading: candidatesLoading } =
     useFrappeGetCall(
-      "scrutin.api.assessment_data.get_applicant_name_assessment_name_for_candidate"
+      "scrutin.api.assessment_data.candidate_list_api"
     );
   const candidatesQueryData = candidatesQuery?.message || [];
 

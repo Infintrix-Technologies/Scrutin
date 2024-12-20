@@ -17,7 +17,7 @@ const FileUploadForm: React.FC = () => {
     isPrivate: true,
     folder: 'Home',
     doctype: 'Scrutin Candidate',
-    docname: 'k3jas5g82l',
+    docname: '37hc0ipka2',
     fieldname: 'image',
     error: ''
   });
@@ -52,14 +52,14 @@ const FileUploadForm: React.FC = () => {
     formData.append('fieldname', state.fieldname);
 
     // CSRF token (if needed)
-    const csrfToken = 'fbdb59ad5d779db9a155b3065719a8f7a51ff1fbea1f4287dd1e3c1e'; // Replace with dynamic CSRF token
+    // const csrfToken = 'fbdb59ad5d779db9a155b3065719a8f7a51ff1fbea1f4287dd1e3c1e'; // Replace with dynamic CSRF token
 
     try {
       const response = await fetch('/api/method/upload_file', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'X-Frappe-CSRF-Token': csrfToken,
+          // 'X-Frappe-CSRF-Token': csrfToken,
         },
         body: formData,
         credentials: 'include', // Include cookies if necessary
@@ -83,7 +83,7 @@ const FileUploadForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>File:</label>
-          <input type="file" onChange={handleFileChange} />
+          <input type="file" className='text-black' onChange={handleFileChange} />
         </div>
         <div>
           <label>Is Private:</label>
@@ -97,6 +97,7 @@ const FileUploadForm: React.FC = () => {
           <label>Folder:</label>
           <input
             type="text"
+            className='text-black'
             value={state.folder}
             onChange={(e) => setState({ ...state, folder: e.target.value })}
           />
@@ -105,14 +106,16 @@ const FileUploadForm: React.FC = () => {
           <label>Document Type:</label>
           <input
             type="text"
+            className='text-black'
             value={state.doctype}
             onChange={(e) => setState({ ...state, doctype: e.target.value })}
           />
         </div>
         <div>
-          <label>Document Name:</label>
+          <label>Document Name : Candidate id: </label>
           <input
             type="text"
+            className='text-black'
             value={state.docname}
             onChange={(e) => setState({ ...state, docname: e.target.value })}
           />
@@ -121,6 +124,7 @@ const FileUploadForm: React.FC = () => {
           <label>Field Name:</label>
           <input
             type="text"
+            className='text-black'
             value={state.fieldname}
             onChange={(e) => setState({ ...state, fieldname: e.target.value })}
           />
