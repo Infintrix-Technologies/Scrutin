@@ -1507,11 +1507,11 @@ def test_details_for_overview_page(candidate_id):
         )
         results = query.run(as_dict=True)
         
-        current_time = Now()
+        current_time = datetime.now()
         
         for result in results:
-            started_at = result.get('started_at', '%Y-%m-%d %H:%M:%S')
-            completed_at = result.get('completed_at', '%Y-%m-%d %H:%M:%S')
+            started_at = result.get('started_at')
+            completed_at = result.get('completed_at')
             duration = result.get('duration')
             
             if completed_at:
@@ -1521,8 +1521,6 @@ def test_details_for_overview_page(candidate_id):
             
             remaining_time = max(0, duration - time_taken)
             result['remaining_time'] = int(remaining_time)
-            if remaining_time < 1:
-                remaining_time = 0
             result['time_completed'] = remaining_time == 0
         
         return results
@@ -1574,7 +1572,6 @@ def test_details_for_overview_page(candidate_id):
         test['total_questions'] = total_questions
         test['unanswered_questions'] = len(unanswered_questions)
         test['answered_questions'] = total_questions - len(unanswered_questions)
-        test['test_completed'] = test['total_questions'] == test['answered_questions']
         test_progress_entry = progress_dict.get(test_name)
         if test_progress_entry:
             test['remaining_time'] = test_progress_entry['remaining_time']
@@ -1583,7 +1580,10 @@ def test_details_for_overview_page(candidate_id):
             test['remaining_time'] = None
             test['time_completed'] = False
 
-        if not test['test_completed'] and not test['time_completed']:
+        # Determine if the test is completed
+        test['test_completed'] = (test['answered_questions'] == test['total_questions']) or test['time_completed']
+
+        if not test['test_completed']:
             all_tests_completed = False
 
     return {

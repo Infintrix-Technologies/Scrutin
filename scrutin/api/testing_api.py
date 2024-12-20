@@ -29,8 +29,3 @@ def get_file_data(doctype, docname):
 
 
 
-
-@frappe.whitelist()
-def upload_image_to_scrutin_webcam_snapshot_get_from_file():
-    pass
-
