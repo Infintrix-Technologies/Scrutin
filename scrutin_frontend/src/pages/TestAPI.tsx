@@ -1,26 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
-import LogImg from "../../../scrutin/public/images/ferrari 5.jpg"
 import FileUploadForm from "@/components/Test/FileUploadForm";
-// import { Image } from "@radix-ui/react-avatar";
-//  assets/scrutin/images/bike12.png
 
 const TestAPI = () => {
 
 const getCandidatesOfSpecificUser = useFrappeGetCall("scrutin.api.user.get_user_candidates");
 console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
-// console.log(LogImg,"vvvvvvvvvvvvvvvv");
-
-
-// const session_user = useFrappeGetCall("scrutin.api.user.get_logged_user");
-// console.log(session_user);
-
-// const update_candidate = useFrappePostCall("scrutin.api.candidate.update_candidate");
-// console.log(update_candidate);
-
-// const update_applicant = useFrappePostCall("scrutin.api.candidate.update_job_applicant_status");
-// console.log(update_applicant);
-
 
 
 //this api give job_title of specific Job Applicant
@@ -43,10 +28,8 @@ const get_questions_for_test_and_total_duration = useFrappePostCall("scrutin.api
 const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_assessment_data")
 
 
-
 //this api will give the candidate detail based on the job_applicant email
 const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot")
-
 
 
 const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options")
@@ -68,41 +51,31 @@ const get_candidate_response_test_finish_time = useFrappePostCall("scrutin.api.t
 const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data.get_specific_test_details")
 
 
-
 const get_applicant_name_assessment_name_for_specific_candidate = useFrappePostCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_specific_candidate")
-
 
 
 const update_test_Completed_time = useFrappePostCall("scrutin.api.assessment_data.update_test_start_time")
 
 
-
 const get_candidate_test_progress = useFrappePostCall("scrutin.api.assessment_data.get_candidate_test_progress")
-
 
 
 const add_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_test_progress")
 
 
-
-
 const get_candidate_detail_based_on_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_based_on_candidate_id")
-
 
 
 const get_candidate_detail_for_intro = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_for_intro")
 
 
-
 const test_details_for_overview_page = useFrappePostCall("scrutin.api.assessment_data.test_details_for_overview_page")
-
 
 
 const get_assessment_test_and_question_with_options_with_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options_with_candidate_id")
 
 
 const get_scrutin_question_detail = useFrappePostCall("scrutin.api.assessment_data.get_scrutin_question_detail")
-
 
 
 const add_scrutin_test_progress = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_test_progress")
@@ -112,11 +85,6 @@ const add_scrutin_question_response = useFrappePostCall("scrutin.api.candidate_t
 
 
 const get_candidate_questions_answer_responses = useFrappePostCall("scrutin.api.candidate_test.get_candidate_questions_answer_responses")
-
-
-
-// TEST PAGE API
-const get_question_with_navigation = useFrappePostCall("scrutin.api.candidate_test.get_question_with_navigation")
 
 
 const get_question_with_answer_and_post_in_responses = useFrappePostCall("scrutin.api.candidate_test.get_question_with_answer_and_post_in_responses")
@@ -131,29 +99,22 @@ const start_assessment = useFrappePostCall("scrutin.api.candidate_test.start_ass
 const complete_assessment = useFrappePostCall("scrutin.api.candidate_test.complete_assessment")
 
 
-
 const are_all_questions_answered = useFrappePostCall("scrutin.api.candidate_test.are_all_questions_answered")
-
 
 
 const check_how_many_candidate_responses_are_correct = useFrappePostCall("scrutin.api.candidate_test.check_how_many_candidate_responses_are_correct")
 
 
-
 const get_candidate_assessment_test_and_question = useFrappePostCall("scrutin.api.candidate_test.get_candidate_assessment_test_and_question")
-
 
 
 const get_candidate_assessment_performance = useFrappePostCall("scrutin.api.candidate_test.get_candidate_assessment_performance")
 
 
-
 const get_assessment_based_on_designation = useFrappePostCall("scrutin.api.assessment_based_on_designation.get_assessment_based_on_designation")
 
 
-
 const get_candidate_test_response_report = useFrappePostCall("scrutin.api.test_response_report.get_candidate_test_response_report")
-
 
 
 const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.api.test_response_report.send_email_to_candidate_test_response_report")
@@ -162,54 +123,40 @@ const send_email_to_candidate_test_response_report = useFrappePostCall("scrutin.
 const get_assessment_data_for_assessment_detail_page = useFrappePostCall("scrutin.api.assessment_data.get_assessment_data_for_assessment_detail_page")
 
 
-
 const get_candidate_test_response_report_for_assessment_detail_page = useFrappePostCall("scrutin.api.assessment_data.get_candidate_test_response_report_for_assessment_detail_page")
-
 
 
 const assessment_list_page_api = useFrappePostCall("scrutin.api.assessment_data.assessment_list_page_api")
 
 
-
 const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_rating")
-
 
 
 const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
 
 
-
 const comparison_two_candidates_test_response_report = useFrappePostCall("scrutin.api.candidate_response_comparison.comparison_two_candidates_test_response_report")
-
 
 
 const get_candidate_test_progress_for_test_page = useFrappePostCall("scrutin.api.test_duration.get_candidate_test_progress_for_test_page")
 
 
-
 const add_scrutin_test_progress_duration = useFrappePostCall("scrutin.api.test_duration.add_scrutin_test_progress_duration")
-
 
 
 const get_test_templete_data = useFrappePostCall("scrutin.api.test_template.get_test_templete_data")
 
 
-
 const get_test_details = useFrappePostCall("scrutin.api.test_template.get_test_details")
-
 
 
 const create_scrutin_test_from_template = useFrappePostCall("scrutin.api.test_template.create_scrutin_test_from_template")
 
 
-
 const create_test_template_from_scrutin_test = useFrappePostCall("scrutin.api.test_template.create_test_template_from_test")
 
 
-
-
 const get_current_question_for_testing = useFrappePostCall("scrutin.api.get_current_question.get_current_question")
-
 
 
 const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite")
@@ -218,9 +165,7 @@ const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite")
 const assessment_list = useFrappePostCall("scrutin.api.send_invite.assessment_list")
 
 
-
 const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_cheating_checks")
-
 
 
 const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
@@ -229,15 +174,10 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
 const get_file_data = useFrappePostCall("scrutin.api.testing_api.get_file_data")
 
 
-const upload_image_from_url_or_base64 = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
-
-
 const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
 
 
-
 const get_candidate_test_progress_remaining_time = useFrappePostCall("scrutin.api.testing_api.get_candidate_test_progress_remaining_time")
-
 
 
 const test_details_for_overview_page_with_remaining_time = useFrappePostCall("scrutin.api.testing_api.test_details_for_overview_page_with_remaining_time")
@@ -249,18 +189,8 @@ const assessment_list_for_search = useFrappePostCall("scrutin.api.search_api.ass
 const test_list_for_search = useFrappePostCall("scrutin.api.search_api.test_list")
 
 
-
 const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_api.candidates_of_selected_assessment")
 
-
-
-
-
-
-
-
-
-// const upload_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
 
 
   return (
@@ -443,16 +373,6 @@ const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_
         });
       }}>
         update_test_Completed_time
-      </Button>
-
-
-      <Button onClick={() => {
-        get_question_with_navigation.call({
-          candidate_id: 'k2abf6d21j',
-
-        });
-      }}>
-        get_question_with_navigation
       </Button>
 
 
@@ -817,17 +737,6 @@ const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_
         Candidates of selected assessment
       </Button>
 
-
-
-      {/* <Button onClick={() => {
-        upload_image.call({
-          candidate_name : "37hc0ipka2",
-          image_file : {LogImg} 
-        });
-      }}>
-        Upload Images in Candidate
-      </Button> */}
-{/* <img src={LogImg} alt="img"/> */}
 
 
     </div>
