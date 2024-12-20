@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useContext, useState } from 'react';
-import { useCandidateTestProgress, useRetrieveNextQuestion } from '@/hooks/post-hooks';
-import { GlobalStateProviderQuestion, Test_Time_and_Questions } from '@/types/Interface';
+import { useRetrieveNextQuestion } from '@/hooks/post-hooks';
+import { GlobalStateProviderQuestion } from '@/types/Interface';
 
 interface Modal {
     open: boolean;
@@ -17,9 +17,7 @@ interface GlobalStateContextProps {
     triggerReload: boolean;
     setTriggerReload: Dispatch<SetStateAction<boolean>>;
     question: GlobalStateProviderQuestion;
-    time_questions: Test_Time_and_Questions;
     updateCurrentQuestion: (candidate_id: string | undefined) => void;
-    updateQuestionAndTime: (candidate_id: string | undefined) => void;
     loading: boolean;
     error: any | null;
     selectedOption: string | string[] | null;
@@ -29,8 +27,6 @@ interface GlobalStateContextProps {
 export const GlobalStateContext = createContext<GlobalStateContextProps | undefined>(undefined);
 
 export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
-  const candidateTestProgress = useCandidateTestProgress();
-  const time_questions = candidateTestProgress.result;
 
   const next_question_api = useRetrieveNextQuestion();
   const question = next_question_api.result;
@@ -56,12 +52,6 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const [triggerReload, setTriggerReload] = useState(false);
 
-  const updateQuestionAndTime = async (candidate_id: string | null = null) => {
-    if (candidate_id) {
-      candidateTestProgress.call({ candidate_id });
-    }
-  };
-
   const updateCurrentQuestion = async (candidate_id: string | null = null) => {
     if (candidate_id) {
       next_question_api.call({ candidate_id });
@@ -81,9 +71,7 @@ export const GlobalStateProvider: FC<PropsWithChildren> = ({ children }) => {
             triggerReload,
             setTriggerReload,
             question,
-            time_questions,
             updateCurrentQuestion,
-            updateQuestionAndTime,
             loading,
             error,
             selectedOption,

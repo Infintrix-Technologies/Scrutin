@@ -10,6 +10,7 @@ export interface GlobalStateProviderQuestion {
   message: {
     message:string,
     test: {
+      total_duration: number;
       remaining_time: number;
       test: {
         test_id: string;
@@ -240,7 +241,7 @@ export interface StartAssessment_And_Continue_Button {
 
 export interface TestProgressResult {
   test: string;
-  duration: number;  
+  total_duration: number;  
   started_at: string;  
   remaining_time: number; 
   total_questions: number;

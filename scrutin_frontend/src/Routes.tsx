@@ -23,6 +23,7 @@ import JobApplicants from "./pages/JobApplicants";
 import CandidateDetailPage from "./pages/CandidatesDetailPage";
 import AssessmentDetailPage from "./pages/AssessmentDetailPage";
 import TestAPI from "./pages/TestAPI";
+import CandidatesComparisonPage from "./pages/CandidatesComparisonPage";
 
 export const router = createBrowserRouter(
   [
@@ -72,6 +73,10 @@ export const router = createBrowserRouter(
             {
               path: ":email",
               element: <CandidateDetailPage />,
+            },
+            {
+              path: "candidate_comparison",
+              element: <CandidatesComparisonPage />,
             },
           ],
         },
