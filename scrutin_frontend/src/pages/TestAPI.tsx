@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import LogImg from "../../../scrutin/public/images/ferrari 5.jpg"
+import FileUploadForm from "@/components/Test/FileUploadForm";
 // import { Image } from "@radix-ui/react-avatar";
 //  assets/scrutin/images/bike12.png
 
@@ -228,7 +229,29 @@ const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webc
 const get_file_data = useFrappePostCall("scrutin.api.testing_api.get_file_data")
 
 
-const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_local_image")
+const upload_image_from_url_or_base64 = useFrappePostCall("scrutin.api.upload_webcam_snapshots.upload_image")
+
+
+const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
+
+
+
+const get_candidate_test_progress_remaining_time = useFrappePostCall("scrutin.api.testing_api.get_candidate_test_progress_remaining_time")
+
+
+
+const test_details_for_overview_page_with_remaining_time = useFrappePostCall("scrutin.api.testing_api.test_details_for_overview_page_with_remaining_time")
+
+
+const assessment_list_for_search = useFrappePostCall("scrutin.api.search_api.assessment_list")
+
+
+const test_list_for_search = useFrappePostCall("scrutin.api.search_api.test_list")
+
+
+
+const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_api.candidates_of_selected_assessment")
+
 
 
 
@@ -249,6 +272,10 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
       flexDirection:"column",
       gap:"12px",
     }}>TestAPI
+
+
+<FileUploadForm/>
+
       <Button onClick={() => {
         specific_assessment_candidates.call({
           assessmnt: 'Python Developer',
@@ -403,7 +430,7 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
 
       <Button onClick={() => {
         test_details_for_overview_page.call({
-          candidate_id: 'g4ckk5b9ml',
+          candidate_id: '97c5oqlsf5',
         });
       }}>
         test_details_for_overview_page
@@ -730,7 +757,8 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
 
       <Button onClick={() => {
         get_file_data.call({
-          file_id: "79fc188cb7",
+          doctype: "Scrutin Candidate",
+          docname: "k3jas5g82l"
         });
       }}>
         File Data
@@ -738,13 +766,57 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
 
 
       <Button onClick={() => {
-        upload_local_image.call({
-          // url: "https://png.pngtree.com/png-clipart/20231210/original/pngtree-black-color-r15-bike-png-image_13809969.png",
-          file_path: "/assets/scrutin/images/ferrari 5.jpg"
+        mark_test_completed.call({
+          candidate_id: "97c5oqlsf5",
+          test_id: "goodt6rf6d"
         });
       }}>
-        Upload Image Into File DocType
+        mark_test_completed
       </Button>
+
+
+      <Button onClick={() => {
+        get_candidate_test_progress_remaining_time.call({
+          candidate_id: "97c5oqlsf5"
+        });
+      }}>
+        get_candidate_test_progress_remaining_time
+      </Button>
+
+
+      <Button onClick={() => {
+        test_details_for_overview_page_with_remaining_time.call({
+          candidate_id: 'k3jas5g82l',
+        });
+      }}>
+        test_details_for_overview_page_with_remaining_time
+      </Button>
+
+
+      <Button onClick={() => {
+        assessment_list_for_search.call({
+        });
+      }}>
+        Assessment List For Search
+      </Button>
+
+
+      <Button onClick={() => {
+        test_list_for_search.call({
+        });
+      }}>
+        Test List For Search
+      </Button>
+
+
+      <Button onClick={() => {
+        candidates_of_selected_assessment.call({
+          assessment_id: "ju7mgf9ceg"
+        });
+      }}>
+        Candidates of selected assessment
+      </Button>
+
 
 
       {/* <Button onClick={() => {
@@ -756,9 +828,32 @@ const upload_local_image = useFrappePostCall("scrutin.api.upload_webcam_snapshot
         Upload Images in Candidate
       </Button> */}
 {/* <img src={LogImg} alt="img"/> */}
+
+
     </div>
     
   )
 }
 
 export default TestAPI
+
+
+
+
+
+
+
+
+// cmd = uploadfile&
+
+//       doctype=[mydoctype]&
+
+//       isprivate=[0/1]&
+      
+//       docname=[myDocName]&
+
+//       filename=[myFileName]&
+
+//       filedata=[myBase64File]&
+
+//       from_form=1
