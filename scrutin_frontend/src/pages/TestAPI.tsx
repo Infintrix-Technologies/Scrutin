@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import LogImg from "../../../scrutin/public/images/ferrari 5.jpg"
+import FileUploadForm from "@/components/Test/FileUploadForm";
 // import { Image } from "@radix-ui/react-avatar";
 //  assets/scrutin/images/bike12.png
 
@@ -242,6 +243,19 @@ const get_candidate_test_progress_remaining_time = useFrappePostCall("scrutin.ap
 const test_details_for_overview_page_with_remaining_time = useFrappePostCall("scrutin.api.testing_api.test_details_for_overview_page_with_remaining_time")
 
 
+const assessment_list_for_search = useFrappePostCall("scrutin.api.search_api.assessment_list")
+
+
+const test_list_for_search = useFrappePostCall("scrutin.api.search_api.test_list")
+
+
+
+const candidates_of_selected_assessment = useFrappePostCall("scrutin.api.search_api.candidates_of_selected_assessment")
+
+
+
+
+
 
 
 
@@ -258,6 +272,10 @@ const test_details_for_overview_page_with_remaining_time = useFrappePostCall("sc
       flexDirection:"column",
       gap:"12px",
     }}>TestAPI
+
+
+<FileUploadForm/>
+
       <Button onClick={() => {
         specific_assessment_candidates.call({
           assessmnt: 'Python Developer',
@@ -739,7 +757,8 @@ const test_details_for_overview_page_with_remaining_time = useFrappePostCall("sc
 
       <Button onClick={() => {
         get_file_data.call({
-          file_id: "79fc188cb7",
+          doctype: "Scrutin Candidate",
+          docname: "k3jas5g82l"
         });
       }}>
         File Data
@@ -775,20 +794,29 @@ const test_details_for_overview_page_with_remaining_time = useFrappePostCall("sc
 
 
       <Button onClick={() => {
-        upload_image_from_url_or_base64.call({
-          // url: "https://png.pngtree.com/png-clipart/20231210/original/pngtree-black-color-r15-bike-png-image_13809969.png",
-          // file_path: "/assets/scrutin/images/ferrari 5.jpg"
-          data : "http://localhost:8001/files/flower1.png",
-          file_name : "Salman 5ee41c.png",
-          file_type : "PNG",
-          attached_to_doctype : "Scrutin Candidate",
-          attached_to_name : "97c5oqlsf5",
-          // attached_to_field : "image",
-          is_private : 0
+        assessment_list_for_search.call({
         });
       }}>
-        Upload Image Into File DocType
+        Assessment List For Search
       </Button>
+
+
+      <Button onClick={() => {
+        test_list_for_search.call({
+        });
+      }}>
+        Test List For Search
+      </Button>
+
+
+      <Button onClick={() => {
+        candidates_of_selected_assessment.call({
+          assessment_id: "ju7mgf9ceg"
+        });
+      }}>
+        Candidates of selected assessment
+      </Button>
+
 
 
       {/* <Button onClick={() => {
@@ -800,6 +828,8 @@ const test_details_for_overview_page_with_remaining_time = useFrappePostCall("sc
         Upload Images in Candidate
       </Button> */}
 {/* <img src={LogImg} alt="img"/> */}
+
+
     </div>
     
   )
