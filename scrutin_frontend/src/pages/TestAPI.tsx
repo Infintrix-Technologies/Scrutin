@@ -215,6 +215,7 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
         Test Questions & Total Duration
       </Button>
 
+
       <Button onClick={() => {
         get_assessment_data.call({
           assessment_id: 'ju7mgf9ceg',
@@ -232,6 +233,7 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
         Candidate Details & SnapShots
       </Button>
 
+
       <Button onClick={() => {
         get_assessment_test_and_question_with_options.call({
           assessment_name: 'jvecvcvl4o',
@@ -239,6 +241,7 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       }}>
         Test Question Options
       </Button>
+
 
       <Button onClick={() => {
         get_specific_assessment_tests.call({
@@ -453,7 +456,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       </Button>
 
 
-
       <Button onClick={() => {
         get_candidate_assessment_test_and_question.call({
           candidate_id: 'k39k9ek7i1'
@@ -461,7 +463,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       }}>
         get candidate assessment test & question
       </Button>
-
 
 
       <Button onClick={() => {
@@ -509,7 +510,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       </Button>
 
 
-
       <Button onClick={() => {
         get_candidate_test_response_report_for_assessment_detail_page.call({
           candidate_id: 'k39k9ek7i1',
@@ -547,7 +547,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       </Button>
 
 
-
       <Button onClick={() => {
         comparison_two_candidates_test_response_report.call({
         candidate_id_1: "k39k9ek7i1",
@@ -565,7 +564,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       }}>
         get_candidate_test_progress_for_test_page
       </Button>
-
 
 
       <Button onClick={() => {
@@ -604,7 +602,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       </Button>
 
 
-
       <Button onClick={() => {
         create_test_template_from_scrutin_test.call({
         test_id: "goodt6rf6d",
@@ -614,7 +611,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       </Button>
 
 
-
       <Button onClick={() => {
         get_current_question_for_testing.call({
         candidate_id: "97c5oqlsf5",
@@ -622,7 +618,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       }}>
         Testing if time is complete then it will show the next test
       </Button>
-
 
 
       <Button onClick={() => {
@@ -635,14 +630,12 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
       </Button>
 
 
-
       <Button onClick={() => {
         assessment_list.call({
         });
       }}>
         Assessment List
       </Button>
-
 
 
       <Button onClick={() => {
