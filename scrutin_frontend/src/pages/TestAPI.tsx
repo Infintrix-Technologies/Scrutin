@@ -14,7 +14,7 @@ console.log(get_applicant_jobtitle, "get_applicant_jobtitle");
 
 //this api give the name of job_applicant_name and assessment_name for Candidate
 const get_candidate_details = useFrappePostCall("scrutin.api.assessment_data.candidate_list_api")
-console.log(get_candidate_details, "get_candidate_details");
+console.log(get_candidate_details, "candidate_list_api");
 
 
 const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment_data.specific_assessment_candidates")
@@ -696,9 +696,9 @@ const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_repo
 
       <Button onClick={() => {
         get_candidate_details.call({
-          // assessment_id: "ju7mgf9ceg",
-          // test_id: "goodt6rf6d",
-          // applicant_name: "Ay"
+          assessment_id: "ju7mgf9ceg",
+          test_id: "k9o3uoe1ob",
+          applicant_name: "kh"
         });
       }}>
         Candidates of selected assessment & test
