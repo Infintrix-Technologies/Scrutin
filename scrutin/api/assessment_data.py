@@ -9,7 +9,7 @@ from frappe.query_builder import functions as fn
 
 #Assessment List Page API
 @frappe.whitelist()
-def assessment_list_page_api():
+def assessment_list_page_api(assessment_name=None):
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinCandidate = DocType("Scrutin Candidate")
     
@@ -31,8 +31,22 @@ def assessment_list_page_api():
         )
     )
     
+    # Add a filter if assessment_name is provided
+    if assessment_name:
+        query = query.where(ScrutinAssessment.assessment_name.like(f"%{assessment_name}%"))
+    
     results = query.run(as_dict=True)
     return results
+
+def search_assessment(self, text, limit=20):
+    # Use the assessment_list_page_api to get the filtered assessment list based on assessment_name
+    assessments = assessment_list_page_api(assessment_name=text)
+    
+    # Apply limit if needed
+    if limit:
+        assessments = assessments[:limit]
+    
+    return assessments
 
 
 #This API provide the Job_title for Job_applicant
@@ -55,13 +69,14 @@ def get_applicant_jobtitle():
 
 #this api give the candidate Job_applicant_name and Assessment_name and also give the assessment count that one candidate have
 @frappe.whitelist()
-def candidate_list_api(assessment_id=None, test_id=None):
+def candidate_list_api(assessment_id=None, test_id=None, applicant_name=None):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
     ScrutinTest = DocType("Scrutin Test")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
 
+    # Create the base query
     query = (
         frappe.qb.from_(ScrutinCandidate)
         .left_join(ScrutinAssessment)
@@ -79,18 +94,38 @@ def candidate_list_api(assessment_id=None, test_id=None):
         )
         .groupby(ScrutinCandidate.job_applicant)
     )
+
     # Add a filter if assessment_id is provided
     if assessment_id:
         query = query.where(ScrutinCandidate.assessment == assessment_id)
+
     # Add a filter if test_id is provided
     if test_id:
         query = query.left_join(ScrutinAssessmentTest).on(ScrutinAssessmentTest.parent == ScrutinAssessment.name)
         query = query.left_join(ScrutinTest).on(ScrutinAssessmentTest.test == ScrutinTest.name)
         query = query.where(ScrutinTest.name == test_id)
+    
+    # Add a filter if applicant_name is provided
+    if applicant_name:
+        query = query.where(JobApplicant.applicant_name.like(f"%{applicant_name}%"))
 
     candidate_detail = query.run(as_dict=True)
+
     return candidate_detail
 
+def search(self, text, scope=None, limit=20):
+    # Use the candidate_list_api to get the filtered candidate list based on applicant_name
+    candidates = candidate_list_api(applicant_name=text)
+    
+    # Optionally apply scope and limit if needed
+    if scope:
+        # Implement scope-specific logic if required
+        pass
+
+    if limit:
+        candidates = candidates[:limit]
+
+    return candidates
 
 #This API provide the questions of individual test and also provide the total duration of the test
 @frappe.whitelist()
