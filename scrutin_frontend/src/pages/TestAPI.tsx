@@ -735,7 +735,8 @@ const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api
       <Button onClick={() => {
         candidate_list_api.call({
           // assessment_id: "ju7mgf9ceg",
-          // test_id: "goodt6rf6d"
+          // test_id: "goodt6rf6d",
+          // applicant_name: "Ay"
         });
       }}>
         Candidates of selected assessment & test

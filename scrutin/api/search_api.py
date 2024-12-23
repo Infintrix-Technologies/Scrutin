@@ -6,7 +6,7 @@ from frappe.query_builder import functions as fn
 
 
 @frappe.whitelist()
-def candidate_list_api(assessment_id=None, test_id=None):
+def candidate_list_api(assessment_id=None, test_id=None, applicant_name=None):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
@@ -41,10 +41,28 @@ def candidate_list_api(assessment_id=None, test_id=None):
         query = query.left_join(ScrutinAssessmentTest).on(ScrutinAssessmentTest.parent == ScrutinAssessment.name)
         query = query.left_join(ScrutinTest).on(ScrutinAssessmentTest.test == ScrutinTest.name)
         query = query.where(ScrutinTest.name == test_id)
+    
+    # Add a filter if applicant_name is provided
+    if applicant_name:
+        query = query.where(JobApplicant.applicant_name.like(f"%{applicant_name}%"))
 
     candidate_detail = query.run(as_dict=True)
 
     return candidate_detail
+
+def search(self, text, scope=None, limit=20):
+    # Use the candidate_list_api to get the filtered candidate list based on applicant_name
+    candidates = candidate_list_api(applicant_name=text)
+    
+    # Optionally apply scope and limit if needed
+    if scope:
+        # Implement scope-specific logic if required
+        pass
+
+    if limit:
+        candidates = candidates[:limit]
+
+    return candidates
 
 
 
