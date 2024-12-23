@@ -13,7 +13,7 @@ const get_applicant_jobtitle = useFrappeGetCall("scrutin.api.assessment_data.get
 console.log(get_applicant_jobtitle, "get_applicant_jobtitle");
 
 //this api give the name of job_applicant_name and assessment_name for Candidate
-const get_candidate_details = useFrappeGetCall("scrutin.api.assessment_data.candidate_list_api")
+const get_candidate_details = useFrappePostCall("scrutin.api.assessment_data.candidate_list_api")
 console.log(get_candidate_details, "get_candidate_details");
 
 
@@ -180,7 +180,7 @@ const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_t
 const test_list_for_search = useFrappePostCall("scrutin.api.assessment_data.test_list")
 
 
-const candidate_list_api = useFrappePostCall("scrutin.api.search_api.candidate_list_api")
+const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_report")
 
 
 
@@ -695,13 +695,21 @@ const candidate_list_api = useFrappePostCall("scrutin.api.search_api.candidate_l
 
 
       <Button onClick={() => {
-        candidate_list_api.call({
+        get_candidate_details.call({
           // assessment_id: "ju7mgf9ceg",
           // test_id: "goodt6rf6d",
           // applicant_name: "Ay"
         });
       }}>
         Candidates of selected assessment & test
+      </Button>
+
+
+      <Button onClick={() => {
+        hr_admin_report.call({
+        });
+      }}>
+        HR Admin Report
       </Button>
 
 
