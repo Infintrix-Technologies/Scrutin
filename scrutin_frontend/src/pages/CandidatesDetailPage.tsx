@@ -139,7 +139,7 @@ const CandidatesDetailPage: React.FC = () => {
 
    const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite");
 
-   const webcam_snapshot_api = useFrappeGetCall("scrutin.api.testing_api.webcam_snapshot_api",{
+   const webcam_snapshot_api = useFrappeGetCall("scrutin.api.webcam_snapshots.webcam_snapshot_api",{
     candidate_id: candidate_details[0]?.candidate_id,
   })
   const webcam_snapshot = webcam_snapshot_api?.data?.message || [];
@@ -378,7 +378,6 @@ console.log(webcam_snapshot,"webcam_snapshot")
               {candidate_details[0].candidate_name}
             </h1>
             <Link
-              // to="mailto:muqeet@infintrotech.com"
               to="#"
               className="text-sm text-muted-foreground hover:underline"
             >

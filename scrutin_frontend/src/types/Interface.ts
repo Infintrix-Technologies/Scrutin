@@ -255,9 +255,7 @@ export interface Test_Time_and_Questions {
   message: TestProgressResult[];
 }
 
-export interface AssessmentsListProps {
-  search: string; 
-}
+
 
 
 export interface JobApplicantSelectAssessment {
@@ -266,6 +264,12 @@ export interface JobApplicantSelectAssessment {
   company: string;
   language: string;
   candidate_count: number;
+}
+
+export interface CandidateDetailPageTestFilter {
+  name: string;
+  title: string;
+
 }
 
 export interface JobApplicantSelectAssessmentResponse {
