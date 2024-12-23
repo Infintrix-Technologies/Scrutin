@@ -113,7 +113,7 @@ def candidate_list_api(assessment_id=None, test_id=None, applicant_name=None):
 
     return candidate_detail
 
-def search(self, text, scope=None, limit=20):
+def search_candidate(self, text, scope=None, limit=20):
     # Use the candidate_list_api to get the filtered candidate list based on applicant_name
     candidates = candidate_list_api(applicant_name=text)
     
