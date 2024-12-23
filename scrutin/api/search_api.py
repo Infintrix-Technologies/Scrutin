@@ -6,10 +6,12 @@ from frappe.query_builder import functions as fn
 
 
 @frappe.whitelist()
-def candidate_list_api(assessment_id=None):
+def candidate_list_api(assessment_id=None, test_id=None):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
 
     # Create the base query
     query = (
@@ -33,6 +35,12 @@ def candidate_list_api(assessment_id=None):
     # Add a filter if assessment_id is provided
     if assessment_id:
         query = query.where(ScrutinCandidate.assessment == assessment_id)
+
+    # Add a filter if test_id is provided
+    if test_id:
+        query = query.left_join(ScrutinAssessmentTest).on(ScrutinAssessmentTest.parent == ScrutinAssessment.name)
+        query = query.left_join(ScrutinTest).on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        query = query.where(ScrutinTest.name == test_id)
 
     candidate_detail = query.run(as_dict=True)
 
@@ -63,6 +71,7 @@ def search_candidate_based_on_test(test_id):
     ScrutinTest = DocType("Scrutin Test")
     ScrutinAssessment = DocType("Scrutin Assessment")
     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
+    ScrutinCandidate = DocType("Scrutin Candidate")
 
     test_id_query = (
         frappe.qb.from_(ScrutinAssessmentTest)
@@ -70,7 +79,10 @@ def search_candidate_based_on_test(test_id):
         .on(ScrutinAssessmentTest.test == ScrutinTest.name)
         .inner_join(ScrutinAssessment)
         .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
-        .select(ScrutinAssessment.assessment_name)
+        .inner_join(ScrutinCandidate)
+        .on(ScrutinCandidate.assessment == ScrutinAssessment.name)
+        .select(ScrutinAssessment.assessment_name,
+                ScrutinCandidate.job_applicant)
         .where(ScrutinTest.name == test_id)
     )
     test_id_list = test_id_query.run(as_dict=True)

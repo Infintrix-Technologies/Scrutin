@@ -55,12 +55,13 @@ def get_applicant_jobtitle():
 
 #this api give the candidate Job_applicant_name and Assessment_name and also give the assessment count that one candidate have
 @frappe.whitelist()
-def candidate_list_api(assessment_id=None):
+def candidate_list_api(assessment_id=None, test_id=None):
     ScrutinCandidate = DocType("Scrutin Candidate")
     ScrutinAssessment = DocType("Scrutin Assessment")
     JobApplicant = DocType("Job Applicant")
+    ScrutinTest = DocType("Scrutin Test")
+    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
 
-    # Create the base query
     query = (
         frappe.qb.from_(ScrutinCandidate)
         .left_join(ScrutinAssessment)
@@ -78,13 +79,16 @@ def candidate_list_api(assessment_id=None):
         )
         .groupby(ScrutinCandidate.job_applicant)
     )
-
     # Add a filter if assessment_id is provided
     if assessment_id:
         query = query.where(ScrutinCandidate.assessment == assessment_id)
+    # Add a filter if test_id is provided
+    if test_id:
+        query = query.left_join(ScrutinAssessmentTest).on(ScrutinAssessmentTest.parent == ScrutinAssessment.name)
+        query = query.left_join(ScrutinTest).on(ScrutinAssessmentTest.test == ScrutinTest.name)
+        query = query.where(ScrutinTest.name == test_id)
 
     candidate_detail = query.run(as_dict=True)
-
     return candidate_detail
 
 
