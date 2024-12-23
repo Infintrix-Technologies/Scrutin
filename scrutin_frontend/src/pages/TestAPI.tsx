@@ -171,28 +171,16 @@ const anti_cheating_checks = useFrappePostCall("scrutin.api.anti_cheating.anti_c
 const get_candidate_webcam_snapshot = useFrappePostCall("scrutin.api.upload_webcam_snapshots.get_candidate_webcam_snapshot")
 
 
-const webcam_snapshot_api = useFrappePostCall("scrutin.api.testing_api.webcam_snapshot_api")
+const webcam_snapshot_api = useFrappePostCall("scrutin.api.webcam_snapshots.webcam_snapshot_api")
 
 
 const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed")
 
 
-const get_candidate_test_progress_remaining_time = useFrappePostCall("scrutin.api.testing_api.get_candidate_test_progress_remaining_time")
-
-
-const test_details_for_overview_page_with_remaining_time = useFrappePostCall("scrutin.api.testing_api.test_details_for_overview_page_with_remaining_time")
-
-
-const assessment_list_for_search = useFrappePostCall("scrutin.api.search_api.assessment_list")
-
-
-const test_list_for_search = useFrappePostCall("scrutin.api.search_api.test_list")
+const test_list_for_search = useFrappePostCall("scrutin.api.assessment_data.test_list")
 
 
 const candidate_list_api = useFrappePostCall("scrutin.api.search_api.candidate_list_api")
-
-
-const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api.search_candidate_based_on_test")
 
 
 
@@ -684,7 +672,7 @@ const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api
           candidate_id: "k3jas5g82l"
         });
       }}>
-        File Data
+        Webcam Snapshot API
       </Button>
 
 
@@ -695,32 +683,6 @@ const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api
         });
       }}>
         mark_test_completed
-      </Button>
-
-
-      <Button onClick={() => {
-        get_candidate_test_progress_remaining_time.call({
-          candidate_id: "97c5oqlsf5"
-        });
-      }}>
-        get_candidate_test_progress_remaining_time
-      </Button>
-
-
-      <Button onClick={() => {
-        test_details_for_overview_page_with_remaining_time.call({
-          candidate_id: 'k3jas5g82l',
-        });
-      }}>
-        test_details_for_overview_page_with_remaining_time
-      </Button>
-
-
-      <Button onClick={() => {
-        assessment_list_for_search.call({
-        });
-      }}>
-        Assessment List For Search
       </Button>
 
 
@@ -741,16 +703,6 @@ const search_candidate_based_on_test = useFrappePostCall("scrutin.api.search_api
       }}>
         Candidates of selected assessment & test
       </Button>
-
-
-      <Button onClick={() => {
-        search_candidate_based_on_test.call({
-          test_id: "f3988t64af"
-        });
-      }}>
-        Search Candidates based on test
-      </Button>
-
 
 
     </div>

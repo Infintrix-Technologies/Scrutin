@@ -67,6 +67,22 @@ def get_applicant_jobtitle():
     results = query.run(as_dict=True)
     return results
 
+
+#Test list to search candidate based on test for candidate list page
+@frappe.whitelist()
+def test_list():
+    ScrutinTest = DocType("Scrutin Test")
+
+    test_query = (
+        frappe.qb.from_(ScrutinTest)
+            .select(ScrutinTest.name,
+                    ScrutinTest.title,
+            )
+    )
+    test_list = test_query.run(as_dict=True)
+    return test_list
+
+
 #this api give the candidate Job_applicant_name and Assessment_name and also give the assessment count that one candidate have
 @frappe.whitelist()
 def candidate_list_api(assessment_id=None, test_id=None, applicant_name=None):
