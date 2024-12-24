@@ -17,7 +17,7 @@ export const CandidateActions: React.FC<CandidateActionsProps> = ({ candidate })
   const delete_api = useFrappeDeleteDoc();
 
   const handleDelete = (name: string) => {
-    console.log(name,"name=============");
+    // console.log(name,"name=============");
     delete_api.deleteDoc('Scrutin Candidate', name);
   };
 

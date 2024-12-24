@@ -58,6 +58,10 @@ export interface CandidateListDetail {
   name: string;
   score: number;
 }
+
+export interface CandidateListResponse {
+  message: CandidateListDetail[];
+}
 export interface Assessment_Detail_Page_Test {
   total_duration: number;
   duration: number;
@@ -238,6 +242,11 @@ export interface AssessmentList {
   candidate_count: number;
 }
 
+export interface AssessmentListResponse {
+  message: AssessmentList[];
+}
+
+
 export interface StartAssessment_And_Continue_Button {
   title: string;
   test_completed: boolean;
@@ -274,4 +283,31 @@ export interface CandidateDetailPageTestFilter {
 
 export interface JobApplicantSelectAssessmentResponse {
   message: JobApplicantSelectAssessment[];
+}
+
+export interface HrAdminReportsTest {
+  test_name: string;
+  test_title: string;
+  test_level: string;
+  accuracy: number;
+  total_questions: number;
+  correct_count: number;
+  incorrect_count: number;
+  total_duration: number;
+  answered_questions: number;
+  unanswered_questions: number;
+  finished_time: string | null;
+}
+
+export interface HrAdminReportsApplicant {
+  applicant_name: string;
+  applicant_email: string;
+  assessment_name: string;
+  tests: HrAdminReportsTest[];
+  custom_questions: number;
+  assessment_average: number;
+}
+
+export interface HrAdminReportResponse {
+  message: HrAdminReportsApplicant[];
 }

@@ -33,7 +33,7 @@ export default function AssessmentOverview() {
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = data?.message || [];
-  console.log(specific_assessment_tests,"specific_assessment_tests")
+  // console.log(specific_assessment_tests,"specific_assessment_tests")
   const { call } = useFrappePostCall(
     "scrutin.api.candidate_test.complete_assessment"
   );

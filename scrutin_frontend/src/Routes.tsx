@@ -24,6 +24,7 @@ import TestAPI from "./pages/TestAPI";
 import CandidatesComparisonPage from "./pages/CandidatesComparisonPage";
 import { CandidatesList } from "./components/CandidatesList";
 import AssessmentsList from "./pages/AssessmentsList";
+import HrAdminReports from "./pages/HrAdminReports";
 
 export const router = createBrowserRouter(
   [
@@ -77,6 +78,10 @@ export const router = createBrowserRouter(
             {
               path: "candidate_comparison",
               element: <CandidatesComparisonPage />,
+            },
+            {
+              path: "hr_report",
+              element: <HrAdminReports />,
             },
           ],
         },

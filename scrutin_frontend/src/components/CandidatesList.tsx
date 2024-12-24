@@ -19,7 +19,7 @@ import { CandidateActions } from "./CandidateActions";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   CandidateDetailPageTestFilter,
-  CandidateListDetail,
+  CandidateListResponse,
   JobApplicantSelectAssessment,
 } from "../types/Interface";
 import dayjs from "dayjs";
@@ -61,9 +61,11 @@ export const CandidatesList = () => {
   );
   const test_list_query = test_list_for_search?.data?.message || [];
 
-  const get_candidate_details = useFrappePostCall(
+  const get_candidate_details = useFrappePostCall<CandidateListResponse>(
     "scrutin.api.assessment_data.candidate_list_api"
   );
+  // console.log(get_candidate_details,"candidate_list_api")
+  const candidatesQueryData = get_candidate_details.result?.message || [];
 
   const applicantMap = (jobApplicants || []).reduce((map, applicant) => {
     map[applicant.email_id] = applicant.applicant_name;
@@ -102,13 +104,16 @@ export const CandidatesList = () => {
     return <div>Loading candidates...</div>;
   }
 
-  const candidatesQueryData = get_candidate_details.result?.message || [];
 
   return (
     <div className="px-32">
       <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Candidate</h1>
         <div className="flex gap-3">
+          <Link to="/candidates/hr_report">
+            <Button>HR Admin Report</Button>
+          </Link>
+
           <Link to="/candidates/candidate_comparison">
             <Button>Candidate Comparison</Button>
           </Link>
@@ -129,47 +134,50 @@ export const CandidatesList = () => {
           />
         </div>
         <div className="flex gap-3">
-        <Select
-  onValueChange={(value) => {
-    handleFilterChange("assessment_id", value === "clear" ? null : value);
-  }}
->
-  <SelectTrigger>
-    <SelectValue placeholder="Select Assessment" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectGroup>
-      <SelectItem value="clear">All Assessments</SelectItem>
-      {assessment_list_query.map((assessment:JobApplicantSelectAssessment) => (
-        <SelectItem key={assessment.name} value={assessment.name}>
-          {assessment.assessment_name}
-        </SelectItem>
-      ))}
-    </SelectGroup>
-  </SelectContent>
-</Select>
+          <Select
+            onValueChange={(value) => {
+              handleFilterChange(
+                "assessment_id",
+                value === "clear" ? null : value
+              );
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Assessment" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="clear">All Assessments</SelectItem>
+                {assessment_list_query.map(
+                  (assessment: JobApplicantSelectAssessment) => (
+                    <SelectItem key={assessment.name} value={assessment.name}>
+                      {assessment.assessment_name}
+                    </SelectItem>
+                  )
+                )}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
-
-<Select
-  onValueChange={(value) => {
-    handleFilterChange("test_id", value === "clear" ? null : value);
-  }}
->
-  <SelectTrigger>
-    <SelectValue placeholder="Select Test" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectGroup>
-      <SelectItem value="clear">All Tests</SelectItem>
-      {test_list_query.map((test:CandidateDetailPageTestFilter) => (
-        <SelectItem key={test.name} value={test.name}>
-          {test.title}
-        </SelectItem>
-      ))}
-    </SelectGroup>
-  </SelectContent>
-</Select>
-
+          <Select
+            onValueChange={(value) => {
+              handleFilterChange("test_id", value === "clear" ? null : value);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Test" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="clear">All Tests</SelectItem>
+                {test_list_query.map((test: CandidateDetailPageTestFilter) => (
+                  <SelectItem key={test.name} value={test.name}>
+                    {test.title}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -186,11 +194,13 @@ export const CandidatesList = () => {
         </TableHeader>
         <TableBody>
           {candidatesQueryData.map(
-            (candidate: CandidateListDetail, index: number) => (
+            (candidate, index: number) => (
               <TableRow key={index}>
                 <TableCell
                   className="cursor-pointer"
-                  onClick={() => navigate(`/candidates/${candidate.job_applicant}`)}
+                  onClick={() =>
+                    navigate(`/candidates/${candidate.job_applicant}`)
+                  }
                 >
                   {applicantMap[candidate.job_applicant] || "N/A"}
                 </TableCell>

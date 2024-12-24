@@ -17,7 +17,7 @@ export function CandidateStatus() {
     },
     asDict: true,
   });
-console.log(candidatesData,"candidatesDatacandidatesData");
+// console.log(candidatesData,"candidatesDatacandidatesData");
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;

@@ -49,7 +49,7 @@ const LinkFields = ({value, onChange, doctype}: Props) => {
     const [open, setOpen] =useState(false)
 
     const [searchValue, setSearchValue] = useState('')
-    console.log(searchValue)
+    // console.log(searchValue)
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

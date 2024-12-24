@@ -19,7 +19,7 @@ export const AssessmentActions = ({ assessment }: AssessmentActionsProps) => {
   const delete_api = useFrappeDeleteDoc();
   // console.log(assessment,"0000000000004")
   const handleDelete = (name: string) => {
-    console.log(name,"name");
+    // console.log(name,"name");
     delete_api?.deleteDoc('Scrutin Assessment', name);
   };
 
