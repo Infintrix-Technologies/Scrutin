@@ -180,7 +180,7 @@ const mark_test_completed = useFrappePostCall("scrutin.api.candidate_test.mark_t
 const test_list_for_search = useFrappePostCall("scrutin.api.assessment_data.test_list")
 
 
-const hr_admin_report = useFrappePostCall("scrutin.api.testing_api.hr_admin_report")
+const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_report")
 
 
 

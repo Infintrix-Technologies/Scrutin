@@ -3,61 +3,7 @@ import frappe
 from frappe.query_builder import DocType
 
 
-# @frappe.whitelist()
-# def get_test_templete_data(template_id):
-#     TestTemplate = DocType("Test Template")
-
-#     template_query = (
-#         frappe.qb.from_(TestTemplate)
-#         .select(TestTemplate.name,
-#                 TestTemplate.title,
-#                 TestTemplate.description,
-#                 TestTemplate.language,
-#                 TestTemplate.level,
-#                 TestTemplate.status,
-#                 TestTemplate.test_format,
-#                 TestTemplate.test_questions)
-#         .where(TestTemplate.name == template_id)
-#     )
-#     template_result = template_query.run(as_dict=True)
-#     return template_result
-
-
-# @frappe.whitelist()
-# def get_test_details(test_id):
-#     Test = DocType("Scrutin Test")
-#     TestQuestion = DocType("Scrutin Test Question")
-
-#     test_query = (
-#         frappe.qb.from_(Test)
-#         .inner_join(TestQuestion)
-#         .on(Test.name == TestQuestion.parent)
-#         .select(Test.name,
-#                 Test.title,
-#                 Test.description,
-#                 Test.language,
-#                 Test.level,
-#                 Test.status,
-#                 Test.test_format,
-#                 TestQuestion.question)
-#         .where(Test.name == test_id)
-#     )
-#     test_result = test_query.run(as_dict=True)
-#     return test_result
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#Scrutin_Test_Template to Scrutin_Test
 # These both API are used to create a Scrutin Test doc by getting data from Scrutin Test Template
 @frappe.whitelist()
 def create_scrutin_test_from_template(template_id):
@@ -94,7 +40,6 @@ def create_scrutin_test_from_template(template_id):
     
     return scrutin_test.name
 
-@frappe.whitelist()
 def get_scrutin_test_templete_data(template_id):
     ScrutinTestTemplate = DocType("Scrutin Test Template")
 
@@ -116,13 +61,7 @@ def get_scrutin_test_templete_data(template_id):
 
 
 
-
-
-
-
-
-
-
+#Scrutin_Test to Scrutin_Test_Template
 # These both API are used to create Scrutin Test Template by getting the data from Scrutin Test
 @frappe.whitelist()
 def create_test_template_from_test(test_id):
@@ -153,7 +92,6 @@ def create_test_template_from_test(test_id):
     frappe.db.commit()
     return new_template.name
 
-
 def get_test_details(test_id):
     Test = DocType("Scrutin Test")
     TestQuestion = DocType("Scrutin Test Question")
@@ -177,25 +115,4 @@ def get_test_details(test_id):
     test_result = test_query.run(as_dict=True)
     return test_result
 
-
-
-# def get_test_template_data(template_id):
-#     TestTemplate = DocType("Scrutin Test Template")
-
-#     template_query = (
-#         frappe.qb.from_(TestTemplate)
-#         .select(
-#             TestTemplate.name,
-#             TestTemplate.title,
-#             TestTemplate.description,
-#             TestTemplate.language,
-#             TestTemplate.level,
-#             TestTemplate.status,
-#             TestTemplate.test_format,
-#             TestTemplate.test_questions
-#         )
-#         .where(TestTemplate.name == template_id)
-#     )
-#     template_result = template_query.run(as_dict=True)
-#     return template_result
 
