@@ -381,6 +381,7 @@ def get_assessment_data_for_assessment_detail_page(assessment_id):
             ScrutinCandidate.invited_on,
             JobApplicant.applicant_name,
             JobApplicant.applicant_rating,
+            JobApplicant.status.as_("applicant_status"),
         )
         .where(ScrutinCandidate.assessment == assessment_id)
     )
