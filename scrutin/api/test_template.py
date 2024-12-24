@@ -39,7 +39,7 @@ def create_scrutin_test_from_template(template_id):
         scrutin_test_question.insert()
     
     return scrutin_test.name
-
+@frappe.whitelist()
 def get_scrutin_test_templete_data(template_id):
     ScrutinTestTemplate = DocType("Scrutin Test Template")
 

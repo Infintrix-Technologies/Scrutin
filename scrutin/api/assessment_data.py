@@ -1017,32 +1017,6 @@ def get_candidate_response_test(candidate_id):
 
 
 
-@frappe.whitelist()
-def get_candidate_test_progress(candidate_id):
-    ScrutinCandidate = DocType("Scrutin Candidate")
-    ScrutinTest = DocType("Scrutin Test")
-    ScrutinTestProgress = DocType("Scrutin Test Progress")
-
-    query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .join(ScrutinTestProgress)
-        .on(ScrutinCandidate.name == ScrutinTestProgress.parent)
-        .join(ScrutinTest)
-        .on(ScrutinTestProgress.test == ScrutinTest.name)
-        .select(
-            ScrutinCandidate.job_applicant,
-            ScrutinTestProgress.test,
-            ScrutinTest.title,
-            ScrutinTestProgress.started_at,
-            ScrutinTestProgress.completed_at,
-        )
-        .where(ScrutinCandidate.name == candidate_id)
-    )
-    results = query.run(as_dict=True)
-    return results
-
-
-
 
 # This API is POST the TEST into the Candidate Response Test Progress
 @frappe.whitelist(allow_guest=True)

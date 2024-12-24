@@ -35,12 +35,6 @@ const get_candidate_responses = useFrappePostCall("scrutin.api.assessment_data.g
 const get_candidate_response_questions_answer = useFrappePostCall("scrutin.api.assessment_data.get_candidate_response_questions_answer")
 
 
-const get_candidate_response_test_finish_time = useFrappePostCall("scrutin.api.test_response_report.get_candidate_response_test_finish_time")
-
-
-const get_candidate_test_progress = useFrappePostCall("scrutin.api.assessment_data.get_candidate_test_progress")
-
-
 const add_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_test_progress")
 
 
@@ -159,6 +153,10 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
 
 
 
+const test_template = useFrappePostCall("scrutin.api.test_template.get_scrutin_test_templete_data")
+
+
+
 
   return (
     <div style={{display:"flex",
@@ -219,29 +217,11 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
 
 
       <Button onClick={() => {
-        get_candidate_test_progress.call({
-          candidate_id: '97c5oqlsf5',
-        });
-      }}>
-        get_candidate_test_progress
-      </Button>
-
-
-      <Button onClick={() => {
         get_candidate_response_questions_answer.call({
           candidate_id: '37hc0ipka2',
         });
       }}>
         Candidate Question/Answer Responses
-      </Button>
-
-
-      <Button onClick={() => {
-        get_candidate_response_test_finish_time.call({
-          candidate_id: 'k39k9ek7i1',
-        });
-      }}>
-        GET Candidate Test Progress
       </Button>
 
 
@@ -439,7 +419,7 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
         Assessment List Page API
       </Button>
 
-
+//Update job_applicant_rating
       <Button onClick={() => {
         update_job_applicant_rating.call({
         applicant_id: "ayeshamalik123@gmail.com",
@@ -615,6 +595,15 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
         });
       }}>
         HR Admin Report
+      </Button>
+
+
+      <Button onClick={() => {
+        test_template.call({
+          template_id: "kbli9u8khv"
+        });
+      }}>
+        Test Template
       </Button>
 
 
