@@ -115,7 +115,7 @@ const CandidatesDetailPage: React.FC = () => {
   );
  
   const candidate_details = data?.message?.candidate_assessment || [];
-  // console.log(candidate_details, "candidate_details");
+  console.log(candidate_details, "candidate_details");
 
   const send_email_to_candidate_test_response_report = useFrappePostCall(
     "scrutin.api.test_response_report.send_email_to_candidate_test_response_report"
@@ -538,41 +538,23 @@ const CandidatesDetailPage: React.FC = () => {
                     <p className="font-bold text-lg py-5"> Hiring stage </p>
 
                     <div className="mb-2">
-                      <Select>
-                        <SelectTrigger className="w-[220px]">
-                          <SelectValue placeholder="Not yet evaluated" />
+                      <Select  >
+                        <SelectTrigger  
+                        // className={assessment.applicant_status == "Accepted" ? 
+                        //   "bg-green-500 text-white" : "bg-red-500 text-white"}>
+                          
+                          className={`${
+                             assessment.applicant_status == "Rejected"
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer w-[220px]`}>
+                          
+                          <SelectValue className="bg-green-500 text-white" />
                         </SelectTrigger>
-                        <SelectContent>
-                          {/* <SelectGroup> */}
-
-                          <SelectItem value="2"> Evaluated</SelectItem>
-                          <SelectItem value="3">
-                            {" "}
-                            Invited for interview
-                          </SelectItem>
-                          <SelectItem value="4"> Interviewed</SelectItem>
-                          <SelectItem value="5">
-                            {" "}
-                            Invited for take-home test
-                          </SelectItem>
-                          <SelectItem value="6">
-                            {" "}
-                            Take-home test completed
-                          </SelectItem>
-                          <SelectItem value="7"> References checked</SelectItem>
-                          <SelectItem value="8"> Offer sent</SelectItem>
-                          <SelectItem value="9"> Offer declined</SelectItem>
-                          <SelectItem value="10">
-                            {" "}
-                            Candidate withdrew
-                          </SelectItem>
-                          <SelectItem value="11">
-                            {" "}
-                            Candidate unresponsive
-                          </SelectItem>
-                          <SelectItem value="12"> Rejected</SelectItem>
-                          <SelectItem value="13"> Hired 🎉</SelectItem>
-                          {/* </SelectGroup> */}
+                        <SelectContent className="">
+                           <SelectItem className="bg-green-500 text-white" key={assessment.applicant_status} value={assessment.name}>
+                                              {assessment.applicant_status || ""}
+                                            </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

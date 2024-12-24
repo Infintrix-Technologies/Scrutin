@@ -484,47 +484,25 @@ const AssessmentDetailPage = () => {
                           )
                         )}
                         <TableCell>
-                          <Select>
-                            <SelectTrigger className="w-[200px]">
-                              <SelectValue placeholder="Not yet evaluated" />
-                            </SelectTrigger>
-
-                            <SelectContent>
-                              {/* <SelectGroup> */}
-
-                              <SelectItem value="2"> Evaluated</SelectItem>
-                              <SelectItem value="3">
-                                {" "}
-                                Invited for interview
-                              </SelectItem>
-                              <SelectItem value="4"> Interviewed</SelectItem>
-                              <SelectItem value="5">
-                                {" "}
-                                Invited for take-home test
-                              </SelectItem>
-                              <SelectItem value="6">
-                                {" "}
-                                Take-home test completed
-                              </SelectItem>
-                              <SelectItem value="7">
-                                {" "}
-                                References checked
-                              </SelectItem>
-                              <SelectItem value="8"> Offer sent</SelectItem>
-                              <SelectItem value="9"> Offer declined</SelectItem>
-                              <SelectItem value="10">
-                                {" "}
-                                Candidate withdrew
-                              </SelectItem>
-                              <SelectItem value="11">
-                                {" "}
-                                Candidate unresponsive
-                              </SelectItem>
-                              <SelectItem value="12"> Rejected</SelectItem>
-                              <SelectItem value="13"> Hired 🎉</SelectItem>
-                              {/* </SelectGroup> */}
-                            </SelectContent>
-                          </Select>
+                         <Select  >
+                                                <SelectTrigger  
+                                                // className={assessment.applicant_status == "Accepted" ? 
+                                                //   "bg-green-500 text-white" : "bg-red-500 text-white"}>
+                                                  
+                                                  className={`${
+                                                    data.applicant_status == "Rejected"
+                                                        ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                                        : "bg-green-100 text-green-700 hover:bg-green-100"
+                                                    } cursor-pointer `}>
+                                                  
+                                                  <SelectValue className="bg-green-500 text-white" />
+                                                </SelectTrigger>
+                                                <SelectContent className="">
+                                                   <SelectItem className="bg-green-500 text-white" key={data.applicant_status} value={data.name}>
+                                                                      {data.applicant_status || ""}
+                                                                    </SelectItem>
+                                                </SelectContent>
+                                              </Select>
                         </TableCell>
                         <TableCell>
                           <Badge

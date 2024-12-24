@@ -36,7 +36,7 @@ import { FaPlus } from "react-icons/fa6";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-
+import { Card } from "@/components/ui/card";
 export const CandidatesList = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -103,21 +103,21 @@ export const CandidatesList = () => {
   if (jobApplicantsLoading) {
     return <div>Loading candidates...</div>;
   }
-
+ const classnameforBtn = "text-white bg-gradient-to-r from-teal-500  to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
 
   return (
-    <div className="px-32">
+    <div className="px-32 py-4 min-h-screen  text-gray-800 bg-[#feeef2]">
       <div className="flex justify-between mt-10">
         <h1 className="text-3xl font-bold">Candidate</h1>
         <div className="flex gap-3">
           <Link to="/candidates/hr_report">
-            <Button>HR Admin Report</Button>
+            <Button className={classnameforBtn}>HR Admin Report</Button>
           </Link>
 
           <Link to="/candidates/candidate_comparison">
-            <Button>Candidate Comparison</Button>
+            <Button className={classnameforBtn}> Candidate Comparison</Button>
           </Link>
-          <Button>
+          <Button className={classnameforBtn}>
             <FaPlus className="mr-2" />
             Create Candidate
           </Button>
@@ -128,13 +128,14 @@ export const CandidatesList = () => {
         <div>
           <Input
             placeholder="Search"
-            className="w-48"
+            className="w-48 bg-white border-none shadow-lg"
             onChange={handleSearchChange}
             value={searchParams.get("applicant_name") || ""}
           />
         </div>
         <div className="flex gap-3">
           <Select
+          
             onValueChange={(value) => {
               handleFilterChange(
                 "assessment_id",
@@ -142,7 +143,7 @@ export const CandidatesList = () => {
               );
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-48 bg-white border-none shadow-lg">
               <SelectValue placeholder="Select Assessment" />
             </SelectTrigger>
             <SelectContent>
@@ -164,14 +165,14 @@ export const CandidatesList = () => {
               handleFilterChange("test_id", value === "clear" ? null : value);
             }}
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Test" />
+            <SelectTrigger className="w-48 bg-white border-none shadow-lg">
+              <SelectValue  placeholder="Select Test" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="clear">All Tests</SelectItem>
+            <SelectContent className="bg-white  border-slate-300 shadow-lg text-black  ">
+              <SelectGroup className="">
+                <SelectItem className="" value="clear">All Tests</SelectItem>
                 {test_list_query.map((test: CandidateDetailPageTestFilter) => (
-                  <SelectItem key={test.name} value={test.name}>
+                  <SelectItem className="" key={test.name} value={test.name}>
                     {test.title}
                   </SelectItem>
                 ))}
@@ -180,24 +181,24 @@ export const CandidatesList = () => {
           </Select>
         </div>
       </div>
-
-      <Table>
+<Card className="bg-white border-none shadow-lg rounded-none text-black">
+      <Table className="rounded-lg">
         <TableCaption>A list of your candidates.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Assessments</TableHead>
-            <TableHead>Invited On</TableHead>
-            <TableHead>Actions</TableHead>
+        <TableHeader className="py-10 text-black ">
+          <TableRow className=" whitespace-nowrap hover:bg-white bg-white  text-black">
+            <TableHead style={{padding:"20px 10px"}} className=" text-black font-bold ">Name</TableHead>
+            <TableHead className=" text-black py-2 font-bold" >Email</TableHead>
+            <TableHead className=" text-black py-2 font-bold" >Assessments</TableHead>
+            <TableHead className=" text-black py-2 font-bold" >Invited On</TableHead>
+            <TableHead className=" text-black py-2 font-bold" >Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {candidatesQueryData.map(
             (candidate, index: number) => (
-              <TableRow key={index}>
+              <TableRow key={index} className="hover:bg-[#feeef2]">
                 <TableCell
-                  className="cursor-pointer"
+                  className="cursor-pointer "
                   onClick={() =>
                     navigate(`/candidates/${candidate.job_applicant}`)
                   }
@@ -216,12 +217,13 @@ export const CandidatesList = () => {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={5}>
+            <TableCell colSpan={5} className="hover:bg-white bg-white text-black">
               Total candidates: {candidatesQueryData.length}
             </TableCell>
           </TableRow>
         </TableFooter>
       </Table>
+      </Card>
     </div>
   );
 };
