@@ -22,6 +22,7 @@ const TestPage = () => {
   const [inFullscreen, setInFullscreen] = useState(false);
   const [mouseInWindow, setMouseInWindow] = useState(true);
   const webcamRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const test = question?.message?.test;
   const currentQuestion = test?.current_question;
@@ -112,10 +113,14 @@ const TestPage = () => {
   }, []);
 
   const startWebcam = async () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+    }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
       });
+      streamRef.current = stream;
       if (webcamRef.current) {
         webcamRef.current.srcObject = stream;
       }
@@ -147,7 +152,11 @@ const TestPage = () => {
               const fileName = `webcam-snapshot-${new Date().toISOString()}.jpeg`;
               console.log(blob, "blobblob");
               localStorage.setItem("snapshot", JSON.stringify(blob));
-              sendSnapshotToBackend(blob, fileName);
+              if (candidate_id) {
+                sendSnapshotToBackend(blob, fileName, candidate_id);
+              } else {
+                console.error("candidate_id is undefined");
+              }
             }
           },
           "image/jpeg",
@@ -157,7 +166,7 @@ const TestPage = () => {
     }
   };
 
-  const sendSnapshotToBackend = async (blob: Blob, fileName: string) => {
+  const sendSnapshotToBackend = async (blob: Blob, fileName: string, candidate_id:string) => {
     const formData = new FormData();
     formData.append("file", blob, fileName);
     formData.append("is_private", "1");
@@ -219,6 +228,11 @@ const TestPage = () => {
       }
     }, 1000);
   }, []);
+
+  // Restart webcam when the question changes
+  useEffect(() => {
+    startWebcam();
+  }, [currentQuestion]);
 
   if (loading) return <p>Loading...</p>;
   if (error?.httpStatus === 403) return <Forbidden />;

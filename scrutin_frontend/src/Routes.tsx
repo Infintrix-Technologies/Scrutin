@@ -1,8 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import Login from "@/pages/auth/Login";
-import Assessments from "@/pages/Assessments";
-import Candidates from "@/pages/Candidates";
 import Jobs from "@/pages/Jobs";
 import MainLayout from "./layouts/MainLayout";
 import JobDetailPage from "./pages/JobDetailPage";
@@ -24,6 +22,8 @@ import CandidateDetailPage from "./pages/CandidatesDetailPage";
 import AssessmentDetailPage from "./pages/AssessmentDetailPage";
 import TestAPI from "./pages/TestAPI";
 import CandidatesComparisonPage from "./pages/CandidatesComparisonPage";
+import { CandidatesList } from "./components/CandidatesList";
+import AssessmentsList from "./pages/AssessmentsList";
 
 export const router = createBrowserRouter(
   [
@@ -53,7 +53,7 @@ export const router = createBrowserRouter(
           children: [
             {
               path: "",
-              element: <Assessments />,
+              element: <AssessmentsList />,
             },
             {
               path: ":assessment_id",
@@ -68,7 +68,7 @@ export const router = createBrowserRouter(
           children: [
             {
               path: "",
-              element: <Candidates />,
+              element: <CandidatesList />,
             },
             {
               path: ":email",
