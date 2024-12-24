@@ -19,7 +19,7 @@ export const JobApplicantActions: React.FC<JobApplicantActionsProps> = ({ applic
   // console.log(applicant,"console for applicant")
 
   const handleDelete = (name: string) => {
-    console.log(name,"name");
+    // console.log(name,"name");
     delete_api?.deleteDoc('Job Applicant', name);
   };
 
