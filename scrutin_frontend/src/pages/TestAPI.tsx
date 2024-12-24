@@ -4,21 +4,14 @@ import FileUploadForm from "@/components/Test/FileUploadForm";
 
 const TestAPI = () => {
 
-const getCandidatesOfSpecificUser = useFrappeGetCall("scrutin.api.user.get_user_candidates");
-console.log(getCandidatesOfSpecificUser, "getCandidatesOfSpecificUser");
-
-
-//this api give job_title of specific Job Applicant
+//Job Applicant List Page API
 const get_applicant_jobtitle = useFrappeGetCall("scrutin.api.assessment_data.get_applicant_jobtitle")
 console.log(get_applicant_jobtitle, "get_applicant_jobtitle");
 
-//this api give the name of job_applicant_name and assessment_name for Candidate
+//Candidate List Page API
 const get_candidate_details = useFrappePostCall("scrutin.api.assessment_data.candidate_list_api")
 console.log(get_candidate_details, "candidate_list_api");
 
-
-const specific_assessment_candidates = useFrappePostCall("scrutin.api.assessment_data.specific_assessment_candidates")
-// console.log(specific_assessment_candidates, "specific_assessment_candidates");
 
 //this api will give the all question for the specific test and their total duration
 const get_questions_for_test_and_total_duration = useFrappePostCall("scrutin.api.assessment_data.get_questions_for_test_and_total_duration")
@@ -30,9 +23,6 @@ const get_assessment_data = useFrappePostCall("scrutin.api.assessment_data.get_a
 
 //this api will give the candidate detail based on the job_applicant email
 const get_combined_candidate_detail_with_snapshot = useFrappePostCall("scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot")
-
-
-const get_assessment_test_and_question_with_options = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options")
 
 
 const get_specific_assessment_tests = useFrappePostCall("scrutin.api.assessment_data.get_specific_assessment_tests")
@@ -48,31 +38,16 @@ const get_candidate_response_questions_answer = useFrappePostCall("scrutin.api.a
 const get_candidate_response_test_finish_time = useFrappePostCall("scrutin.api.test_response_report.get_candidate_response_test_finish_time")
 
 
-const get_specific_test_details = useFrappePostCall("scrutin.api.assessment_data.get_specific_test_details")
-
-
-const get_applicant_name_assessment_name_for_specific_candidate = useFrappePostCall("scrutin.api.assessment_data.get_applicant_name_assessment_name_for_specific_candidate")
-
-
-const update_test_Completed_time = useFrappePostCall("scrutin.api.assessment_data.update_test_start_time")
-
-
 const get_candidate_test_progress = useFrappePostCall("scrutin.api.assessment_data.get_candidate_test_progress")
 
 
 const add_test_progress = useFrappePostCall("scrutin.api.assessment_data.add_test_progress")
 
 
-const get_candidate_detail_based_on_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_based_on_candidate_id")
-
-
 const get_candidate_detail_for_intro = useFrappePostCall("scrutin.api.assessment_data.get_candidate_detail_for_intro")
 
 
 const test_details_for_overview_page = useFrappePostCall("scrutin.api.assessment_data.test_details_for_overview_page")
-
-
-const get_assessment_test_and_question_with_options_with_candidate_id = useFrappePostCall("scrutin.api.assessment_data.get_assessment_test_and_question_with_options_with_candidate_id")
 
 
 const get_scrutin_question_detail = useFrappePostCall("scrutin.api.assessment_data.get_scrutin_question_detail")
@@ -199,15 +174,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
     <FileUploadForm/>
 
       <Button onClick={() => {
-        specific_assessment_candidates.call({
-          assessmnt: 'Python Developer',
-        });
-      }}>
-        Update Job Applicant
-      </Button>
-
-
-      <Button onClick={() => {
         get_questions_for_test_and_total_duration.call({
           test_name: 'gh76ldgot2',
         });
@@ -231,15 +197,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
         });
       }}>
         Candidate Details & SnapShots
-      </Button>
-
-
-      <Button onClick={() => {
-        get_assessment_test_and_question_with_options.call({
-          assessment_name: 'jvecvcvl4o',
-        });
-      }}>
-        Test Question Options
       </Button>
 
 
@@ -309,24 +266,6 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
 
 
       <Button onClick={() => {
-        get_specific_test_details.call({
-          test_id: '36se65gll1',
-        });
-      }}>
-        Specific Test Duration & no_of_q
-      </Button>
-
-
-      <Button onClick={() => {
-        get_applicant_name_assessment_name_for_specific_candidate.call({
-          candidate_id: 'k265ossobt',
-        });
-      }}>
-        get_specific_candidate_details
-      </Button>
-
-
-      <Button onClick={() => {
         get_candidate_detail_for_intro.call({
           candidate_id: '37hc0ipka2',
         });
@@ -336,38 +275,11 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
 
 
       <Button onClick={() => {
-        get_candidate_detail_based_on_candidate_id.call({
-          candidate_id: '37hc0ipka2',
-        });
-      }}>
-        get_candidate_detail_based_on_candidate_id
-      </Button>
-
-
-      <Button onClick={() => {
-        get_assessment_test_and_question_with_options_with_candidate_id.call({
-          candidate_id: 'k39k9ek7i1',
-        });
-      }}>
-        Test Question With Options With Candidate ID
-      </Button>
-
-
-      <Button onClick={() => {
         test_details_for_overview_page.call({
           candidate_id: '97c5oqlsf5',
         });
       }}>
         test_details_for_overview_page
-      </Button>
-
-
-      <Button onClick={() => {
-        update_test_Completed_time.call({
-          test_id: 'k9o3uoe1ob',
-        });
-      }}>
-        update_test_Completed_time
       </Button>
 
 
