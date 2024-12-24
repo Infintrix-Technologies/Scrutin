@@ -27,7 +27,7 @@ export const CandidateActions: React.FC<CandidateActionsProps> = ({ candidate })
         <div className="mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-transparent border-none text-white shadow-none">
+              <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none">
                 <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>

@@ -93,6 +93,8 @@ export interface AssessmentDetailData {
   test_scores: string;
   title: string;
   test_response_report: TestResponseReport;
+  applicant_status:string,
+  name:string
 }
 
 
@@ -171,6 +173,8 @@ export interface CandidateDetailAssessments {
   webcam_snapshots: (string | null)[];
   assessment_completed_at: string | null;
   applicant_rating:number
+  applicant_status:string
+  name:string
 }
 
 export interface CustomTestQuestions {
