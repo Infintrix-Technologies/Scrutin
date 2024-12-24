@@ -12,7 +12,7 @@ import {
 import { AssessmentActions } from "../components/AssessmentActions";
 import { Link } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
-import { AssessmentList } from "@/types/Interface";
+import { AssessmentListResponse } from "@/types/Interface";
 import CreateAssessment from "@/components/CreateAssessment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,9 +22,14 @@ const AssessmentsList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("assessment_name") || ""; 
 
-  const assessment_list_page_api_query = useFrappePostCall(
+  const assessment_list_page_api_query = useFrappePostCall<AssessmentListResponse>(
     "scrutin.api.assessment_data.assessment_list_page_api"
   );
+
+  const assessmentsData = assessment_list_page_api_query.result;
+  const assessmentsDataList = assessmentsData?.message || []; 
+
+  console.log(assessment_list_page_api_query,"assessment_list_page_api_query");
 
   useEffect(() => {
     assessment_list_page_api_query.call({
@@ -32,7 +37,6 @@ const AssessmentsList = () => {
     });
   }, [search]);
 
-  const assessmentsData = assessment_list_page_api_query.result;
 
   return (
     <div className="px-3 md:px-32">
@@ -46,9 +50,8 @@ const AssessmentsList = () => {
           <Input
             placeholder="Search"
             className="w-48"
-            value={search} // Bind input value to the search query param
+            value={search} 
             onChange={(e) => {
-              // Update the search term in the URL query parameters
               setSearchParams({ assessment_name: e.target.value });
             }}
           />
@@ -71,7 +74,7 @@ const AssessmentsList = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {assessmentsData?.message?.map((assessment:AssessmentList, index:number) => (
+          {assessmentsDataList.map((assessment, index:number) => (
             <TableRow key={index}>
               <TableCell className="font-medium">
                 <Link to={`/assessments/${assessment?.name}`}>

@@ -143,7 +143,7 @@ const CandidatesDetailPage: React.FC = () => {
     candidate_id: candidate_details[0]?.candidate_id,
   })
   const webcam_snapshot = webcam_snapshot_api?.data?.message || [];
-console.log(webcam_snapshot,"webcam_snapshot")
+// console.log(webcam_snapshot,"webcam_snapshot")
 
    const handleSendInvite = async (event: React.FormEvent) => {
     event.preventDefault();

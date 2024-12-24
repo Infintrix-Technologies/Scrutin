@@ -69,7 +69,7 @@ const TestPage = () => {
     getLocalIP();
   }, []);
 
-  // Update IP comparison in payload handling
+  // Anti cheating API Call
   useEffect(() => {
     const interval = setInterval(() => {
       const isIpSame = localIp === lastIp ? 1 : 0;
@@ -81,7 +81,7 @@ const TestPage = () => {
         mouse_always_in_test_window: mouseInWindow ? 1 : 0,
       });
       setLastIp(localIp);
-    }, 10000);
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [localIp, webcamError, inFullscreen, mouseInWindow, candidate_id]);
@@ -133,7 +133,7 @@ const TestPage = () => {
 
   useEffect(() => {
     startWebcam();
-    const interval = setInterval(takeSnapshot, 10000);
+    const interval = setInterval(takeSnapshot, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -150,7 +150,7 @@ const TestPage = () => {
           (blob) => {
             if (blob) {
               const fileName = `webcam-snapshot-${new Date().toISOString()}.jpeg`;
-              console.log(blob, "blobblob");
+              // console.log(blob, "blobblob");
               localStorage.setItem("snapshot", JSON.stringify(blob));
               if (candidate_id) {
                 sendSnapshotToBackend(blob, fileName, candidate_id);

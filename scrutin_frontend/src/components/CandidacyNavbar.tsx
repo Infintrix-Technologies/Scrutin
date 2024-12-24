@@ -48,7 +48,7 @@ const CandidacyNavbar = () => {
 
       setSelectedOption(null); 
     } catch (error) {
-      console.log(error, "error");
+      console.error(error, "error");
       // toast.error("There was an issue submitting your response. Please try again.");
     }
   };
