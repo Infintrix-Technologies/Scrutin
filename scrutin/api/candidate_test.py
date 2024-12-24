@@ -1,7 +1,6 @@
 import frappe 
-import time
-from frappe.query_builder import DocType
 from frappe.utils import now
+from frappe.query_builder import DocType
 from frappe.query_builder import functions as fn
 
 

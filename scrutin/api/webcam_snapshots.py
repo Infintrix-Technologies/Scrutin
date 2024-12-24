@@ -2,7 +2,6 @@ import frappe
 from frappe.query_builder import DocType
 
 
-
 @frappe.whitelist()
 def webcam_snapshot_api(candidate_id):
     File = DocType("File")
@@ -16,8 +15,3 @@ def webcam_snapshot_api(candidate_id):
     return file_data
 
        
-
-
-
-
-

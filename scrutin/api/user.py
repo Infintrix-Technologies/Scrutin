@@ -22,9 +22,6 @@ def get_user_candidates():
 
     return query.run(as_dict=True)
 
-
-from frappe.utils import random_string
-
 @frappe.whitelist()
 def create_user_from_job_applicant(email, first_name):
     if frappe.db.exists("User", {"email": email}):
