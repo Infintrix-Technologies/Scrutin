@@ -152,8 +152,14 @@ const test_list_for_search = useFrappePostCall("scrutin.api.assessment_data.test
 const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_report")
 
 
-
 const test_template = useFrappePostCall("scrutin.api.test_template.get_scrutin_test_templete_data")
+
+
+const test_detail = useFrappePostCall("scrutin.api.testing_api.get_test_details_with_options")
+
+
+const create_test_template_with_test = useFrappePostCall("scrutin.api.testing_api.create_test_template_from_test")
+
 
 
 
@@ -419,7 +425,7 @@ const test_template = useFrappePostCall("scrutin.api.test_template.get_scrutin_t
         Assessment List Page API
       </Button>
 
-//Update job_applicant_rating
+
       <Button onClick={() => {
         update_job_applicant_rating.call({
         applicant_id: "ayeshamalik123@gmail.com",
@@ -600,10 +606,28 @@ const test_template = useFrappePostCall("scrutin.api.test_template.get_scrutin_t
 
       <Button onClick={() => {
         test_template.call({
-          template_id: "kbli9u8khv"
+          template_id: "o2lq4eenkb"
         });
       }}>
-        Test Template
+        Test Template Detail
+      </Button>
+
+
+      <Button onClick={() => {
+        test_detail.call({
+          test_id: "k9o3uoe1ob"
+        });
+      }}>
+        Test Detail
+      </Button>
+
+
+      <Button onClick={() => {
+        create_test_template_with_test.call({
+          test_id: "k9o3uoe1ob"
+        });
+      }}>
+        Test Template with Test Data
       </Button>
 
 

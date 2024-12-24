@@ -596,6 +596,7 @@ def get_combined_candidate_detail_with_snapshot(email):
             ScrutinCandidate.name.as_("candidate_id"),
             JobApplicant.applicant_name.as_("candidate_name"),
             JobApplicant.applicant_rating,
+            JobApplicant.status.as_("applicant_status"),
             ScrutinCandidate.status,
             ScrutinCandidate.invited_on,
             ScrutinCandidate.assessment_completed_at,
@@ -702,14 +703,12 @@ def get_combined_candidate_detail_with_snapshot(email):
 
 
 #This API give the all question of Test and also give the Total Duration of the Test
-# @frappe.whitelist()
-def get_test_details_with_options(test_name):
+@frappe.whitelist()
+def get_test_details_with_options(test_id):
     ScrutinTest = DocType("Scrutin Test")
     ScrutinTestQuestion = DocType("Scrutin Test Question")
     ScrutinQuestion = DocType("Scrutin Question")
     ScrutinQuestionOption = DocType("Scrutin Question Option")
-    ScrutinAssessment = DocType("Scrutin Assessment")
-    ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
     
     # Query to get questions for the given test
     question_query = (
@@ -723,7 +722,7 @@ def get_test_details_with_options(test_name):
                 ScrutinQuestion.type,
                 ScrutinTest.title,
                 ScrutinQuestion.duration.as_("question_duration"))
-        .where(ScrutinTest.name == test_name)
+        .where(ScrutinTest.name == test_id)
     )
     questions = question_query.run(as_dict=True)
     
@@ -735,7 +734,7 @@ def get_test_details_with_options(test_name):
         .inner_join(ScrutinQuestion)
         .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
         .select(fn.Sum(ScrutinQuestion.duration).as_("test_total_duration"))
-        .where(ScrutinTest.name == test_name)
+        .where(ScrutinTest.name == test_id)
     )
     duration_result = duration_query.run(as_dict=True)
     total_duration = duration_result[0]['test_total_duration'] if duration_result else 0
