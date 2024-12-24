@@ -1,9 +1,9 @@
 import time
 import frappe
-from frappe.query_builder import DocType
-from frappe.query_builder import functions as fn
 from frappe.utils import now
 from datetime import datetime, timedelta
+from frappe.query_builder import DocType
+from frappe.query_builder import functions as fn
 
 def countdown_timer(seconds):
     time_updates = []
@@ -43,236 +43,6 @@ def get_timer_status(timer_name):
         "remaining_time": max(0, remaining_time)
     }
 
-
-
-
-
-
-
-# @frappe.whitelist()
-# def get_current_question(candidate_id):
-#     # Define DocTypes
-#     ScrutinAssessment = DocType("Scrutin Assessment")
-#     ScrutinAssessmentTest = DocType("Scrutin Assessment Tests")
-#     ScrutinTest = DocType("Scrutin Test")
-#     ScrutinTestQuestion = DocType("Scrutin Test Question")
-#     ScrutinQuestion = DocType("Scrutin Question")
-#     ScrutinQuestionOption = DocType("Scrutin Question Option")
-#     ScrutinCandidate = DocType("Scrutin Candidate")
-#     ScrutinTestProgress = DocType("Scrutin Test Progress")
-
-#     # Check candidate status
-#     status_query = (
-#         frappe.qb.from_(ScrutinCandidate)
-#         .select(ScrutinCandidate.status)
-#         .where(ScrutinCandidate.name == candidate_id)
-#     )
-#     candidate_status_result = status_query.run(as_dict=True)
-#     if candidate_status_result:
-#         candidate_status = candidate_status_result[0].get('status')
-#         if candidate_status == "Open" or candidate_status != "Started":
-#             raise frappe.PermissionError("Candidate status not valid for this operation: 403 Forbidden")
-
-#     # Check if candidate exists
-#     exists_query = (
-#         frappe.qb.from_(ScrutinCandidate)
-#         .select(ScrutinCandidate.name)
-#         .where(ScrutinCandidate.name == candidate_id)
-#     )
-#     candidate_exists = exists_query.run(as_dict=True)
-#     if not candidate_exists:
-#         raise frappe.DoesNotExistError(f"Candidate with ID {candidate_id} does not exist")
-
-#     # Helper functions
-#     def has_test_started(candidate_id, test_id):
-#         test_progress_query = (
-#             frappe.qb.from_(ScrutinTestProgress)
-#             .select(ScrutinTestProgress.name)
-#             .where(
-#                 (ScrutinTestProgress.parent == candidate_id) &
-#                 (ScrutinTestProgress.test == test_id)
-#             )
-#         )
-#         test_progress = test_progress_query.run(as_dict=True)
-#         return bool(test_progress)
-    
-#     def are_all_questions_answered(test_id, candidate_id):
-#         question_query = (
-#             frappe.qb.from_(ScrutinTestQuestion)
-#             .inner_join(ScrutinTest)
-#             .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-#             .inner_join(ScrutinQuestion)
-#             .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-#             .select(ScrutinTestQuestion.question)
-#             .where(ScrutinTest.name == test_id)
-#         )
-#         questions = question_query.run(as_dict=True)
-        
-#         if not questions:
-#             return True  # No questions in the test
-        
-#         responses = get_candidate_questions_answer_responses(candidate_id)
-#         answered_questions = {response['question'] for response in responses}
-        
-#         for question in questions:
-#             if question['question'] not in answered_questions:
-#                 return False
-        
-#         return True
-    
-#     # Retrieve assessment for candidate
-#     query = (
-#         frappe.qb.from_(ScrutinCandidate)
-#         .select(ScrutinCandidate.assessment)
-#         .where(ScrutinCandidate.name == candidate_id)
-#     )
-#     candidate_assessments = query.run(as_dict=True)
-#     if candidate_assessments:
-#         assessment_name = candidate_assessments[0].get('assessment')
-#     else:
-#         assessment_name = None
-
-#     if not assessment_name:
-#         return {
-#             'message': 'No assessment found for the candidate'
-#         }
-
-#     # Retrieve tests for the assessment
-#     tests_query = (
-#         frappe.qb.from_(ScrutinAssessmentTest)
-#         .inner_join(ScrutinAssessment)
-#         .on(ScrutinAssessment.name == ScrutinAssessmentTest.parent)
-#         .inner_join(ScrutinTest)
-#         .on(ScrutinAssessmentTest.test == ScrutinTest.name)
-#         .select(
-#             ScrutinAssessmentTest.test,
-#             ScrutinTest.title
-#         )
-#         .where(ScrutinAssessment.name == assessment_name)
-#     )
-#     tests = tests_query.run(as_dict=True)
-
-#     if not tests:
-#         return {
-#             'message': 'No tests available for the assessment'
-#         }
-
-#     current_test_index = 0
-#     while current_test_index < len(tests):
-#         current_test = tests[current_test_index]
-#         test_id = current_test['test']
-
-#         if not has_test_started(candidate_id, test_id):
-#             add_scrutin_test_progress(candidate_id, test_id, None)
-
-#         # Check if all questions are answered or the duration is zero
-#         test_progress = get_candidate_test_progress_for_test_page(candidate_id)
-#         test_duration_zero = any(progress['test'] == test_id and progress['remaining_time'] == 0 for progress in test_progress)
-
-#         if are_all_questions_answered(test_id, candidate_id) or test_duration_zero:
-#             current_test_index += 1
-#         else:
-#             break
-
-#     if current_test_index >= len(tests):
-#         return {'message': 'No more tests available'}
-
-#     test_id = tests[current_test_index]['test']
-#     test_title = tests[current_test_index]['title']
-
-#     question_query = (
-#         frappe.qb.from_(ScrutinTestQuestion)
-#         .inner_join(ScrutinTest)
-#         .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-#         .inner_join(ScrutinQuestion)
-#         .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-#         .select(
-#             ScrutinTestQuestion.question,
-#             ScrutinQuestion.question.as_('question_text'),
-#             ScrutinQuestion.type.as_('question_type')
-#         )
-#         .where(ScrutinTest.name == test_id)
-#     )
-#     questions = question_query.run(as_dict=True)
-
-#     if not questions:
-#         return {
-#             'message': 'No questions available for the test'
-#         }
-
-#     responses = get_candidate_questions_answer_responses(candidate_id)
-#     answered_questions = {response['question'] for response in responses}
-
-#     current_question = None
-#     next_question = None
-#     last_test_question = False
-
-#     for i, question in enumerate(questions):
-#         if question['question'] not in answered_questions:
-#             current_question = question
-#             if i + 1 < len(questions):
-#                 next_question = questions[i + 1]['question']
-#             else:
-#                 next_question = None
-#                 last_test_question = True  # This is the last question
-#             break
-
-#     if not current_question:
-#         current_question = questions[0]
-#         next_question = questions[1]['question'] if len(questions) > 1 else None
-
-#     if next_question is None and not last_test_question:
-#         next_test_index = current_test_index + 1
-#         if next_test_index < len(tests):
-#             next_test = tests[next_test_index]
-#             next_test_name = next_test['test']
-#             next_test_question_query = (
-#                 frappe.qb.from_(ScrutinTestQuestion)
-#                 .inner_join(ScrutinTest)
-#                 .on(ScrutinTest.name == ScrutinTestQuestion.parent)
-#                 .inner_join(ScrutinQuestion)
-#                 .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
-#                 .select(ScrutinTestQuestion.question)
-#                 .where(ScrutinTest.name == next_test_name)
-#             )
-#             next_test_questions = next_test_question_query.run(as_dict=True)
-#             if next_test_questions:
-#                 next_question = next_test_questions[0]['question']
-#         else:
-#             next_question = None
-
-#     option_query = (
-#         frappe.qb.from_(ScrutinQuestionOption)
-#         .select(
-#             ScrutinQuestionOption.value,
-#             ScrutinQuestionOption.label
-#         )
-#         .where(ScrutinQuestionOption.parent == current_question['question'])
-#     )
-#     options = option_query.run(as_dict=True)
-#     current_question['options'] = options
-
-#     update_data = {
-#         'current_question': current_question['question'],
-#         'next_question': next_question
-#     }
-#     frappe.db.set_value("Scrutin Candidate", candidate_id, update_data)
-
-#     return {
-#         'test': {
-#             'test': {
-#                 'test_id': current_test['test'],
-#                 'title': test_title
-#             },
-#             'current_question': {
-#                 'name': current_question['question'],
-#                 'text': current_question['question_text'],
-#                 'type': current_question['question_type'],
-#                 'options': options
-#             },
-#             'last_test_question': last_test_question
-#         }
-#     }
 
 
 @frappe.whitelist()
@@ -560,8 +330,6 @@ def add_scrutin_test_progress_duration(candidate_id):
         frappe.db.rollback()
         return f"An error occurred: {e}"
 
-
-
 @frappe.whitelist()
 def get_candidate_test_progress_for_test_page(candidate_id):
     ScrutinCandidate = DocType("Scrutin Candidate")
@@ -639,7 +407,6 @@ def get_candidate_test_progress_for_test_page(candidate_id):
     return results
 
 
-
 def add_scrutin_test_progress(candidate_id, test_name, started_at):
     try:
         ScrutinTest = DocType("Scrutin Test")
@@ -676,9 +443,6 @@ def add_scrutin_test_progress(candidate_id, test_name, started_at):
     except Exception as e:
         frappe.db.rollback()
         return f"An error occurred: {e}"
-
-
-
 
 
 def get_candidate_questions_answer_responses(candidate_id):

@@ -239,66 +239,8 @@ def get_candidate_test_response_report(candidate_id):
     }
 
 
-#Update the job_applicant rating based on assessment_average
-def update_job_applicant_rating(applicant_id, rating):
-    if not (0 <= rating <= 1):
-        return f"Invalid rating value: {rating}. Rating must be between 0 and 1."
 
-    JobApplicant = DocType("Job Applicant")
-    (
-        frappe.qb.update(JobApplicant)
-        .set(JobApplicant.applicant_rating, rating)
-        .where(JobApplicant.name == applicant_id)
-    ).run()
-    return f"Rating for applicant {applicant_id} has been updated successfully."
-
-
-
-# this api give each test start, complete & finished time 
-@frappe.whitelist()
-def get_candidate_response_test_finish_time(candidate_id):
-    ScrutinCandidate = DocType("Scrutin Candidate")
-    ScrutinTestProgress = DocType("Scrutin Test Progress")
-    ScrutinTest = DocType("Scrutin Test")
-
-    query = (
-        frappe.qb.from_(ScrutinCandidate)
-        .join(ScrutinTestProgress)
-        .on(ScrutinCandidate.name == ScrutinTestProgress.parent)
-        .join(ScrutinTest)
-        .on(ScrutinTestProgress.test == ScrutinTest.name)
-        .select(
-            ScrutinCandidate.job_applicant,
-            ScrutinTestProgress.test,
-            ScrutinTest.title,
-            ScrutinTestProgress.started_at,
-            ScrutinTestProgress.completed_at,
-        )
-        .where(ScrutinCandidate.name == candidate_id)
-    )
-    results = query.run(as_dict=True)
-
-    # Calculate the finished time for each record
-    for result in results:
-        started_at = result.get("started_at")
-        completed_at = result.get("completed_at")
-        if started_at and completed_at:
-            # Parse the timestamps if they are not already datetime objects
-            if isinstance(started_at, str):
-                started_at = datetime.fromisoformat(started_at)
-            if isinstance(completed_at, str):
-                completed_at = datetime.fromisoformat(completed_at)
-
-            # Calculate the finished time
-            finished_time = completed_at - started_at
-            result["finished_time"] = str(finished_time)  # Convert to string for JSON compatibility
-        else:
-            result["finished_time"] = None  # Handle cases where timestamps are missing
-
-    return results
-
-
-
+#This API is used to Send Email to candidate with its Test_Response_Report
 @frappe.whitelist()
 def send_email_to_candidate_test_response_report(candidate_id):
     report = get_candidate_test_response_report(candidate_id)
