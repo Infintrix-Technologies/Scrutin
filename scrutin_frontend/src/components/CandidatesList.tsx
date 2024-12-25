@@ -36,12 +36,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { buttonClassName } from "./common/ButtonStyle";
 // Other imports remain unchanged
 
 export const CandidatesList = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchInput, setSearchInput] = useState(""); // Temp state for search input
+  const [searchInput, setSearchInput] = useState(""); 
 
   const { data: jobApplicants, isLoading: jobApplicantsLoading } =
     useFrappeGetDocList("Job Applicant", {
@@ -89,13 +90,13 @@ export const CandidatesList = () => {
         newParams.delete("applicant_name");
       }
       setSearchParams(newParams);
-    }, 500); // 500ms delay
+    }, 500); 
 
-    return () => clearTimeout(delayDebounceFn); // Cleanup the timer
+    return () => clearTimeout(delayDebounceFn); 
   }, [searchInput, searchParams, setSearchParams]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value); // Update temp state
+    setSearchInput(e.target.value); 
   };
 
   const handleFilterChange = (key: string, value: string | null) => {
@@ -115,12 +116,10 @@ export const CandidatesList = () => {
     return <div>Loading candidates...</div>;
   }
 
-  const buttonClassName =
-    "text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg rounded-lg text-sm px-4 py-2 sm:px-5 sm:py-2.5 mb-2";
-
+ 
   return (
-    <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 bg-[#feeef2]">
-      <div className="flex flex-wrap justify-between items-center mt-6 gap-4">
+    <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 ">
+      <div className="border-b-2 border-slate-400 flex flex-wrap justify-between items-center mt-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Candidate</h1>
         <div className="flex flex-wrap gap-3">
           <Link to="/candidates/hr_report">
@@ -140,8 +139,8 @@ export const CandidatesList = () => {
         <Input
           placeholder="Search"
           className="w-full sm:w-48 bg-white border-none shadow-lg"
-          onChange={handleSearchChange} // Now debounced
-          value={searchInput} // Controlled input
+          onChange={handleSearchChange}
+          value={searchInput}
         />
         <div className="flex flex-wrap gap-3">
           <Select onValueChange={(value) => handleFilterChange("assessment_id", value === "clear" ? null : value)}>
@@ -178,16 +177,16 @@ export const CandidatesList = () => {
         </div>
       </div>
 
-      <Card className="bg-white border-none shadow-lg rounded-none">
+      <Card className="bg-white border-none shadow-lg rounded-lg">
         <Table className="rounded-lg">
           <TableCaption>A list of your candidates.</TableCaption>
           <TableHeader>
-            <TableRow>
-              <TableHead style={{padding:"20px 10px"}}>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Assessments</TableHead>
-              <TableHead>Invited On</TableHead>
-              <TableHead>Actions</TableHead>
+            <TableRow >
+              <TableHead className="text-black font-bold" style={{padding:"20px 10px"}}>Name</TableHead>
+              <TableHead className="text-black font-bold">Email</TableHead>
+              <TableHead className="text-black font-bold">Assessments</TableHead>
+              <TableHead className="text-black font-bold">Invited On</TableHead>
+              <TableHead className="text-black font-bold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

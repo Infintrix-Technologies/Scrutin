@@ -36,6 +36,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Create_Assessment } from "../types/Interface";
+import { buttonClassName } from "./common/ButtonStyle";
 // import { RainbowButton } from "./ui/rainbow-button";
 
 
@@ -58,7 +59,7 @@ const CreateAssessment = () => {
         <FaPlus />
         Create Assessment
         </RainbowButton> */}
-        <Button>
+        <Button className={buttonClassName}>
           <FaPlus className="mr-2" />
           Create Assessment
         </Button>
@@ -67,7 +68,7 @@ const CreateAssessment = () => {
           Create Assessment
         </Button> */}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="bg-white sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create Assessment</DialogTitle>
           <DialogDescription>

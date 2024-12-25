@@ -50,7 +50,7 @@ const AssessmentsList = () => {
   }, [search]);
 
   return (
-    <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 bg-[#feeef2]">
+    <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 ">
       <div className="flex flex-wrap justify-between items-center mt-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Assessments</h1>
         <CreateAssessment />
@@ -87,7 +87,7 @@ const AssessmentsList = () => {
           </TableHeader>
           <TableBody>
             {assessmentsDataList.map((assessment, index: number) => (
-              <TableRow key={index} className="hover:bg-[#feeef2]">
+              <TableRow key={index} className="">
                 <TableCell className="font-medium">
                   <Link to={`/assessments/${assessment?.name}`}>
                     {assessment.assessment_name}

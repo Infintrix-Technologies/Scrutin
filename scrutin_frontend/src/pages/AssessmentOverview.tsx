@@ -93,10 +93,10 @@ export default function AssessmentOverview() {
                     className="flex flex-col items-center text-center text-black space-y-2"
                     key={index}
                   >
-                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full border-2 bg-secondary flex items-center justify-center">
 
                       {test.answered_questions === test.total_questions ? (
-                        <CheckIcon className="w-8 h-8 text-primary-foreground" />
+                        <CheckIcon className="w-8 h-8" />
                       ) : (
                         <p className="text-lg font-bold">
                           {test.answered_questions} / {test.total_questions}
@@ -104,7 +104,7 @@ export default function AssessmentOverview() {
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-white">{test.title}</p>
+                      <p className="font-semibold text-black">{test.title}</p>
                       <p className="text-sm text-muted-foreground">
                         {test.total_questions}
                         {test.total_questions == 1
@@ -150,7 +150,7 @@ export default function AssessmentOverview() {
                 //when assessment is completed then the results modal is open otherwise not
                 onClick={() => globalState.openModal("test_resutls", specific_assessment_tests.assessment_completed == true)} //open
               >
-                <div className="w-12 h-12 rounded-full cursor-pointer bg-secondary flex items-center justify-center">
+                <div className="w-12 border-2  h-12 rounded-full cursor-pointer bg-secondary flex items-center justify-center">
                   <EyeIcon className="w-8 h-8 text-secondary-foreground" />
                 </div>
 
@@ -236,7 +236,7 @@ export default function AssessmentOverview() {
         open={globalState.modals.test_resutls.open}
         onOpenChange={(open) => globalState.openModal("test_resutls", open)}
       >
-        <DialogContent className="sm:max-w-[725px] h-screen overflow-x-hidden mt-2">
+        <DialogContent className="bg-white sm:max-w-[725px] h-screen overflow-x-hidden mt-2">
           <DialogHeader>
             <DialogTitle>Candidate Test Response Result </DialogTitle>
             <DialogDescription>
