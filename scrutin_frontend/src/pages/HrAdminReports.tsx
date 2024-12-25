@@ -15,7 +15,7 @@ import { HrAdminReportResponse } from "@/types/Interface";
 
 const HrAdminReports = () => {
   const { data: hrAdminReport, error, isLoading } = useFrappeGetCall<HrAdminReportResponse>(
-    "scrutin.api.testing_api.hr_admin_report"
+    "scrutin.api.hr_admin_report.hr_admin_report"
   );
   
   if (isLoading) return <p className="text-center p-4">Loading...</p>;
