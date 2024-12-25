@@ -29,8 +29,8 @@ export const JobApplicantActions: React.FC<JobApplicantActionsProps> = ({ applic
         <div  style={{ marginBottom: "1rem" }}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button style={{ background: "none", border: "none", color: "white", boxShadow: "none" }}>
-                <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
+            <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none">
+            <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-24">

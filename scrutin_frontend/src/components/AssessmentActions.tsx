@@ -29,8 +29,7 @@ export const AssessmentActions = ({ assessment }: AssessmentActionsProps) => {
         <div className="mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="border-none text-white shadow-none" style={{ background: "none"}}
-              >
+              <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none">
                 <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>

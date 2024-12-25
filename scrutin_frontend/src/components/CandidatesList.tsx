@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -23,7 +23,6 @@ import {
   JobApplicantSelectAssessment,
 } from "../types/Interface";
 import dayjs from "dayjs";
-
 import {
   Select,
   SelectContent,
@@ -37,9 +36,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import { buttonClassName } from "./common/ButtonStyle";
+// Other imports remain unchanged
+
 export const CandidatesList = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchInput, setSearchInput] = useState(""); 
 
   const { data: jobApplicants, isLoading: jobApplicantsLoading } =
     useFrappeGetDocList("Job Applicant", {
@@ -64,7 +67,7 @@ export const CandidatesList = () => {
   const get_candidate_details = useFrappePostCall<CandidateListResponse>(
     "scrutin.api.assessment_data.candidate_list_api"
   );
-  // console.log(get_candidate_details,"candidate_list_api")
+
   const candidatesQueryData = get_candidate_details.result?.message || [];
 
   const applicantMap = (jobApplicants || []).reduce((map, applicant) => {
@@ -77,14 +80,23 @@ export const CandidatesList = () => {
     get_candidate_details.call(params);
   }, [searchParams]);
 
+  // Debounced Effect for Search
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const newParams = new URLSearchParams(searchParams);
+      if (searchInput) {
+        newParams.set("applicant_name", searchInput);
+      } else {
+        newParams.delete("applicant_name");
+      }
+      setSearchParams(newParams);
+    }, 500); 
+
+    return () => clearTimeout(delayDebounceFn); 
+  }, [searchInput, searchParams, setSearchParams]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (e.target.value) {
-      newParams.set("applicant_name", e.target.value);
-    } else {
-      newParams.delete("applicant_name");
-    }
-    setSearchParams(newParams);
+    setSearchInput(e.target.value); 
   };
 
   const handleFilterChange = (key: string, value: string | null) => {
@@ -103,76 +115,59 @@ export const CandidatesList = () => {
   if (jobApplicantsLoading) {
     return <div>Loading candidates...</div>;
   }
- const classnameforBtn = "text-white bg-gradient-to-r from-teal-500  to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
 
+ 
   return (
-    <div className="px-32 py-4 min-h-screen  text-gray-800 bg-[#feeef2]">
-      <div className="flex justify-between mt-10">
-        <h1 className="text-3xl font-bold">Candidate</h1>
-        <div className="flex gap-3">
+    <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 ">
+      <div className="border-b-2 border-slate-400 flex flex-wrap justify-between items-center mt-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">Candidate</h1>
+        <div className="flex flex-wrap gap-3">
           <Link to="/candidates/hr_report">
-            <Button className={classnameforBtn}>HR Admin Report</Button>
+            <Button className={buttonClassName}>HR Admin Report</Button>
           </Link>
-
           <Link to="/candidates/candidate_comparison">
-            <Button className={classnameforBtn}> Candidate Comparison</Button>
+            <Button className={buttonClassName}>Candidate Comparison</Button>
           </Link>
-          <Button className={classnameforBtn}>
+          <Button className={buttonClassName}>
             <FaPlus className="mr-2" />
             Create Candidate
           </Button>
         </div>
       </div>
 
-      <div className="my-3 flex justify-between">
-        <div>
-          <Input
-            placeholder="Search"
-            className="w-48 bg-white border-none shadow-lg"
-            onChange={handleSearchChange}
-            value={searchParams.get("applicant_name") || ""}
-          />
-        </div>
-        <div className="flex gap-3">
-          <Select
-          
-            onValueChange={(value) => {
-              handleFilterChange(
-                "assessment_id",
-                value === "clear" ? null : value
-              );
-            }}
-          >
-            <SelectTrigger className="w-48 bg-white border-none shadow-lg">
+      <div className="my-3 flex flex-wrap gap-3 justify-between items-center">
+        <Input
+          placeholder="Search"
+          className="w-full sm:w-48 bg-white border-none shadow-lg"
+          onChange={handleSearchChange}
+          value={searchInput}
+        />
+        <div className="flex flex-wrap gap-3">
+          <Select onValueChange={(value) => handleFilterChange("assessment_id", value === "clear" ? null : value)}>
+            <SelectTrigger className="w-full sm:w-48 bg-white border-none shadow-lg">
               <SelectValue placeholder="Select Assessment" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="clear">All Assessments</SelectItem>
-                {assessment_list_query.map(
-                  (assessment: JobApplicantSelectAssessment) => (
-                    <SelectItem key={assessment.name} value={assessment.name}>
-                      {assessment.assessment_name}
-                    </SelectItem>
-                  )
-                )}
+                {assessment_list_query.map((assessment: JobApplicantSelectAssessment) => (
+                  <SelectItem key={assessment.name} value={assessment.name}>
+                    {assessment.assessment_name}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
 
-          <Select
-            onValueChange={(value) => {
-              handleFilterChange("test_id", value === "clear" ? null : value);
-            }}
-          >
-            <SelectTrigger className="w-48 bg-white border-none shadow-lg">
-              <SelectValue  placeholder="Select Test" />
+          <Select onValueChange={(value) => handleFilterChange("test_id", value === "clear" ? null : value)}>
+            <SelectTrigger className="w-full sm:w-48 bg-white border-none shadow-lg">
+              <SelectValue placeholder="Select Test" />
             </SelectTrigger>
-            <SelectContent className="bg-white  border-slate-300 shadow-lg text-black  ">
-              <SelectGroup className="">
-                <SelectItem className="" value="clear">All Tests</SelectItem>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="clear">All Tests</SelectItem>
                 {test_list_query.map((test: CandidateDetailPageTestFilter) => (
-                  <SelectItem className="" key={test.name} value={test.name}>
+                  <SelectItem key={test.name} value={test.name}>
                     {test.title}
                   </SelectItem>
                 ))}
@@ -181,28 +176,23 @@ export const CandidatesList = () => {
           </Select>
         </div>
       </div>
-<Card className="bg-white border-none shadow-lg rounded-none text-black">
-      <Table className="rounded-lg">
-        <TableCaption>A list of your candidates.</TableCaption>
-        <TableHeader className="py-10 text-black ">
-          <TableRow className=" whitespace-nowrap hover:bg-white bg-white  text-black">
-            <TableHead style={{padding:"20px 10px"}} className=" text-black font-bold ">Name</TableHead>
-            <TableHead className=" text-black py-2 font-bold" >Email</TableHead>
-            <TableHead className=" text-black py-2 font-bold" >Assessments</TableHead>
-            <TableHead className=" text-black py-2 font-bold" >Invited On</TableHead>
-            <TableHead className=" text-black py-2 font-bold" >Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {candidatesQueryData.map(
-            (candidate, index: number) => (
+
+      <Card className="bg-white border-none shadow-lg rounded-lg">
+        <Table className="rounded-lg">
+          <TableCaption>A list of your candidates.</TableCaption>
+          <TableHeader>
+            <TableRow >
+              <TableHead className="text-black font-bold" style={{padding:"20px 10px"}}>Name</TableHead>
+              <TableHead className="text-black font-bold">Email</TableHead>
+              <TableHead className="text-black font-bold">Assessments</TableHead>
+              <TableHead className="text-black font-bold">Invited On</TableHead>
+              <TableHead className="text-black font-bold">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {candidatesQueryData.map((candidate, index: number) => (
               <TableRow key={index} className="hover:bg-[#feeef2]">
-                <TableCell
-                  className="cursor-pointer "
-                  onClick={() =>
-                    navigate(`/candidates/${candidate.job_applicant}`)
-                  }
-                >
+                <TableCell onClick={() => navigate(`/candidates/${candidate.job_applicant}`)}>
                   {applicantMap[candidate.job_applicant] || "N/A"}
                 </TableCell>
                 <TableCell>{candidate.job_applicant}</TableCell>
@@ -212,17 +202,14 @@ export const CandidatesList = () => {
                   <CandidateActions candidate={candidate} />
                 </TableCell>
               </TableRow>
-            )
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={5} className="hover:bg-white bg-white text-black">
-              Total candidates: {candidatesQueryData.length}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={5}>Total candidates: {candidatesQueryData.length}</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
       </Card>
     </div>
   );

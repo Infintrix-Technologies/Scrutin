@@ -15,14 +15,14 @@ import { HrAdminReportResponse } from "@/types/Interface";
 
 const HrAdminReports = () => {
   const { data: hrAdminReport, error, isLoading } = useFrappeGetCall<HrAdminReportResponse>(
-    "scrutin.api.testing_api.hr_admin_report"
+    "scrutin.api.hr_admin_report.hr_admin_report"
   );
   
   if (isLoading) return <p className="text-center p-4">Loading...</p>;
   if (error) return <NotFound />;
   
   return (
-    <div className="px-32 py-4 min-h-screen bg-[#feeef2]">
+    <div className="px-6  md:px-22 lg:px-36 py-4 min-h-screen ">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">
         HR Admin Reports
       </h1>
