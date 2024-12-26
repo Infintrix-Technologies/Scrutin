@@ -133,4 +133,8 @@ ul > a.active {
    }
  }
 
- 
+ .tableeadclass {
+  TableHead{
+    color:black !important;
+  }
+ }

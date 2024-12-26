@@ -6,7 +6,7 @@ import {
   FaSearch,
   FaChevronLeft,
   FaChevronRight,
-  FaSlidersH,
+  // FaSlidersH,
 } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { Clock, Edit, MessageSquare } from "lucide-react";
@@ -56,7 +56,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGlobalState } from "@/utils/StateProvider";
 import SetTestWeights from "@/components/Modal/SetTestWeights";
-import { StarIcon, TrashIcon } from "@radix-ui/react-icons";
+import { TrashIcon } from "@radix-ui/react-icons";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
@@ -69,6 +69,7 @@ import {
   TestAssessmentsAccuracy,
 } from "@/types/Interface";
 import NotFound from "./NotFound";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 const AssessmentDetailPage = () => {
   const params = useParams();
@@ -81,6 +82,8 @@ const AssessmentDetailPage = () => {
       assessment_id: assessment_id,
     }
   );
+  console.log(data, "dataddddddddddd");
+
   const assessment_data = data?.message || [];
   console.log(assessment_data, "assessment_data");
 
@@ -98,6 +101,58 @@ const AssessmentDetailPage = () => {
     },
   ];
 
+  const renderStars = (
+    rating: number,
+    onClickHandler?: (rating: number) => void
+  ) => {
+    const stars = [];
+    const fullStar = <FaStar className="text-yellow-500 text-xl" />;
+    const halfStar = <FaStarHalfAlt className="text-yellow-500 text-xl" />;
+    const emptyStar = <FaRegStar className="text-yellow-500 text-xl" />;
+
+    const convertedRating = Math.round(rating * 10);
+    const fullStarsCount = Math.floor(convertedRating / 2);
+    const halfStarCount = convertedRating % 2;
+    const emptyStarsCount = 5 - (fullStarsCount + halfStarCount);
+
+    for (let i = 0; i < fullStarsCount; i++) {
+      stars.push(
+        <span
+          key={`full-${i}`}
+          onClick={() => onClickHandler && onClickHandler((i + 1) * 0.2)}
+        >
+          {fullStar}
+        </span>
+      );
+    }
+    if (halfStarCount === 1) {
+      stars.push(
+        <span
+          key="half"
+          onClick={() =>
+            onClickHandler && onClickHandler(fullStarsCount * 0.2 + 0.1)
+          }
+        >
+          {halfStar}
+        </span>
+      );
+    }
+    for (let i = 0; i < emptyStarsCount; i++) {
+      stars.push(
+        <span
+          key={`empty-${i}`}
+          onClick={() =>
+            onClickHandler && onClickHandler((fullStarsCount + i + 1) * 0.2)
+          }
+        >
+          {emptyStar}
+        </span>
+      );
+    }
+
+    return stars;
+  };
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <NotFound />;
 
@@ -110,13 +165,14 @@ const AssessmentDetailPage = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
+              className="rounded-full bg-slate-100 hover:bg-slate-200"
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Go back</span>
             </Button>
           </Link>
-          {assessment_data?.assessment_data?.map((data: AssessmentDetailData, index: number) => (
+          {assessment_data?.assessment_data?.map(
+            (data: AssessmentDetailData, index: number) => (
               <div className="flex flex-col gap-1 " key={index}>
                 <div className="flex gap-2">
                   <h1 className="text-xl font-semibold">
@@ -127,7 +183,7 @@ const AssessmentDetailPage = () => {
                     size="icon"
                     className="rounded-full h-6 w-6"
                   >
-                    <Edit2 className="h-4 w-4" />
+                    <Edit2 className="h-4 w-4 " />
                     <span className="sr-only">Edit title</span>
                   </Button>
                 </div>
@@ -195,12 +251,12 @@ const AssessmentDetailPage = () => {
         </div>
       </div>
 
-      <Card className="container mx-auto p-6">
+      <div className="border rounded-lg container mx-auto my-5 p-6">
         <Card>
           <div className="p-6 my-3 space-y-8">
             <div className="flex items-center justify-between overflow-y-hidden gap-3">
               <h1 className="text-2xl font-semibold">Candidates</h1>
-              <div className="flex items-center gap-4">
+              {/* <div className="flex items-center gap-4">
                 <div className="relative">
                   <FaSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input className="pl-10 w-[300px]" placeholder="Search" />
@@ -244,7 +300,7 @@ const AssessmentDetailPage = () => {
                   <FaSlidersH className="h-4 w-4" />
                   More filters
                 </Button>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex items-center gap-2">
@@ -253,7 +309,11 @@ const AssessmentDetailPage = () => {
                 className="flex gap-3 text-sm font-medium cursor-pointer"
                 onClick={() => globalState.openModal("set_test_weights", true)}
               >
-                <Switch id="airplane-mode" disabled />
+                <Switch
+                  id="airplane-mode"
+                  disabled
+                  className="bg-slate-50 text-slate-50"
+                />
                 Set test weights
               </span>
               <Dialog
@@ -325,7 +385,7 @@ const AssessmentDetailPage = () => {
                   globalState.openModal("set_test_weights", open)
                 }
               >
-                <DialogContent className="sm:max-w-[625px]">
+                <DialogContent className="sm:max-w-[625px] bg-white">
                   <DialogHeader>
                     <DialogTitle>Set Test Weights</DialogTitle>
                     <DialogDescription>
@@ -378,17 +438,19 @@ const AssessmentDetailPage = () => {
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {feedback_modal_candidates_detail?.map((candidate) => (
-                                    <TableRow key={candidate.name}>
-                                      <TableCell>{candidate.name}</TableCell>
-                                      <TableCell>{candidate.score}</TableCell>
-                                      <TableCell>
-                                        <Checkbox
-                                        // checked={candidate.hired}
-                                        />
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
+                                  {feedback_modal_candidates_detail?.map(
+                                    (candidate) => (
+                                      <TableRow key={candidate.name}>
+                                        <TableCell>{candidate.name}</TableCell>
+                                        <TableCell>{candidate.score}</TableCell>
+                                        <TableCell>
+                                          <Checkbox
+                                          // checked={candidate.hired}
+                                          />
+                                        </TableCell>
+                                      </TableRow>
+                                    )
+                                  )}
                                 </TableBody>
                               </Table>
                             </Card>
@@ -484,36 +546,40 @@ const AssessmentDetailPage = () => {
                           )
                         )}
                         <TableCell>
-                         <Select  >
-                                                <SelectTrigger  
-                                                // className={assessment.applicant_status == "Accepted" ? 
-                                                //   "bg-green-500 text-white" : "bg-red-500 text-white"}>
-                                                  
-                                                  className={`${
-                                                    data.applicant_status == "Rejected"
-                                                        ? "bg-red-100 text-red-700 hover:bg-red-100"
-                                                        : "bg-green-100 text-green-700 hover:bg-green-100"
-                                                    } cursor-pointer `}>
-                                                  
-                                                  <SelectValue className="bg-green-500 text-white" />
-                                                </SelectTrigger>
-                                                <SelectContent className="">
-                                                   <SelectItem className="bg-green-500 text-white" key={data.applicant_status} value={data.name}>
-                                                                      {data.applicant_status || ""}
-                                                                    </SelectItem>
-                                                </SelectContent>
-                                              </Select>
+                          <Select>
+                            <SelectTrigger
+                              // className={assessment.applicant_status == "Accepted" ?
+                              //   "bg-green-500 text-white" : "bg-red-500 text-white"}>
+
+                              className={`${
+                                data.applicant_status == "Rejected"
+                                  ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                  : "bg-green-100 text-green-700 hover:bg-green-100"
+                              } cursor-pointer `}
+                            >
+                              <SelectValue className="bg-green-500 text-white" />
+                            </SelectTrigger>
+                            <SelectContent className="">
+                              <SelectItem
+                                className="bg-green-500 text-white"
+                                key={data.applicant_status}
+                                value={data.name}
+                              >
+                                {data.applicant_status || ""}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                         </TableCell>
                         <TableCell>
                           <Badge
                             variant="secondary"
                             className={
                               data?.status === "Open"
-                                ? "bg-orange-100 text-orange-700 hover:bg-orange-100"
+                                ? "bg-orange-100 text-orange-700 hover:bg-orange-200"
                                 : data?.status === "Completed"
-                                ? "bg-green-100 text-green-800 hover:bg-red-100"
+                                ? "bg-green-100 text-green-800 hover:bg-green-200"
                                 : data?.status === "Started"
-                                ? "bg-blue-100 text-blue-700 hover:bg-green-100"
+                                ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
                                 : ""
                             }
                           >
@@ -523,12 +589,13 @@ const AssessmentDetailPage = () => {
                         <TableCell>{formatDate(data?.invited_on)}</TableCell>
                         <TableCell>
                           <div className="flex justify-center gap-1">
-                            {[...Array(5)].map((_, i) => (
+                            {renderStars(data.applicant_rating)}
+                            {/* {[...Array(5)].map((_, i) => (
                               <StarIcon
                                 key={i}
                                 className={"w-4 h-4 text-gray-300"}
                               />
-                            ))}
+                            ))} */}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -607,28 +674,39 @@ const AssessmentDetailPage = () => {
                     <div>Impact</div>
                     <div>Duration</div>
                   </div>
-                  {assessment_data.tests.map((assessment_data: Assessment_Detail_Page_Test, index: number) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
-                    >
-                      <div className="text-start">{assessment_data?.title}</div>
-                      <div>{assessment_data.weight || "--"}</div>
-                      <div>{assessment_data.impact || "--"}</div>
-                      <div className="flex items-end">
-                        <Clock className="mr-2 h-4 w-4" />
-                        {assessment_data.total_duration < 60
-                          ? assessment_data.total_duration > 0
-                            ? `${assessment_data.total_duration} seconds`
-                            : ""
-                          : `${Math.floor(assessment_data.total_duration / 60)} min${
-                              assessment_data.total_duration % 60 > 0
-                                ? ` ${assessment_data.total_duration % 60} sec`
-                                : ""
-                            }`}
+                  {assessment_data.tests.map(
+                    (
+                      assessment_data: Assessment_Detail_Page_Test,
+                      index: number
+                    ) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
+                      >
+                        <div className="text-start">
+                          {assessment_data?.title}
+                        </div>
+                        <div>{assessment_data.weight || "--"}</div>
+                        <div>{assessment_data.impact || "--"}</div>
+                        <div className="flex items-end">
+                          <Clock className="mr-2 h-4 w-4" />
+                          {assessment_data.total_duration < 60
+                            ? assessment_data.total_duration > 0
+                              ? `${assessment_data.total_duration} seconds`
+                              : ""
+                            : `${Math.floor(
+                                assessment_data.total_duration / 60
+                              )} min${
+                                assessment_data.total_duration % 60 > 0
+                                  ? ` ${
+                                      assessment_data.total_duration % 60
+                                    } sec`
+                                  : ""
+                              }`}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -805,7 +883,7 @@ const AssessmentDetailPage = () => {
             </AccordionItem>
           </Accordion>
         </Card>
-      </Card>
+      </div>
     </>
   );
 };

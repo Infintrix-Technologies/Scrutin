@@ -63,7 +63,7 @@ export default function Component() {
        <div className="flex justify-between my-6">
         <h1 className="text-3xl font-bold">Jobs</h1>
         <Link to="/jobs/post">
-        <Button>
+        <Button className="shadow-lg rounded-full">
           <FaPlus className="mr-2" />
           Post Job
         </Button>
@@ -88,13 +88,13 @@ export default function Component() {
                 <Briefcase className="w-4 h-4" />
                 <span>{job?.type}</span>
               </div>
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="secondary" className="mb-4 shadow-lg rounded-full ">
                 <Clock className="w-4 h-4 mr-1" />
                 {job?.postedAt}
               </Badge>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Apply Now</Button>
+              <Button className="shadow-lg rounded-full w-full" >Apply Now</Button>
             </CardFooter>
           </Card>
         ))}

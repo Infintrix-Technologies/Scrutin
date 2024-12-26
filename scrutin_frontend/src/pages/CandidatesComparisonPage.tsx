@@ -21,15 +21,15 @@ const CandidatesComparisonPage = () => {
   console.log(comparison_two_candidates_test, "comparison_two_candidates_test");
 
   return (
-    <div className="mx-3">
+    <div className="mx-3 lg:mx-28">
       <h1 className="text-xl py-2 font-bold">
         Two Candidates Test Response Report Comparison Page
       </h1>
-      <Card className="block lg:flex ">
+      <div className="block lg:flex ">
         <div className="w-full p-6  space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Applicant Information</CardTitle>
+              <CardTitle>Candidate 1 # Information</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center space-x-6">
               <Avatar className="h-20 w-20">
@@ -285,7 +285,7 @@ const CandidatesComparisonPage = () => {
             )
           )}
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

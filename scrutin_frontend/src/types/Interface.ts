@@ -95,6 +95,7 @@ export interface AssessmentDetailData {
   test_response_report: TestResponseReport;
   applicant_status:string,
   name:string
+  applicant_rating:number
 }
 
 
@@ -314,4 +315,35 @@ export interface HrAdminReportsApplicant {
 
 export interface HrAdminReportResponse {
   message: HrAdminReportsApplicant[];
+}
+export interface AssessmentDetailResponse {
+  message: {
+    assessment_data: {
+      assessment_name: string;
+      total_number_of_tests: number;
+      total_duration_of_all_tests: number;
+    }[];
+    candidate_name: {
+      candidate_id: string;
+      status: string;
+      invited_on: string;
+      applicant_name: string;
+      applicant_rating: number;
+      applicant_status: string;
+      test_response_report: {
+        tests: {
+          test_title: string;
+          accuracy: number;
+        }[];
+        assessment_average: number;
+      };
+    }[];
+    tests: {
+      test: string;
+      weight: string;
+      title: string;
+      total_duration: number;
+    }[];
+    custom_questions:string
+  };
 }

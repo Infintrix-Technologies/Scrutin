@@ -36,7 +36,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Create_Assessment } from "../types/Interface";
-import { buttonClassName } from "./common/ButtonStyle";
 // import { RainbowButton } from "./ui/rainbow-button";
 
 
@@ -59,7 +58,7 @@ const CreateAssessment = () => {
         <FaPlus />
         Create Assessment
         </RainbowButton> */}
-        <Button className={buttonClassName}>
+        <Button className="shadow-lg rounded-full">
           <FaPlus className="mr-2" />
           Create Assessment
         </Button>
