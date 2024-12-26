@@ -184,7 +184,7 @@ import { Link, useParams } from "react-router-dom";
       </CardContent>
       <CardFooter className="flex justify-end">
         <Link to={`/candidacy/${candidate_id}/test`}>
-              <Button className="text-end flex items-center">
+              <Button className="rounded-full text-end flex items-center">
                 Start Test
                 <ChevronRightIcon className="ml-2 h-4 w-4" />
               </Button>

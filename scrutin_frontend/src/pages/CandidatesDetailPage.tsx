@@ -181,9 +181,9 @@ const CandidatesDetailPage: React.FC = () => {
     onClickHandler?: (rating: number) => void
   ) => {
     const stars = [];
-    const fullStar = <FaStar className="text-yellow-300" />;
-    const halfStar = <FaStarHalfAlt className="text-yellow-300" />;
-    const emptyStar = <FaRegStar className="text-yellow-300" />;
+    const fullStar = <FaStar className="text-yellow-500 text-xl" />;
+    const halfStar = <FaStarHalfAlt className="text-yellow-500 text-xl" />;
+    const emptyStar = <FaRegStar className="text-yellow-500 text-xl" />;
 
     const convertedRating = Math.round(rating * 10);
     const fullStarsCount = Math.floor(convertedRating / 2);
@@ -364,7 +364,7 @@ const CandidatesDetailPage: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full bg-[hsl(217.24deg_32.58%_17.45%)] hover:bg-teal-950"
+            className="rounded-full bg-slate-200 hover:bg-slate-300"
           >
             
             <Link to={'/candidates'}>
@@ -379,7 +379,7 @@ const CandidatesDetailPage: React.FC = () => {
             </h1>
             <Link
               to="#"
-              className="text-sm text-muted-foreground hover:underline"
+              className="text-sm text-muted-foreground  "
             >
               {candidate_details[0].job_applicant}
             </Link>
@@ -437,7 +437,7 @@ const CandidatesDetailPage: React.FC = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
-                          className="rounded-full border p-2 hover:bg-green-800"
+                          className="rounded-full border p-2 hover:bg-slate-100"
                           onClick={() =>
                             globalState.openModal("interpret_results", true)
                           }
@@ -454,7 +454,7 @@ const CandidatesDetailPage: React.FC = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-green-800">
+                        <button className="rounded-full border p-2 hover:bg-slate-100">
                           <FaDownload onClick={handleDownloadPDF}/>
                         </button>
                       </TooltipTrigger>
@@ -468,7 +468,7 @@ const CandidatesDetailPage: React.FC = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
-                          className="rounded-full border p-2 hover:bg-green-800"
+                          className="rounded-full border p-2 hover:bg-slate-100"
                           onClick={() => {
                             send_email_to_candidate_test_response_report.call({
                               candidate_id: candidate_details[0]?.candidate_id,
@@ -487,7 +487,7 @@ const CandidatesDetailPage: React.FC = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-green-800"                        
+                        <button className="rounded-full border p-2 hover:bg-slate-100"                        
                           onClick={handleRejectApplicant}
                         >
                           <FaUserTimes />
@@ -506,17 +506,17 @@ const CandidatesDetailPage: React.FC = () => {
             <div className="container mx-auto pt-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
                 <div className="col-span-1">
-                  <div className="p-4 border rounded-lg">
+                  <Card className="p-4 border rounded-lg">
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Invited</h3>
-                      <p className="text-gray-300">
+                      <p className="">
                         {formatDate(assessment.invited_on)}
                       </p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Completed</h3>
-                      <p className="text-gray-300">
+                      <p className="">
                         {formatDate(assessment.assessment_completed_at || "Not Completed")}
                       </p>
                     </div>
@@ -525,14 +525,14 @@ const CandidatesDetailPage: React.FC = () => {
                       <h3 className="font-bold text-lg">
                         Extra time breakdown
                       </h3>
-                      <p className="text-gray-300">
+                      <p className="">
                         No extra time was granted to this candidate
                       </p>
                     </div>
 
                     <div className="mb-2">
                       <h3 className="font-bold text-lg">Source</h3>
-                      <p className="text-gray-300">General public link</p>
+                      <p className="">General public link</p>
                     </div>
 
                     <p className="font-bold text-lg py-5"> Hiring stage </p>
@@ -558,7 +558,7 @@ const CandidatesDetailPage: React.FC = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
+                  </Card>
                 </div>
                 <div className="col-span-1">
                   <Card className="container ">
@@ -977,11 +977,11 @@ const CandidatesDetailPage: React.FC = () => {
 
                           {/* Rating Column */}
                           <TableCell>
-                            <div className="flex justify-center gap-1">
+                            <div className=" cursor-pointer flex justify-center gap-1">
                               {[...Array(5)].map((_, i) => (
                                 <FaStar
                                   key={i}
-                                  className={`w-4 h-4 ${
+                                  className={`w-4 h-4 cursor-pointer ${
                                     // i < question?.rating
                                     i < 3
                                       ? "text-yellow-400 fill-yellow-400"
@@ -1004,7 +1004,7 @@ const CandidatesDetailPage: React.FC = () => {
                       Give your personal overall rating of this candidate based
                       on your impressions and interactions with him or her.
                     </p>
-                    <div className="flex items-center gap-1 mt-2">
+                    <div className="flex items-center gap-1 mt-2 cursor-pointer">
                 
                     {renderStars(
                   currentRating,
@@ -1104,7 +1104,7 @@ const CandidatesDetailPage: React.FC = () => {
                           </p>
                         </div>
                         <div className="col-span-2">
-                          <div className="bg-white text-black rounded-md shadow-md px-4 py-3">
+                          <Card className=" text-black rounded-md px-4 py-3">
                             <div className="flex justify-between items-center mb-2">
                               <h2 className="text-lg font-bold">
                                 Average score
@@ -1159,7 +1159,7 @@ const CandidatesDetailPage: React.FC = () => {
                                 </span>
                               </div>
                             </div>
-                          </div>
+                          </Card>
                         </div>
                       </div>
                     </CardContent>

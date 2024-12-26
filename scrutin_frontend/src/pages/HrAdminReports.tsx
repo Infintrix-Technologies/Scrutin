@@ -22,14 +22,14 @@ const HrAdminReports = () => {
   if (error) return <NotFound />;
   
   return (
-    <div className="px-6  md:px-22 lg:px-36 py-4 min-h-screen ">
+    <div className="px-6  md:px-22 lg:px-40 py-6 md:py-10 min-h-screen ">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">
         HR Admin Reports
       </h1>
       <div className="space-y-6">
         {hrAdminReport?.message.map((report, index: number) => (
-          <Card key={index} className="bg-white border-none shadow-lg">
-            <CardHeader className="">
+          <Card key={index} >
+            <CardHeader >
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <User className="text-black"/>
                 {report.applicant_name}
@@ -47,7 +47,7 @@ const HrAdminReports = () => {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="font-bold text-base">
-                    <TableRow className="whitespace-nowrap hover:bg-[#feeef2] bg-white">
+                    <TableRow className="whitespace-nowrap ">
                       <TableHead className="text-black">Test Title</TableHead>
                       <TableHead className="text-black">Level</TableHead>
                       <TableHead className="text-center text-black">
@@ -66,7 +66,7 @@ const HrAdminReports = () => {
                   </TableHeader>
                   <TableBody>
                     {report.tests.map((test, index: number) => (
-                      <TableRow key={index} className="whitespace-nowrap hover:bg-[#feeef2]">
+                      <TableRow key={index} className="whitespace-nowrap ">
                         <TableCell className="text-black">{test.test_title}</TableCell>
                         <TableCell className="text-black">{test.test_level}</TableCell>
                         <TableCell className="text-center text-black">

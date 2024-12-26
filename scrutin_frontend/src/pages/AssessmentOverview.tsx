@@ -214,7 +214,7 @@ export default function AssessmentOverview() {
             {!specific_assessment_tests.assessment_completed && (
               <Link to={`/candidacy/${candidate_id}/setup`}>
                 <Button
-                  className="text-end flex items-center"
+                  className="rounded-full text-end flex items-center"
                   onClick={() => {
                     assessment_started.call({
                       candidate_id: candidate_id,
@@ -236,11 +236,11 @@ export default function AssessmentOverview() {
         open={globalState.modals.test_resutls.open}
         onOpenChange={(open) => globalState.openModal("test_resutls", open)}
       >
-        <DialogContent className="bg-white sm:max-w-[725px] h-screen overflow-x-hidden mt-2">
+        <DialogContent className="sm:max-w-[725px] h-screen overflow-x-hidden mt-2 border-none">
           <DialogHeader>
             <DialogTitle>Candidate Test Response Result </DialogTitle>
             <DialogDescription>
-              <Card className="max-w-4xl mx-auto p-6 space-y-6">
+              <div className="border rounded-lg max-w-4xl mx-auto p-6 space-y-6">
                 <Card>
                   <CardHeader>
                     <CardTitle>Applicant Information</CardTitle>
@@ -305,7 +305,18 @@ export default function AssessmentOverview() {
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <Badge>{test.test_level}</Badge>
+                          <Badge 
+                          className={
+                            test.test_level === "Beginner"
+                              ? "bg-orange-100 text-orange-700 hover:bg-orange-200"
+                              : test.test_level === "Intermediate"
+                              ? "bg-green-100 text-green-800 hover:bg-green-200"
+                              : test.test_level === "Expert"
+                              ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                              : ""
+                          }
+                          
+                          >{test.test_level}</Badge>
                           {test.finished_time === null ? (
                             "Incomplete Test"
                           ) : (
@@ -376,7 +387,7 @@ export default function AssessmentOverview() {
                     </Card>
                   )
                 )}
-              </Card>
+              </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

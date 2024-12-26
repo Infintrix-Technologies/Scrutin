@@ -31,7 +31,7 @@ export default function Navbar() {
 
   return (
     <>
-    <header className="flex bg-[#f5f5f5] justify-between h-16 border-b-2 w-full shrink-0 items-center px-4 md:px-6">
+    <header className="flex bg-[#f4f4f8] justify-between h-16 border-b-2 w-full shrink-0 items-center px-4 md:px-6">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden">

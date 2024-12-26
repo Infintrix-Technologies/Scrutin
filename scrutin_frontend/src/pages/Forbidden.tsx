@@ -15,7 +15,7 @@ const Forbidden = () => {
             Access to this resource on the server is denied!
             </p>
             <Link to={"/"}>
-            <Button>Back to Home</Button>
+            <Button className='rounded-full'>Back to Home</Button>
             </Link>
         </div>
     </div>

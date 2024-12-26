@@ -14,7 +14,7 @@ const NotFound = () => {
             There's nothing here
             </p>
             <Link to={"/"}>
-            <Button>Back to Home</Button>
+            <Button className='rounded-full'>Back to Home</Button>
             </Link>
         </div>
     </div>

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -35,15 +35,16 @@ import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { JobApplicantActions } from "@/components/JobApplicantActions";
 import { JobApplicant, JobApplication } from "@/types/Interface";
+import { Card } from "@/components/ui/card";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const renderStars = (rating: number) => {
     const stars = [];
-    const fullStar = <FaStar className="text-yellow-300" />;
-    const halfStar = <FaStarHalfAlt className="text-yellow-300" />;
-    const emptyStar = <FaRegStar className="text-yellow-300" />;
+    const fullStar = <FaStar className="text-yellow-500 text-xl" />;
+    const halfStar = <FaStarHalfAlt className="text-yellow-500 text-xl" />;
+    const emptyStar = <FaRegStar className="text-yellow-500 text-xl" />;
 
     const convertedRating = Math.round(rating * 10);
     const fullStarsCount = Math.floor(convertedRating / 2);
@@ -183,23 +184,23 @@ const JobApplicants = () => {
         <h1 className="text-2xl sm:text-3xl font-bold">Job Applicants</h1>
       </div>
 
-      <div className="bg-white border-none shadow-lg rounded-lg  mt-6">
+      <Card className="bg-white rounded-lg  my-6">
         <Table>
-          <TableCaption>A list of job applicants.</TableCaption>
+          {/* <TableCaption>A list of job applicants.</TableCaption> */}
           <TableHeader>
-            <TableRow>
-              <TableHead style={{padding:"20px 10px"}} >Applicant Name</TableHead>
-              <TableHead>Rating</TableHead>
-              <TableHead>Job Title</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Send Invite</TableHead>
-              <TableHead>Actions</TableHead>
+            <TableRow className="whitespace-nowrap tableeadclass">
+              <TableHead className="p-[20px] text-black font-bold" >Applicant Name</TableHead>
+              <TableHead className="text-black font-bold">Rating</TableHead>
+              <TableHead className="text-black font-bold" >Job Title</TableHead>
+              <TableHead className="text-black font-bold">Status</TableHead>
+              <TableHead className="text-black font-bold">Send Invite</TableHead>
+              <TableHead className="text-black font-bold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {job_applicants?.map((applicant: JobApplicant, index: number) => (
-              <TableRow key={index} className="hover:bg-[#feeef2]">
-                <TableCell>{applicant.applicant_name}</TableCell>
+              <TableRow key={index} className="whitespace-nowrap">
+                <TableCell className="p-[20px]">{applicant.applicant_name}</TableCell>
                 <TableCell className="flex py-6">
                   {renderStars(applicant.applicant_rating)}
                 </TableCell>
@@ -213,11 +214,11 @@ const JobApplicants = () => {
                     className={`${
                       applicant.status === "Open" ||
                       applicant.status === "Replied"
-                        ? "bg-orange-100 text-orange-700"
+                        ? "bg-orange-100 hover:bg-orange-100 text-orange-700"
                         : applicant.status === "Rejected" ||
                           applicant.status === "Hold"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-green-100 text-green-700"
+                        ? "bg-red-100 hover:bg-red-100 text-red-700"
+                        : "bg-green-100 hover:bg-green-100 text-green-700"
                     }`}
                   >
                     {applicant.status}
@@ -233,7 +234,6 @@ const JobApplicants = () => {
                     }}
                   >
                     <FaPaperPlane />
-                    {/* <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none"> */}
 
                   </Button>
                 </TableCell>
@@ -245,13 +245,13 @@ const JobApplicants = () => {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={5}>
+              <TableCell className="pl-[20px]" colSpan={5}>
                 Total applicants: {job_applicants?.length}
               </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
-      </div>
+      </Card>
     </div>
   );
 };

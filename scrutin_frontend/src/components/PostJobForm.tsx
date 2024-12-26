@@ -85,7 +85,7 @@ export default function PostJobForm() {
 
   return (
     <>
-     <Card className="px-5 py-3 mb-4">
+     <Card className="p-8 mx-12  my-8 ">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
@@ -407,7 +407,7 @@ export default function PostJobForm() {
           </div>
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button className="rounded-full" type="submit">Submit</Button>
       </form>
     </Form>
     </Card>

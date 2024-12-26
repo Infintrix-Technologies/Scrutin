@@ -26,7 +26,7 @@ export const JobApplicantActions: React.FC<JobApplicantActionsProps> = ({ applic
   return (
     <div>
       
-        <div  style={{ marginBottom: "1rem" }}>
+        <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
             <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none">
