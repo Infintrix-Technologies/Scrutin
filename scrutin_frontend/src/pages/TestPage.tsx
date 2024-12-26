@@ -23,6 +23,7 @@ const TestPage = () => {
   const [mouseInWindow, setMouseInWindow] = useState(true);
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const [devToolsOpen, setDevToolsOpen] = useState(false);
 
   const test = question?.message?.test;
   const currentQuestion = test?.current_question;
@@ -141,8 +142,8 @@ const TestPage = () => {
     if (webcamRef.current) {
       const video = webcamRef.current as HTMLVideoElement;
       const canvas = document.createElement("canvas");
-      canvas.width = 320;
-      canvas.height = 240;
+      canvas.width = 600;
+      canvas.height = 340;
       const context = canvas.getContext("2d");
       if (context) {
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -150,7 +151,6 @@ const TestPage = () => {
           (blob) => {
             if (blob) {
               const fileName = `webcam-snapshot-${new Date().toISOString()}.jpeg`;
-              // console.log(blob, "blobblob");
               localStorage.setItem("snapshot", JSON.stringify(blob));
               if (candidate_id) {
                 sendSnapshotToBackend(blob, fileName, candidate_id);
@@ -201,26 +201,27 @@ const TestPage = () => {
     }
   };
 
-  useEffect(() => {
-    const enterFullscreen = () => {
-      const element = document.documentElement as HTMLElement & {
-        webkitRequestFullscreen?: () => Promise<void>;
-        msRequestFullscreen?: () => Promise<void>;
-      };
-
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen(); // Safari (older versions)
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen(); // IE/Edge (older versions)
-      }
+  // Function to enter fullscreen mode
+  const enterFullscreen = () => {
+    const element = document.documentElement as HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void>;
+      msRequestFullscreen?: () => Promise<void>;
     };
 
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen(); // Safari (older versions)
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen(); // IE/Edge (older versions)
+    }
+  };
+
+  useEffect(() => {
     enterFullscreen();
   }, []);
 
-  //fix the camera issue for start
+  // Fix the camera issue for start
   useEffect(() => {
     setTimeout(() => {
       if (webcamRef.current && webcamRef.current.readyState === 0) {
@@ -233,6 +234,73 @@ const TestPage = () => {
   useEffect(() => {
     startWebcam();
   }, [currentQuestion]);
+
+  // Disable right-click, F11, F12, Escape, and function keys
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const functionKeys = [
+        "F1", "F2", "F3", "F4", "F5",
+        "F6", "F7", "F8", "F9", "F10",
+        "F11", "F12", "Escape"
+      ];
+      if (functionKeys.includes(event.key)) {
+        event.preventDefault();
+        alert("Function keys and Escape key are disabled during the test.");
+      }
+    };
+
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
+      // alert("Right-click is disabled during the test.");
+    };
+
+    const handleCopyPaste = (event: ClipboardEvent) => {
+      event.preventDefault();
+      // alert("Copy-paste is disabled during the test.");
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("contextmenu", handleContextMenu);
+    window.addEventListener("copy", handleCopyPaste);
+    window.addEventListener("paste", handleCopyPaste);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("copy", handleCopyPaste);
+      window.removeEventListener("paste", handleCopyPaste);
+    };
+  }, []);
+
+  // Detect if inspect is open or closed
+  useEffect(() => {
+    const detectInspect = () => {
+      const threshold = 160; 
+      const element = new Image();
+      Object.defineProperty(element, 'id', {
+        get: () => {
+          setDevToolsOpen(true);
+        }
+      });
+      console.dir(element);
+
+      setInterval(() => {
+        const widthDiff = window.outerWidth - window.innerWidth > threshold;
+        const heightDiff = window.outerHeight - window.innerHeight > threshold;
+        const isDevToolsOpen = widthDiff || heightDiff;
+
+        if (isDevToolsOpen && !devToolsOpen) {
+          setDevToolsOpen(true);
+          alert('Developer tools are open, please close them to continue.');
+        } else if (!isDevToolsOpen && devToolsOpen) {
+          setDevToolsOpen(false);
+          enterFullscreen();
+        }
+      }, 1000);
+    };
+
+    detectInspect();
+  }, [devToolsOpen]);
 
   if (loading) return <p>Loading...</p>;
   if (error?.httpStatus === 403) return <Forbidden />;
@@ -330,7 +398,7 @@ const TestPage = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-2 left-2 border-2 border-black w-[150px] h-[100px] overflow-hidden rounded-lg bg-black">
+      <div className="fixed bottom-2 left-2 border-2 w-[150px] h-[100px] overflow-hidden rounded-lg">
         <video
           ref={webcamRef}
           autoPlay

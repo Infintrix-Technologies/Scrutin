@@ -125,7 +125,7 @@ export default function AssessmentOverview() {
               )}
               {specific_assessment_tests.custom_questions !== 0 && (
                 <div className="flex flex-col items-center text-center space-y-2">
-                  <div className="w-12 h-12 text-black font-bold rounded-full cursor-pointer bg-primary flex items-center justify-center">
+                  <div className="w-12 h-12  font-bold rounded-full cursor-pointer bg-slate-100 border-2 flex items-center justify-center">
                     {/* <CheckIcon className="w-12 h-12 text-primary-foreground" /> */}
                     {specific_assessment_tests.custom_questions}
                   </div>
