@@ -143,7 +143,12 @@ const CandidatesDetailPage: React.FC = () => {
     candidate_id: candidate_details[0]?.candidate_id,
   })
   const webcam_snapshot = webcam_snapshot_api?.data?.message || [];
-// console.log(webcam_snapshot,"webcam_snapshot")
+  console.log(webcam_snapshot,"webcam_snapshot")
+
+
+  // const allTestsIncomplete = specific_assessment_tests?.tests?.every(
+  //   (test:StartAssessment_And_Continue_Button) => !test.test_completed
+  // );
 
    const handleSendInvite = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -895,34 +900,35 @@ const CandidatesDetailPage: React.FC = () => {
                           </Badge>
                         </div>
                       </div>
-                          <>
-                          {webcam_snapshot.length > 0 ? (
-                            <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
-                              <div className="flex h-full items-center justify-center">
-                                {webcam_snapshot[sliderValue]?.file_url ? (
-                                  <img
-                                    src={webcam_snapshot[sliderValue].file_url}
-                                    alt="Snapshot"
-                                    className="h-[230px] w-[410px] rounded-lg"
-                                  />
-                                ) : (
-                                  <FaLock className="h-8 w-8 text-muted-foreground" />
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex h-full items-center justify-center">
-                              <FaLock className="h-8 w-8 text-muted-foreground" />
-                            </div>
-                          )}
-                          <Slider
-                            defaultValue={[0]}
-                            max={webcam_snapshot.length - 1}
-                            step={1}
-                            value={[sliderValue]}
-                            onValueChange={(value) => handleSliderChange(value[0])}
-                          />
-                        </>
+                      <>
+  {webcam_snapshot.length > 0 ? (
+    <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
+      <div className="flex h-full items-center justify-center">
+        {webcam_snapshot[sliderValue]?.file_url ? (
+          <img
+            src={webcam_snapshot[sliderValue].file_url}
+            alt="Snapshot"
+            className="h-full w-full object-contain rounded-lg"
+          />
+        ) : (
+          <FaLock className="h-8 w-8 text-muted-foreground" />
+        )}
+      </div>
+    </div>
+  ) : (
+    <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex items-center justify-center">
+      <FaLock className="h-8 w-8 text-muted-foreground" />
+    </div>
+  )}
+  <Slider
+    defaultValue={[0]}
+    max={webcam_snapshot.length - 1}
+    step={1}
+    value={[sliderValue]}
+    onValueChange={(value) => handleSliderChange(value[0])}
+  />
+</>
+
                     </CardContent>
                   </Card>
                 </div>

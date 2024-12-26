@@ -12,10 +12,8 @@ export default function TestProgress() {
   const { candidate_id } = useParams();
   const { updateCurrentQuestion, question } = useGlobalState();
   const mark_test_completed  = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed");
-  console.log(question, "time_questions");
 
   const candidate_test_progress_query = question?.message?.test || [];
-  // console.log(candidate_test_progress_query,"candidate_test_progress_query")
   const specific_test_details = candidate_test_progress_query || {};
   const totalDuration = specific_test_details?.total_duration ;
   const remainingTime = Math.round(specific_test_details?.remaining_time );
@@ -50,7 +48,6 @@ export default function TestProgress() {
       // });
       navigate(`/candidacy/${candidate_id}/overview`);
     }
-    // console.log(timeLeft,"timeLeft")
     
   }, [mark_test_completed,timeLeft, candidate_id, navigate,question]);
 
