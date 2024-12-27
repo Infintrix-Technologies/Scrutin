@@ -19,6 +19,10 @@ const navitems = [
     href: "/candidates",
   },
   {
+    title: "Admin Reports",
+    href: "/admin_reports",
+  },
+  {
     title: "Job Applicants",
     href: "/applicants",
   },
@@ -31,7 +35,7 @@ export default function Navbar() {
 
   return (
     <>
-    <header className="flex bg-[#f4f4f8] justify-between h-16 border-b-2 w-full shrink-0 items-center px-4 md:px-6">
+    <header className="flex bg-[#f4f4f8] justify-between h-16 border-b-4  w-full shrink-0 items-center px-4 md:px-6 sticky top-0 z-50">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden">

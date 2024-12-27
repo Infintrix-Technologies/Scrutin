@@ -1,7 +1,5 @@
 
-type Props = {}
-
-const Register = (props: Props) => {
+const Register = () => {
   return (
     <div>Register</div>
   )

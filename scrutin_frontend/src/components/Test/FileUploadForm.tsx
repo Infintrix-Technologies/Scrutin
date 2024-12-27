@@ -27,7 +27,7 @@ const FileUploadForm: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       setState(prevState => ({
         ...prevState,
-        file: e.target.files[0],
+        file: e.target.files ? e.target.files[0] : null,
         error: '' // Clear any previous errors
       }));
     }
@@ -74,7 +74,11 @@ const FileUploadForm: React.FC = () => {
         // Handle success (reset form or show message)
       }
     } catch (err) {
-      setState(prevState => ({ ...prevState, error: `Error: ${err.message}` }));
+      if (err instanceof Error) {
+        setState(prevState => ({ ...prevState, error: `Error: ${err.message}` }));
+      } else {
+        setState(prevState => ({ ...prevState, error: 'An unknown error occurred' }));
+      }
     }
   };
 

@@ -89,13 +89,13 @@ const AssessmentsList = () => {
           {/* <TableCaption>A list of your job postings.</TableCaption> */}
           <TableHeader>
             <TableRow>
-              <TableHead style={{ padding: "20px 20px" }} className="font-bold">
+              <TableHead style={{ padding: "20px 20px" }} className="font-bold text-black">
                 Name
               </TableHead>
-              <TableHead className="font-bold text-center">Candidate</TableHead>
-              <TableHead className="font-bold">Company</TableHead>
-              <TableHead className="font-bold">Language</TableHead>
-              <TableHead className="font-bold">Actions</TableHead>
+              <TableHead className="font-bold text-center text-black">Candidate</TableHead>
+              <TableHead className="font-bold text-black">Company</TableHead>
+              <TableHead className="font-bold text-black">Language</TableHead>
+              <TableHead className="font-bold text-black">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -120,11 +120,6 @@ const AssessmentsList = () => {
               </TableRow>
             ))}
           </TableBody>
-          {/* <TableFooter>
-            <TableRow>
-              <TableCell   colSpan={5}>Total Assessment: {assessmentsDataList.length}</TableCell>
-            </TableRow>
-          </TableFooter> */}
         </Table>
         <hr />
         <div className="flex flex-col sm:flex-row items-center justify-between p-4 gap-4 sm:gap-0">

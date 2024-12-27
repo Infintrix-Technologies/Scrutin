@@ -120,9 +120,6 @@ export const CandidatesList = () => {
       <div className=" flex flex-wrap justify-between items-center mt-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Candidate</h1>
         <div className="flex flex-wrap gap-3 py-2">
-          <Link to="/candidates/hr_report">
-            <Button className="rounded-full">HR Admin Report</Button>
-          </Link>
           <Link to="/candidates/candidate_comparison">
             <Button className="shadow-lg rounded-full">
               Candidate Comparison

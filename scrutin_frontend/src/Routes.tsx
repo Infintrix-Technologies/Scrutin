@@ -64,6 +64,16 @@ export const router = createBrowserRouter(
           ],
         },
         {
+          path: "admin_reports",
+          element: <PublicLayout />,
+          children: [
+            {
+              path: "",
+              element: <HrAdminReports />,
+            },
+          ],
+        },
+        {
           path: "candidates",
           element: <AdminLayout />,
           children: [
@@ -79,10 +89,7 @@ export const router = createBrowserRouter(
               path: "candidate_comparison",
               element: <CandidatesComparisonPage />,
             },
-            {
-              path: "hr_report",
-              element: <HrAdminReports />,
-            },
+                  
           ],
         },
         //This Show the Jobs Page 

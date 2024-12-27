@@ -84,47 +84,49 @@ import { MdCheckCircle, MdTimer } from "react-icons/md";
 import { VscTypeHierarchySuper } from "react-icons/vsc";
 import { AiOutlineBarChart } from "react-icons/ai";
 import { FaChevronLeft } from "react-icons/fa6";
+import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import {
-  useFrappeGetCall,
-  useFrappePostCall,
-} from "frappe-react-sdk";
-import { CandidateDetailAssessments, CandidateTestResponseReport, AssessmentCustomQuestion, JobApplicantSelectAssessment } from "@/types/Interface";
+  CandidateDetailAssessments,
+  CandidateTestResponseReport,
+  AssessmentCustomQuestion,
+  JobApplicantSelectAssessment,
+} from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import toast, { Toaster } from "react-hot-toast";
 
-
 const CandidatesDetailPage: React.FC = () => {
   const [sliderValue, setSliderValue] = React.useState(0);
-  const [updatedRatings, setUpdatedRatings] = React.useState<{ [key: string]: number }>({});
-  const [ratingUpdated, setRatingUpdated] = React.useState(false); 
-  const [selectedAssessment, setSelectedAssessment] = React.useState<string | null>(null);
+  const [updatedRatings, setUpdatedRatings] = React.useState<{
+    [key: string]: number;
+  }>({});
+  const [ratingUpdated, setRatingUpdated] = React.useState(false);
+  const [selectedAssessment, setSelectedAssessment] = React.useState<
+    string | null
+  >(null);
   const globalState = useGlobalState();
   const params = useParams();
   const email = params.email || null;
 
-  const handleSliderChange = (value: number) => {
-    setSliderValue(value);
-  };
-
   const { data, isLoading, error } = useFrappeGetCall(
     "scrutin.api.assessment_data.get_combined_candidate_detail_with_snapshot",
-    { email: email , ratingUpdated: ratingUpdated}
+    { email: email, ratingUpdated: ratingUpdated }
   );
- 
   const candidate_details = data?.message?.candidate_assessment || [];
-  console.log(candidate_details, "candidate_details");
 
   const send_email_to_candidate_test_response_report = useFrappePostCall(
     "scrutin.api.test_response_report.send_email_to_candidate_test_response_report"
   );
-  const update_job_applicant_status = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_status")
+  const update_job_applicant_status = useFrappePostCall(
+    "scrutin.api.candidate_test.update_job_applicant_status"
+  );
 
-  const assessment_list_page_api = useFrappeGetCall("scrutin.api.assessment_data.assessment_list_page_api")
-  const assessment_list_query =
-  assessment_list_page_api?.data?.message || [];
+  const assessment_list_page_api = useFrappeGetCall(
+    "scrutin.api.assessment_data.assessment_list_page_api"
+  );
+  const assessment_list_query = assessment_list_page_api?.data?.message || [];
   // console.log(assessment_list_query,"assessment_list_query")
   const get_candidate_test_response_report = useFrappeGetCall(
     "scrutin.api.test_response_report.get_candidate_test_response_report",
@@ -132,54 +134,80 @@ const CandidatesDetailPage: React.FC = () => {
       candidate_id: candidate_details[0]?.candidate_id,
     }
   );
- 
+
   const candidate_test_response_report =
     get_candidate_test_response_report?.data?.message || [];
-  const update_job_applicant_rating = useFrappePostCall("scrutin.api.candidate_test.update_job_applicant_rating")
+  const update_job_applicant_rating = useFrappePostCall(
+    "scrutin.api.candidate_test.update_job_applicant_rating"
+  );
 
-   const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite");
+  const send_invite = useFrappePostCall("scrutin.api.send_invite.send_invite");
 
-   const webcam_snapshot_api = useFrappeGetCall("scrutin.api.webcam_snapshots.webcam_snapshot_api",{
-    candidate_id: candidate_details[0]?.candidate_id,
-  })
+  const webcam_snapshot_api = useFrappeGetCall(
+    "scrutin.api.webcam_snapshots.webcam_snapshot_api",
+    {
+      candidate_id: candidate_details[0]?.candidate_id,
+    }
+  );
+
+  const handleEmailSend = async () => {
+    try {
+      const response = await send_email_to_candidate_test_response_report.call({
+        candidate_id: candidate_details[0]?.candidate_id,
+      });
+
+      if (response?.message?.message) {
+        toast.success(response.message.message);
+      } else {
+        toast.success("Email sent successfully!");
+      }
+    } catch (error) {
+      toast.error(
+        (error as { message: string })?.message ||
+          "Failed to send email. Please try again later."
+      );
+    }
+  };
+
+  const handleSliderChange = (value: number) => {
+    setSliderValue(value);
+  };
+
   const webcam_snapshot = webcam_snapshot_api?.data?.message || [];
-  console.log(webcam_snapshot,"webcam_snapshot")
-
 
   // const allTestsIncomplete = specific_assessment_tests?.tests?.every(
   //   (test:StartAssessment_And_Continue_Button) => !test.test_completed
   // );
 
-   const handleSendInvite = async (event: React.FormEvent) => {
+  const handleSendInvite = async (event: React.FormEvent) => {
     event.preventDefault();
-  
+
     if (!selectedAssessment) {
       toast.error("Please select an assessment.");
       return;
     }
-  
+
     if (!email) {
       toast.error("Email is not available.");
-      return; 
+      return;
     }
-  
+
     try {
       const response = await send_invite.call({
         assessment: selectedAssessment,
         email_id: email,
       });
-  
+
       if (response.message.message) {
         toast.success(response.message.message);
         globalState.openModal("candidate_send_invite", false);
-        send_invite.reset()
+        send_invite.reset();
       }
     } catch (error) {
       console.error("Error sending invite:", error);
       toast.error("Failed to send invite. Please try again.");
     }
   };
-  
 
   const renderStars = (
     rating: number,
@@ -209,7 +237,9 @@ const CandidatesDetailPage: React.FC = () => {
       stars.push(
         <span
           key="half"
-          onClick={() => onClickHandler && onClickHandler(fullStarsCount * 0.2 + 0.1)}
+          onClick={() =>
+            onClickHandler && onClickHandler(fullStarsCount * 0.2 + 0.1)
+          }
         >
           {halfStar}
         </span>
@@ -220,8 +250,7 @@ const CandidatesDetailPage: React.FC = () => {
         <span
           key={`empty-${i}`}
           onClick={() =>
-            onClickHandler &&
-            onClickHandler((fullStarsCount + i + 1) * 0.2)
+            onClickHandler && onClickHandler((fullStarsCount + i + 1) * 0.2)
           }
         >
           {emptyStar}
@@ -258,122 +287,149 @@ const CandidatesDetailPage: React.FC = () => {
   };
   const handleRejectApplicant = async () => {
     try {
-      const response = await update_job_applicant_status.call({ applicant_id: email });
+      const response = await update_job_applicant_status.call({
+        applicant_id: email,
+      });
       if (response.message.rejected) {
-        toast.error(response.message.message || 'The applicant has already been rejected.');
+        toast.error(
+          response.message.message || "The applicant has already been rejected."
+        );
       } else {
-        toast.success('The applicant status has been updated successfully.');
+        toast.success("The applicant status has been updated successfully.");
       }
     } catch (error) {
       console.error(error);
-      toast.error('An error occurred while updating the status.');
+      toast.error("An error occurred while updating the status.");
     }
   };
   const handleDownloadPDF = () => {
     const candidateDetails = candidate_details[0];
     const responseReport = get_candidate_test_response_report?.data?.message;
-  
+
     if (!candidateDetails || !responseReport) {
       alert("No data available to download.");
       return;
     }
-  
-  const doc = new jsPDF();
-  
+
+    const doc = new jsPDF();
+
     doc.setFontSize(16);
     doc.text("Candidate Assessment Report", 10, 10);
     doc.setFontSize(12);
 
     doc.setFont("helvetica", "normal");
     doc.text("Candidate Name : ", 10, 20);
-  
+
     doc.setFont("helvetica", "bold");
     doc.text(`${candidateDetails.candidate_name}`, 50, 20);
-    
+
     doc.setFont("helvetica", "normal");
     doc.text("Candidate Email : ", 10, 30);
-    
+
     doc.setFont("helvetica", "bold");
     doc.text(`${candidateDetails.job_applicant}`, 50, 30);
-  
+
     doc.setFont("helvetica", "normal");
     doc.text("Assessment Name : ", 10, 40);
-  
+
     doc.setFont("helvetica", "bold");
     doc.text(`${candidateDetails.assessment_title}`, 50, 40);
-  
+
     doc.setFont("helvetica", "normal");
     doc.text("Assessment Average : ", 10, 50);
-  
+
     doc.setFont("helvetica", "bold");
     doc.text(`${responseReport.assessment_average.toFixed(0)} %`, 55, 50);
-  
+
     doc.setFont("helvetica", "normal");
     doc.text("Assessment Status : ", 10, 60);
-  
+
     doc.setFont("helvetica", "bold");
     doc.text(`${candidateDetails.status || "Not Completed"}`, 50, 60);
-  
+
     doc.line(10, 65, 200, 65);
-  
-    const testTableData = candidate_details.map((assessments:CandidateDetailAssessments) => [
-      formatDate(assessments.invited_on || "N/A"),
-      formatDate(assessments.assessment_completed_at || "Not Completed"),
-      "desktop",
-      "Lahore",
-      assessments.filled_out_only_once_from_ip_address === 0 ? "No" : "Yes",
-      assessments.web_cam_enabled === 0 ? "No" : "Yes",
-      assessments.full_screen_mode_always_active === 0 ? "No" : "Yes",
-      assessments.mouse_always_in_assessment_window === 0 ? "No" : "Yes",
-    ]);
-  
-    
+
+    const testTableData = candidate_details.map(
+      (assessments: CandidateDetailAssessments) => [
+        formatDate(assessments.invited_on || "N/A"),
+        formatDate(assessments.assessment_completed_at || "Not Completed"),
+        "desktop",
+        "Lahore",
+        assessments.filled_out_only_once_from_ip_address == 0 ? "No" : "Yes",
+        assessments.web_cam_enabled == 0 ? "No" : "Yes",
+        assessments.full_screen_mode_always_active == 0 ? "No" : "Yes",
+        assessments.mouse_always_in_assessment_window == 0 ? "No" : "Yes",
+      ]
+    );
+
     autoTable(doc, {
-      head: [["Invited_on", "Completed at", "Device Used", "Location", "Filled only once IP", "Webcam", "Full-screen","Mouse always in window"]],
+      head: [
+        [
+          "Invited_on",
+          "Completed at",
+          "Device Used",
+          "Location",
+          "Filled only once IP",
+          "Webcam",
+          "Full-screen",
+          "Mouse always in window",
+        ],
+      ],
       body: testTableData,
       startY: 70,
       styles: { fontSize: 10, cellPadding: 4 },
       theme: "grid",
     });
-  
-   
-    const testTableData2 = responseReport.tests.map((test:CandidateTestResponseReport, index:number) => [
-      index + 1,
-      test.test_title,
-      test.test_level,
-      test.total_questions,
-      test.correct_count,
-      test.incorrect_count,
-      test.unanswered_questions,
-      `${test.accuracy.toFixed(0)}%`,
-    ]);
-  
+
+    const testTableData2 = responseReport.tests.map(
+      (test: CandidateTestResponseReport, index: number) => [
+        index + 1,
+        test.test_title,
+        test.test_level,
+        test.total_questions,
+        test.correct_count,
+        test.incorrect_count,
+        test.unanswered_questions,
+        `${test.accuracy.toFixed(0)}%`,
+      ]
+    );
+
     autoTable(doc, {
-      head: [["#", "Test Title", "Level", "Total Questions", "Correct", "Incorrect","unanswered" ,"Accuracy"]],
+      head: [
+        [
+          "#",
+          "Test Title",
+          "Level",
+          "Total Questions",
+          "Correct",
+          "Incorrect",
+          "unanswered",
+          "Accuracy",
+        ],
+      ],
       body: testTableData2,
       startY: 120,
       styles: { fontSize: 10, cellPadding: 4 },
       theme: "grid",
     });
-  
+
     doc.save(`Assessment_Report_${candidateDetails.candidate_name}.pdf`);
   };
-  
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <NotFound />;
 
   return (
     <div className="">
-      <header className="flex  justify-between px-4 py-3 border-b">
+      <header className="flex  justify-between px-4 py-3 border-b-4">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
             className="rounded-full bg-slate-200 hover:bg-slate-300"
           >
-            
-            <Link to={'/candidates'}>
-            <FaChevronLeft className="h-4 w-4" />
+            <Link to={"/candidates"}>
+              <FaChevronLeft className="h-4 w-4" />
             </Link>
             <span className="sr-only">Go back</span>
           </Button>
@@ -384,7 +440,7 @@ const CandidatesDetailPage: React.FC = () => {
             </h1>
             <Link
               to="#"
-              className="text-sm text-muted-foreground  "
+              className="text-sm text-muted-foreground  hidden md:block"
             >
               {candidate_details[0].job_applicant}
             </Link>
@@ -392,18 +448,13 @@ const CandidatesDetailPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-         
-
           <Button
             size="sm"
-            className="bg-[#E31B88] hover:bg-[#C41875] text-white flex gap-3"
-            onClick={() =>
-              globalState.openModal("candidate_send_invite", true)
-            }
+            className="bg-[#E31B88] hover:bg-[#C41875] text-white flex gap-3 rounded-full"
+            onClick={() => globalState.openModal("candidate_send_invite", true)}
           >
-           Send Invite 
+            Send Invite
             <FaPaperPlane />
-            
           </Button>
 
           <div className="hidden sm:flex items-center gap-2 ml-2 text-sm text-muted-foreground">
@@ -418,622 +469,651 @@ const CandidatesDetailPage: React.FC = () => {
             </Button>
           </div>
         </div>
-      </header>       
-      {candidate_details.map((assessment: CandidateDetailAssessments, index: number) => {
-        // console.log(assessment,"assessmentassessment")
-        const currentRating = updatedRatings[assessment.candidate_id] || assessment.applicant_rating;
-        return (
-          <div key={index} className="px-4 md:px-14">         
-            <Card className="container m-auto p-5 mt-4">
-              <div className="block md:flex justify-between items-center">
-                <div className="flex flex-col justify-center">
-                  <div className="flex whitespace-nowrap text-sm md:text-lg items-center justify-center gap-3">
-                    <h2 className="font-bold text-lg">Assessment : </h2>
-                    <span className="">
-                      {assessment.assessment_title || "N/A"}
-                    </span>
+      </header>
+      {candidate_details.map(
+        (assessment: CandidateDetailAssessments, index: number) => {
+          // console.log(assessment,"assessmentassessment")
+          const currentRating =
+            updatedRatings[assessment.candidate_id] ||
+            assessment.applicant_rating;
+          return (
+            <div key={index} className="px-4 md:px-14">
+              <Card className="container m-auto p-5 mt-4">
+                <div className="block md:flex justify-between items-center">
+                  <div className="flex flex-col justify-center">
+                    <div className="flex whitespace-nowrap text-sm md:text-lg items-center justify-center gap-3">
+                      <h2 className="font-bold text-lg">Assessment : </h2>
+                      <span className="">
+                        {assessment.assessment_title || "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex justify-start items-start gap-2">
+                      {renderStars(currentRating)}
+                    </div>
                   </div>
-                  <div className="flex justify-start items-start gap-2">
-                  {renderStars(currentRating)}
+                  <div className="flex space-x-4">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            className="rounded-full border p-2 hover:bg-slate-100"
+                            onClick={() =>
+                              globalState.openModal("interpret_results", true)
+                            }
+                          >
+                            <FaQuestionCircle />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Learn more</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button className="rounded-full border p-2 hover:bg-slate-100">
+                            <FaDownload onClick={handleDownloadPDF} />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Download results</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            className="rounded-full border p-2 hover:bg-slate-100"
+                            onClick={handleEmailSend}
+                          >
+                            <FaEnvelope />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Send results to candidate</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            className="rounded-full border p-2 hover:bg-slate-100"
+                            onClick={handleRejectApplicant}
+                          >
+                            <FaUserTimes />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Reject</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <Toaster position="top-center" reverseOrder={false} />
                   </div>
                 </div>
-                <div className="flex space-x-4">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          className="rounded-full border p-2 hover:bg-slate-100"
+              </Card>
+              <div className="container mx-auto pt-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
+                  <div className="col-span-1">
+                    <Card className="p-4 border rounded-lg">
+                      <div className="mb-2">
+                        <h3 className="font-bold text-lg">Invited</h3>
+                        <p className="">{formatDate(assessment.invited_on)}</p>
+                      </div>
+
+                      <div className="mb-2">
+                        <h3 className="font-bold text-lg">Completed</h3>
+                        <p className="">
+                          {formatDate(
+                            assessment.assessment_completed_at ||
+                              "Not Completed"
+                          )}
+                        </p>
+                      </div>
+
+                      <div className="mb-2">
+                        <h3 className="font-bold text-lg">
+                          Extra time breakdown
+                        </h3>
+                        <p className="">
+                          No extra time was granted to this candidate
+                        </p>
+                      </div>
+
+                      <div className="mb-2">
+                        <h3 className="font-bold text-lg">Source</h3>
+                        <p className="">General public link</p>
+                      </div>
+
+                      <p className="font-bold text-lg py-5"> Hiring stage </p>
+
+                      <div className="mb-2">
+                        <Select>
+                          <SelectTrigger
+                            // className={assessment.applicant_status == "Accepted" ?
+                            //   "bg-green-500 text-white" : "bg-red-500 text-white"}>
+
+                            className={`${
+                              assessment.applicant_status == "Rejected"
+                                ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                : "bg-green-100 text-green-700 hover:bg-green-100"
+                            } cursor-pointer w-[220px]`}
+                          >
+                            <SelectValue className="bg-green-500 text-white" />
+                          </SelectTrigger>
+                          <SelectContent className="">
+                            <SelectItem
+                              className="bg-green-500 text-white"
+                              key={assessment.applicant_status}
+                              value={assessment.name}
+                            >
+                              {assessment.applicant_status || ""}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </Card>
+                  </div>
+                  <div className="col-span-1">
+                    <Card className="container ">
+                      <CardHeader>
+                        <div className="flex justify-between">
+                          <div>
+                            <Badge variant="outline">
+                              {candidate_test_response_report.applicant_name}
+                            </Badge>
+                          </div>
+                          <div>
+                            <h1 className="text-2xl font-bold">
+                              {(
+                                candidate_test_response_report.assessment_average ||
+                                0
+                              ).toFixed(1)}
+                              %
+                            </h1>
+                            <p className="text-sm text-gray-500">
+                              Average score
+                            </p>
+                          </div>
+                        </div>
+                        <Progress
+                          className="mt-4 h-3"
+                          value={
+                            candidate_test_response_report.assessment_average ||
+                            0
+                          }
+                          max={100}
+                        />
+                        <p
+                          className="py-2 text-blue-600 cursor-pointer"
                           onClick={() =>
                             globalState.openModal("interpret_results", true)
                           }
                         >
-                          <FaQuestionCircle />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Learn more</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-slate-100">
-                          <FaDownload onClick={handleDownloadPDF}/>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Download results</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          className="rounded-full border p-2 hover:bg-slate-100"
-                          onClick={() => {
-                            send_email_to_candidate_test_response_report.call({
-                              candidate_id: candidate_details[0]?.candidate_id,
-                            });
-                          }}
-                        >
-                          <FaEnvelope />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Send results to candidate</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button className="rounded-full border p-2 hover:bg-slate-100"                        
-                          onClick={handleRejectApplicant}
-                        >
-                          <FaUserTimes />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Reject</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <Toaster position="top-center" reverseOrder={false} />
-
-                </div>
-              </div>
-            </Card>
-            <div className="container mx-auto pt-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
-                <div className="col-span-1">
-                  <Card className="p-4 border rounded-lg">
-                    <div className="mb-2">
-                      <h3 className="font-bold text-lg">Invited</h3>
-                      <p className="">
-                        {formatDate(assessment.invited_on)}
-                      </p>
-                    </div>
-
-                    <div className="mb-2">
-                      <h3 className="font-bold text-lg">Completed</h3>
-                      <p className="">
-                        {formatDate(assessment.assessment_completed_at || "Not Completed")}
-                      </p>
-                    </div>
-
-                    <div className="mb-2">
-                      <h3 className="font-bold text-lg">
-                        Extra time breakdown
-                      </h3>
-                      <p className="">
-                        No extra time was granted to this candidate
-                      </p>
-                    </div>
-
-                    <div className="mb-2">
-                      <h3 className="font-bold text-lg">Source</h3>
-                      <p className="">General public link</p>
-                    </div>
-
-                    <p className="font-bold text-lg py-5"> Hiring stage </p>
-
-                    <div className="mb-2">
-                      <Select  >
-                        <SelectTrigger  
-                        // className={assessment.applicant_status == "Accepted" ? 
-                        //   "bg-green-500 text-white" : "bg-red-500 text-white"}>
-                          
-                          className={`${
-                             assessment.applicant_status == "Rejected"
-                                ? "bg-red-100 text-red-700 hover:bg-red-100"
-                                : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer w-[220px]`}>
-                          
-                          <SelectValue className="bg-green-500 text-white" />
-                        </SelectTrigger>
-                        <SelectContent className="">
-                           <SelectItem className="bg-green-500 text-white" key={assessment.applicant_status} value={assessment.name}>
-                                              {assessment.applicant_status || ""}
-                                            </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </Card>
-                </div>
-                <div className="col-span-1">
-                  <Card className="container ">
-                    <CardHeader>
-                      <div className="flex justify-between">
-                        <div>
-                          <Badge variant="outline">
-                            {candidate_test_response_report.applicant_name}
-                          </Badge>
-                        </div>
-                        <div>
-                          <h1 className="text-2xl font-bold">
-                            {(
-                              candidate_test_response_report.assessment_average ||
-                              0
-                            ).toFixed(1)}
-                            %
-                          </h1>
-                          <p className="text-sm text-gray-500">Average score</p>
-                        </div>
-                      </div>
-                      <Progress
-                        className="mt-4 h-3"
-                        value={
-                          candidate_test_response_report.assessment_average ||
-                          0
-                        }
-                        max={100}
-                      />
-                      <p
-                        className="py-2 text-blue-600 cursor-pointer"
-                        onClick={() =>
-                          globalState.openModal("interpret_results", true)
-                        }
-                      >
-                        How to interpret results
-                      </p>
-                    </CardHeader>
-                  </Card>
-                  <Card className="container mt-4">
-                    <CardHeader>
-                      <div className="max-w-2xl space-y-6">
-                        <div className="flex items-start justify-between">
-                          <div className="space-y-2">
-                            <h2 className="text-sm font-medium text-muted-foreground">
-                              Scoring method
-                            </h2>
-                            <p className="text-lg font-semibold">
-                              Percentage of correct answers
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            className="flex justify-between items-center gap-2 rounded-full border"
-                            onClick={() =>
-                              globalState.openModal(
-                                "choose_scoring_method",
-                                true
-                              )
-                            }
-                          >
-                            <Pencil1Icon className="h-4 w-4" />
-                            Change
-                          </Button>
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-medium">
-                            Tests included in overall assessment score
-                          </h3>
-                        </div>
-                      </div>
-                      {candidate_test_response_report?.tests?.map(
-                        (candidate_test: CandidateTestResponseReport, index: number) => {
-                          return (
-                            <Accordion key={index} type="single" collapsible>
-                              <AccordionItem value={String(index)}>
-                                <AccordionTrigger className="flex">
-                                  <span className="whitespace-nowrap">
-                                    {candidate_test.test_title}
-                                  </span>
-                                  <div className="flex justify-end items-center w-full space-x-1">
-                                    <span>
-                                      {" "}
-                                      {(candidate_test.accuracy || 0).toFixed(1)}%
-                                    </span>
-                                  </div>
-                                </AccordionTrigger>
-                                <Progress
-                                  className="my-4"
-                                  value={candidate_test.accuracy || 0}
-                                  max={100}
-                                />
-                                <AccordionContent>
-                                  <div className="block md:flex md:justify-between items-center">
-                                    <p className="flex gap-2 items-center">
-                                      <AiOutlineBarChart />
-                                      {candidate_test.test_level}
-                                    </p>
-
-                                    {candidate_test.finished_time === null ? (
-                                      "Incomplete Test"
-                                    ) : (
-                                      <p className="flex gap-2 items-center">
-                                        <RxTimer />
-                                        Finished in{" "}
-                                        {candidate_test.finished_time.split(".")[0]} out
-                                        of :{" "}
-                                        {candidate_test.total_duration < 60
-                                          ? `${candidate_test.total_duration} seconds`
-                                          : `${Math.floor(
-                                            candidate_test.total_duration / 60
-                                            )} min${
-                                              candidate_test.total_duration % 60 > 0
-                                                ? ` ${
-                                                  candidate_test.total_duration % 60
-                                                  } sec`
-                                                : ""
-                                            }`}{" "}
-                                      </p>
-                                    )}
-                                  </div>
-
-                                  <Card className="w-full max-w-2xl my-3">
-                                    <CardContent>
-                                      <ul className="space-y-6">
-                                        <p className="text-sm">
-                                          <div className="flex">
-                                            {candidate_test.correct_count !== 0 && (
-                                              <div
-                                                className="bg-green-400   my-4  text-black font-bold text-center"
-                                                style={{ width: "317px" }}
-                                              >
-                                                {candidate_test.correct_count || 0}
-                                              </div>
-                                            )}
-                                            {candidate_test.incorrect_count !== 0 && (
-                                              <div
-                                                className="bg-red-300  my-4  text-black font-bold text-center"
-                                                style={{ width: "317px" }}
-                                              >
-                                                {candidate_test.incorrect_count || 0}
-                                              </div>
-                                            )}
-
-                                            {candidate_test.unanswered_questions !==
-                                              0 && (
-                                              <div
-                                                className="bg-gray-300 my-4  text-black font-bold text-center"
-                                                style={{ width: "317px" }}
-                                              >
-                                                {candidate_test?.unanswered_questions ||
-                                                  0}
-                                              </div>
-                                            )}
-                                          </div>
-                                        </p>
-                                      </ul>
-                                      <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
-                                        <div className="flex items-center">
-                                          <div className="w-3 h-3 bg-green-400 mr-2"></div>
-                                          <span>Correct</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                          <div className="w-3 h-3 bg-red-300 mr-2"></div>
-                                          <span>Incorrect</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                          <div className="w-3 h-3 bg-gray-300 mr-2"></div>
-                                          <span>Not answered</span>
-                                        </div>
-                                      </div>
-                                    </CardContent>
-                                    <hr />
-                                    <CardFooter>
-                                      <Button
-                                        variant="link"
-                                        className="text-pink-500 p-0"
-                                        onClick={() =>
-                                          globalState.openModal(
-                                            "communication_skills_assessment",
-                                            true
-                                          )
-                                        }
-                                      >
-                                        Learn more
-                                      </Button>
-                                    </CardFooter>
-                                  </Card>
-                                </AccordionContent>
-                              </AccordionItem>
-                            </Accordion>
-                          );
-                        }
-                      )}
-                    </CardHeader>
-                  </Card>
-                </div>
-                <div className="col-span-1">
-                  <Card className="w-full max-w-2xl mx-auto ">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                      <CardTitle className="text-xl font-semibold">
-                        Anti-cheating monitor
-                      </CardTitle>
-                      <Link
-                        onClick={() =>
-                          globalState.openModal("anti_cheating_measures", true)
-                        }
-                        className="text-primary hover:underline text-sm font-medium"
-                        to="#"
-                      >
-                        Learn more
-                      </Link>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <FaDesktop className="h-4 w-4" />
-                            <span className="text-sm">Device used</span>
-                          </div>
-                          <span className="text-sm font-bold">Desktop</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <FaMapPin className="h-4 w-4" />
-                            <span className="text-sm">Location</span>
-                          </div>
-                          <span className="text-sm font-bold">
-                            Lahore (PB), PK
-                          </span>
-                        </div>
-                        <Separator />
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <FaGlobe className="h-4 w-4" />
-                            <span className="text-sm">
-                              Filled out only once from IP address?
-                            </span>
-                          </div>
-                          <Badge
-                            variant="secondary"
-                            className={`${
-                              assessment.filled_out_only_once_from_ip_address ===
-                              0
-                                ? "bg-red-100 text-red-700 hover:bg-red-100"
-                                : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
-                            onClick={() =>
-                              globalState.openModal(
-                                "anti_cheating_measures",
-                                true
-                              )
-                            }
-                          >
-                            {assessment.filled_out_only_once_from_ip_address ===
-                            0
-                              ? "No"
-                              : "Yes"}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <FaVideo className="h-4 w-4" />
-                            <span className="text-sm">Webcam enabled?</span>
-                          </div>
-                          <Badge
-                            variant="secondary"
-                            className={`${
-                              assessment.web_cam_enabled === 0
-                                ? "bg-red-100 text-red-700 hover:bg-red-100"
-                                : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
-                            onClick={() =>
-                              globalState.openModal(
-                                "anti_cheating_measures",
-                                true
-                              )
-                            }
-                          >
-                            {assessment.web_cam_enabled === 0 ? "No" : "Yes"}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <FaExpand className="h-4 w-4" />
-                            <span className="text-sm">
-                              Full-screen mode always active?
-                            </span>
-                          </div>
-                          <Badge
-                            variant="secondary"
-                            className={`${
-                              assessment.full_screen_mode_always_active === 0
-                                ? "bg-red-100 text-red-700 hover:bg-red-100"
-                                : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
-                            onClick={() =>
-                              globalState.openModal(
-                                "anti_cheating_measures",
-                                true
-                              )
-                            }
-                          >
-                            {assessment.full_screen_mode_always_active === 0
-                              ? "No"
-                              : "Yes"}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <FaMousePointer className="h-4 w-4" />
-                            <span className="text-sm">
-                              Mouse always in assessment window?
-                            </span>
-                          </div>
-                          <Badge
-                            variant="secondary"
-                            className={`${
-                              assessment.mouse_always_in_assessment_window ===
-                              0
-                                ? "bg-red-100 text-red-700 hover:bg-red-100"
-                                : "bg-green-100 text-green-700 hover:bg-green-100"
-                            } cursor-pointer`}
-                            onClick={() =>
-                              globalState.openModal(
-                                "anti_cheating_measures",
-                                true
-                              )
-                            }
-                          >
-                            {assessment.mouse_always_in_assessment_window === 0
-                              ? "No"
-                              : "Yes"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <>
-  {webcam_snapshot.length > 0 ? (
-    <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
-      <div className="flex h-full items-center justify-center">
-        {webcam_snapshot[sliderValue]?.file_url ? (
-          <img
-            src={webcam_snapshot[sliderValue].file_url}
-            alt="Snapshot"
-            className="h-full w-full object-contain rounded-lg"
-          />
-        ) : (
-          <FaLock className="h-8 w-8 text-muted-foreground" />
-        )}
-      </div>
-    </div>
-  ) : (
-    <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex items-center justify-center">
-      <FaLock className="h-8 w-8 text-muted-foreground" />
-    </div>
-  )}
-  <Slider
-    defaultValue={[0]}
-    max={webcam_snapshot.length - 1}
-    step={1}
-    value={[sliderValue]}
-    onValueChange={(value) => handleSliderChange(value[0])}
-  />
-</>
-
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </div>
-
-            <div className="container mx-auto py-6 space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Custom questions</CardTitle>
-                </CardHeader>
-                <hr />
-                <Table className="mx-2">
-                  <TableHeader>
-                    <TableRow className="whitespace-nowrap">
-                      <TableHead className="font-bold">Question</TableHead>
-                      <TableHead className="font-bold">View Answer</TableHead>
-                      <TableHead className="font-bold">
-                        Average Rating
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="">
-                    {assessment?.questions?.map(
-                      (question: AssessmentCustomQuestion, index: number) => (
-                        <TableRow key={index}>
-                          {/* Question Column */}
-
-                          <TableCell className="p-4 flex items-center">
-                            <div
-                              className="p-4 flex items-center"
-                              dangerouslySetInnerHTML={{
-                                __html: question?.question || "N/A",
-                              }}
-                            ></div>
-                          </TableCell>
-
-                          {/* View Answer Column */}
-                          <TableCell>
+                          How to interpret results
+                        </p>
+                      </CardHeader>
+                    </Card>
+                    <Card className="container mt-4">
+                      <CardHeader>
+                        <div className="max-w-2xl space-y-6">
+                          <div className="flex items-start justify-between">
+                            <div className="space-y-2">
+                              <h2 className="text-sm font-medium text-muted-foreground">
+                                Scoring method
+                              </h2>
+                              <p className="text-lg font-semibold">
+                                Percentage of correct answers
+                              </p>
+                            </div>
                             <Button
                               variant="outline"
-                              size="sm"
-                              className="flex items-center gap-2 cursor-pointer"
+                              className="flex justify-between items-center gap-2 rounded-full border"
                               onClick={() =>
-                                globalState.openModal("review_answer", true)
+                                globalState.openModal(
+                                  "choose_scoring_method",
+                                  true
+                                )
                               }
                             >
-                              <Eye className="w-4 h-4" />
-                              Read
+                              <Pencil1Icon className="h-4 w-4" />
+                              Change
                             </Button>
-                          </TableCell>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium">
+                              Tests included in overall assessment score
+                            </h3>
+                          </div>
+                        </div>
+                        {candidate_test_response_report?.tests?.map(
+                          (
+                            candidate_test: CandidateTestResponseReport,
+                            index: number
+                          ) => {
+                            return (
+                              <Accordion key={index} type="single" collapsible>
+                                <AccordionItem value={String(index)}>
+                                  <AccordionTrigger className="flex">
+                                    <span className="whitespace-nowrap">
+                                      {candidate_test.test_title}
+                                    </span>
+                                    <div className="flex justify-end items-center w-full space-x-1">
+                                      <span>
+                                        {" "}
+                                        {(candidate_test.accuracy || 0).toFixed(
+                                          1
+                                        )}
+                                        %
+                                      </span>
+                                    </div>
+                                  </AccordionTrigger>
+                                  <Progress
+                                    className="my-4"
+                                    value={candidate_test.accuracy || 0}
+                                    max={100}
+                                  />
+                                  <AccordionContent>
+                                    <div className="block md:flex md:justify-between items-center">
+                                      <p className="flex gap-2 items-center">
+                                        <AiOutlineBarChart />
+                                        {candidate_test.test_level}
+                                      </p>
 
-                          {/* Rating Column */}
-                          <TableCell>
-                            <div className=" cursor-pointer flex justify-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <FaStar
-                                  key={i}
-                                  className={`w-4 h-4 cursor-pointer ${
-                                    // i < question?.rating
-                                    i < 3
-                                      ? "text-yellow-400 fill-yellow-400"
-                                      : "text-gray-300"
-                                  }`}
-                                />
-                              ))}
+                                      {candidate_test.finished_time === null ? (
+                                        "Incomplete Test"
+                                      ) : (
+                                        <p className="flex gap-2 items-center">
+                                          <RxTimer />
+                                          Finished in{" "}
+                                          {
+                                            candidate_test.finished_time.split(
+                                              "."
+                                            )[0]
+                                          }{" "}
+                                          out of :{" "}
+                                          {candidate_test.total_duration < 60
+                                            ? `${candidate_test.total_duration} seconds`
+                                            : `${Math.floor(
+                                                candidate_test.total_duration /
+                                                  60
+                                              )} min${
+                                                candidate_test.total_duration %
+                                                  60 >
+                                                0
+                                                  ? ` ${
+                                                      candidate_test.total_duration %
+                                                      60
+                                                    } sec`
+                                                  : ""
+                                              }`}{" "}
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    <Card className="w-full max-w-2xl my-3">
+                                      <CardContent>
+                                        <ul className="space-y-6">
+                                          <p className="text-sm">
+                                            <div className="flex">
+                                              {candidate_test.correct_count !==
+                                                0 && (
+                                                <div
+                                                  className="bg-green-400   my-4  text-black font-bold text-center"
+                                                  style={{ width: "317px" }}
+                                                >
+                                                  {candidate_test.correct_count ||
+                                                    0}
+                                                </div>
+                                              )}
+                                              {candidate_test.incorrect_count !==
+                                                0 && (
+                                                <div
+                                                  className="bg-red-300  my-4  text-black font-bold text-center"
+                                                  style={{ width: "317px" }}
+                                                >
+                                                  {candidate_test.incorrect_count ||
+                                                    0}
+                                                </div>
+                                              )}
+
+                                              {candidate_test.unanswered_questions !==
+                                                0 && (
+                                                <div
+                                                  className="bg-gray-300 my-4  text-black font-bold text-center"
+                                                  style={{ width: "317px" }}
+                                                >
+                                                  {candidate_test?.unanswered_questions ||
+                                                    0}
+                                                </div>
+                                              )}
+                                            </div>
+                                          </p>
+                                        </ul>
+                                        <div className="flex justify-start items-center mt-4 space-x-4 text-sm">
+                                          <div className="flex items-center">
+                                            <div className="w-3 h-3 bg-green-400 mr-2"></div>
+                                            <span>Correct</span>
+                                          </div>
+                                          <div className="flex items-center">
+                                            <div className="w-3 h-3 bg-red-300 mr-2"></div>
+                                            <span>Incorrect</span>
+                                          </div>
+                                          <div className="flex items-center">
+                                            <div className="w-3 h-3 bg-gray-300 mr-2"></div>
+                                            <span>Not answered</span>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                      <hr />
+                                      <CardFooter>
+                                        <Button
+                                          variant="link"
+                                          className="text-pink-500 p-0"
+                                          onClick={() =>
+                                            globalState.openModal(
+                                              "communication_skills_assessment",
+                                              true
+                                            )
+                                          }
+                                        >
+                                          Learn more
+                                        </Button>
+                                      </CardFooter>
+                                    </Card>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </Accordion>
+                            );
+                          }
+                        )}
+                      </CardHeader>
+                    </Card>
+                  </div>
+                  <div className="col-span-1">
+                    <Card className="w-full max-w-2xl mx-auto ">
+                      <CardHeader className="flex flex-row items-center justify-between">
+                        <CardTitle className="text-xl font-semibold">
+                          Anti-cheating monitor
+                        </CardTitle>
+                        <Link
+                          onClick={() =>
+                            globalState.openModal(
+                              "anti_cheating_measures",
+                              true
+                            )
+                          }
+                          className="text-primary hover:underline text-sm font-medium"
+                          to="#"
+                        >
+                          Learn more
+                        </Link>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FaDesktop className="h-4 w-4" />
+                              <span className="text-sm">Device used</span>
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-                <hr className="mt-10" />
-                <div className="flex flex-col lg:flex-row mt-6 justify-between space-y-4 lg:space-y-0 lg:space-x-4">
-                  <CardHeader className="flex-1">
-                    <CardTitle>Your rating</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      Give your personal overall rating of this candidate based
-                      on your impressions and interactions with him or her.
-                    </p>
-                    <div className="flex items-center gap-1 mt-2 cursor-pointer">
-                
-                    {renderStars(
-                  currentRating,
-                  (rating: number) => handleRatingUpdate(assessment.candidate_id, rating)
-                )}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-1">
-                    <div className="space-y-4">
-                      <Textarea
-                        placeholder="Add your private notes here (auto-saved)..."
-                        className="min-h-[100px] w-full lg:w-[30rem] resize-none"
-                      />
-                    </div>
-                  </CardContent>
+                            <span className="text-sm font-bold">Desktop</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FaMapPin className="h-4 w-4" />
+                              <span className="text-sm">Location</span>
+                            </div>
+                            <span className="text-sm font-bold">
+                              Lahore (PB), PK
+                            </span>
+                          </div>
+                          <Separator />
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FaGlobe className="h-4 w-4" />
+                              <span className="text-sm">
+                                Filled out only once from IP address?
+                              </span>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className={`${
+                                assessment.filled_out_only_once_from_ip_address ===
+                                0
+                                  ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                  : "bg-green-100 text-green-700 hover:bg-green-100"
+                              } cursor-pointer`}
+                              onClick={() =>
+                                globalState.openModal(
+                                  "anti_cheating_measures",
+                                  true
+                                )
+                              }
+                            >
+                              {assessment.filled_out_only_once_from_ip_address ===
+                              0
+                                ? "No"
+                                : "Yes"}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FaVideo className="h-4 w-4" />
+                              <span className="text-sm">Webcam enabled?</span>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className={`${
+                                assessment.web_cam_enabled === 0
+                                  ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                  : "bg-green-100 text-green-700 hover:bg-green-100"
+                              } cursor-pointer`}
+                              onClick={() =>
+                                globalState.openModal(
+                                  "anti_cheating_measures",
+                                  true
+                                )
+                              }
+                            >
+                              {assessment.web_cam_enabled === 0 ? "No" : "Yes"}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FaExpand className="h-4 w-4" />
+                              <span className="text-sm">
+                                Full-screen mode always active?
+                              </span>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className={`${
+                                assessment.full_screen_mode_always_active === 0
+                                  ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                  : "bg-green-100 text-green-700 hover:bg-green-100"
+                              } cursor-pointer`}
+                              onClick={() =>
+                                globalState.openModal(
+                                  "anti_cheating_measures",
+                                  true
+                                )
+                              }
+                            >
+                              {assessment.full_screen_mode_always_active === 0
+                                ? "No"
+                                : "Yes"}
+                            </Badge>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FaMousePointer className="h-4 w-4" />
+                              <span className="text-sm">
+                                Mouse always in assessment window?
+                              </span>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className={`${
+                                assessment.mouse_always_in_assessment_window ===
+                                0
+                                  ? "bg-red-100 text-red-700 hover:bg-red-100"
+                                  : "bg-green-100 text-green-700 hover:bg-green-100"
+                              } cursor-pointer`}
+                              onClick={() =>
+                                globalState.openModal(
+                                  "anti_cheating_measures",
+                                  true
+                                )
+                              }
+                            >
+                              {assessment.mouse_always_in_assessment_window ===
+                              0
+                                ? "No"
+                                : "Yes"}
+                            </Badge>
+                          </div>
+                        </div>
+                        <>
+                          {webcam_snapshot.length > 0 ? (
+                            <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
+                              <div className="flex h-full items-center justify-center">
+                                {webcam_snapshot[sliderValue]?.file_url ? (
+                                  <img
+                                    src={webcam_snapshot[sliderValue].file_url}
+                                    alt="Snapshot"
+                                    className="h-full w-full object-contain rounded-lg"
+                                  />
+                                ) : (
+                                  <FaLock className="h-8 w-8 text-muted-foreground" />
+                                )}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex items-center justify-center">
+                              <FaLock className="h-8 w-8 text-muted-foreground" />
+                            </div>
+                          )}
+                          <Slider
+                            defaultValue={[0]}
+                            max={webcam_snapshot.length - 1}
+                            step={1}
+                            value={[sliderValue]}
+                            onValueChange={(value) =>
+                              handleSliderChange(value[0])
+                            }
+                          />
+                        </>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
-              </Card>
+              </div>
 
-              {/* card end heree */}
+              <div className="container mx-auto py-6 space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Custom questions</CardTitle>
+                  </CardHeader>
+                  <hr />
+                  <Table className="mx-2">
+                    <TableHeader>
+                      <TableRow className="whitespace-nowrap">
+                        <TableHead className="font-bold">Question</TableHead>
+                        <TableHead className="font-bold">View Answer</TableHead>
+                        <TableHead className="font-bold">
+                          Average Rating
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="">
+                      {assessment?.questions?.map(
+                        (question: AssessmentCustomQuestion, index: number) => (
+                          <TableRow key={index}>
+                            {/* Question Column */}
+
+                            <TableCell className="p-4 flex items-center">
+                              <div
+                                className="p-4 flex items-center"
+                                dangerouslySetInnerHTML={{
+                                  __html: question?.question || "N/A",
+                                }}
+                              ></div>
+                            </TableCell>
+
+                            {/* View Answer Column */}
+                            <TableCell>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-2 cursor-pointer rounded-full"
+                                onClick={() =>
+                                  globalState.openModal("review_answer", true)
+                                }
+                              >
+                                <Eye className="w-4 h-4" />
+                                Read
+                              </Button>
+                            </TableCell>
+
+                            {/* Rating Column */}
+                            <TableCell>
+                              <div className=" cursor-pointer flex justify-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <FaStar
+                                    key={i}
+                                    className={`w-4 h-4 cursor-pointer ${
+                                      // i < question?.rating
+                                      i < 3
+                                        ? "text-yellow-400 fill-yellow-400"
+                                        : "text-gray-300"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                  <hr className="mt-10" />
+                  <div className="flex flex-col lg:flex-row mt-6 justify-between space-y-4 lg:space-y-0 lg:space-x-4">
+                    <CardHeader className="flex-1">
+                      <CardTitle>Your rating</CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        Give your personal overall rating of this candidate
+                        based on your impressions and interactions with him or
+                        her.
+                      </p>
+                      <div className="flex items-center gap-1 mt-2 cursor-pointer">
+                        {renderStars(currentRating, (rating: number) =>
+                          handleRatingUpdate(assessment.candidate_id, rating)
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="flex-1">
+                      <div className="space-y-4">
+                        <Textarea
+                          placeholder="Add your private notes here (auto-saved)..."
+                          className="min-h-[100px] w-full lg:w-[30rem] resize-none"
+                        />
+                      </div>
+                    </CardContent>
+                  </div>
+                </Card>
+
+                {/* card end heree */}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        }
+      )}
 
       {/* Modals */}
 
@@ -1691,17 +1771,16 @@ const CandidatesDetailPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-       {/* Send invite to candidate Modal */}
-       <Dialog
-         open={globalState.modals.candidate_send_invite.open}
-         onOpenChange={(open) => {
-           globalState.openModal("candidate_send_invite", open);
-           if (open) {
-             setSelectedAssessment(null); 
-           }
-         }}
+      {/* Send invite to candidate Modal */}
+      <Dialog
+        open={globalState.modals.candidate_send_invite.open}
+        onOpenChange={(open) => {
+          globalState.openModal("candidate_send_invite", open);
+          if (open) {
+            setSelectedAssessment(null);
+          }
+        }}
       >
-        
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Send Invitation</DialogTitle>
@@ -1712,43 +1791,34 @@ const CandidatesDetailPage: React.FC = () => {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSendInvite}>
-
             <div className="grid gap-4 py-4">
-              
               <div className="flex justify-between items-center gap-4">
-               
-                <Select
-                    onValueChange={(value) => setSelectedAssessment(value)}>
+                <Select onValueChange={(value) => setSelectedAssessment(value)}>
                   <SelectTrigger className="">
                     <SelectValue placeholder="Select Assessment" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {assessment_list_query.map((assessment:JobApplicantSelectAssessment) => (
-                        <SelectItem 
-                        key={assessment.name}
-                          value={assessment.name}
-                        >
-                          {assessment.assessment_name}
-                        </SelectItem>
-                      ))}
+                      {assessment_list_query.map(
+                        (assessment: JobApplicantSelectAssessment) => (
+                          <SelectItem
+                            key={assessment.name}
+                            value={assessment.name}
+                          >
+                            {assessment.assessment_name}
+                          </SelectItem>
+                        )
+                      )}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-               
-                <Button type="submit">
-                Send Invite
-              </Button>
+
+                <Button type="submit">Send Invite</Button>
               </div>
             </div>
-
-            
           </form>
-          
         </DialogContent>
-
       </Dialog>
-
     </div>
   );
 };

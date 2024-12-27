@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, ChevronRightIcon, EyeIcon } from "lucide-react";
@@ -33,30 +34,21 @@ export default function AssessmentOverview() {
     { candidate_id: candidate_id }
   );
   const specific_assessment_tests = data?.message || [];
-  // console.log(specific_assessment_tests,"specific_assessment_tests")
-  const { call } = useFrappePostCall(
-    "scrutin.api.candidate_test.complete_assessment"
+  const complete_assessment_query = useFrappePostCall( "scrutin.api.candidate_test.complete_assessment");
+  const assessment_started = useFrappePostCall( "scrutin.api.candidate_test.start_assessment");
+  const candidate_test_response_report = useFrappeGetCall( "scrutin.api.test_response_report.get_candidate_test_response_report",
+    { candidate_id: candidate_id }
   );
-
+  // console.log(candidate_test_response_report,"candidate_test_response_report")
+  const report_response_query = candidate_test_response_report?.data?.message;
+  
   useEffect(() => {
     if (specific_assessment_tests?.assessment_completed === true  ) {
-      call({
+      complete_assessment_query.call({
         candidate_id,
       });
     }
-  }, [specific_assessment_tests.assessment_completed, candidate_id, call]);
-
-  const assessment_started = useFrappePostCall(
-    "scrutin.api.candidate_test.start_assessment"
-  );
-
-  const { data: report } = useFrappeGetCall(
-    "scrutin.api.test_response_report.get_candidate_test_response_report",
-    {
-      candidate_id: candidate_id,
-    }
-  );
-  const report_response_query = report?.message;
+  }, [specific_assessment_tests.assessment_completed, candidate_id]);
 
   const allTestsIncomplete = specific_assessment_tests?.tests?.every(
     (test:StartAssessment_And_Continue_Button) => !test.test_completed
