@@ -76,7 +76,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Eye } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
+// import { Slider } from "@/components/ui/slider";
 import { useGlobalState } from "@/utils/StateProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaClock, FaLanguage, FaChartLine } from "react-icons/fa";
@@ -90,15 +90,22 @@ import {
   CandidateTestResponseReport,
   AssessmentCustomQuestion,
   JobApplicantSelectAssessment,
+  WebcamSnapshot,
 } from "@/types/Interface";
 import dayjs from "dayjs";
 import NotFound from "./NotFound";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import toast, { Toaster } from "react-hot-toast";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const CandidatesDetailPage: React.FC = () => {
-  const [sliderValue, setSliderValue] = React.useState(0);
   const [updatedRatings, setUpdatedRatings] = React.useState<{
     [key: string]: number;
   }>({});
@@ -149,6 +156,8 @@ const CandidatesDetailPage: React.FC = () => {
       candidate_id: candidate_details[0]?.candidate_id,
     }
   );
+  console.log(webcam_snapshot_api,"webcam_snapshot_api")
+  const webcam_snapshot = webcam_snapshot_api?.data?.message || [];
 
   const handleEmailSend = async () => {
     try {
@@ -165,15 +174,10 @@ const CandidatesDetailPage: React.FC = () => {
       toast.error(
         (error as { message: string })?.message ||
           "Failed to send email. Please try again later."
-      );
-    }
-  };
-
-  const handleSliderChange = (value: number) => {
-    setSliderValue(value);
-  };
-
-  const webcam_snapshot = webcam_snapshot_api?.data?.message || [];
+        );
+      }
+    };
+    
 
   // const allTestsIncomplete = specific_assessment_tests?.tests?.every(
   //   (test:StartAssessment_And_Continue_Button) => !test.test_completed
@@ -982,32 +986,38 @@ const CandidatesDetailPage: React.FC = () => {
                         <>
                           {webcam_snapshot.length > 0 ? (
                             <div className="mt-6 aspect-video w-full rounded-lg bg-muted">
-                              <div className="flex h-full items-center justify-center">
-                                {webcam_snapshot[sliderValue]?.file_url ? (
-                                  <img
-                                    src={webcam_snapshot[sliderValue].file_url}
-                                    alt="Snapshot"
-                                    className="h-full w-full object-contain rounded-lg"
-                                  />
-                                ) : (
-                                  <FaLock className="h-8 w-8 text-muted-foreground" />
-                                )}
-                              </div>
+                              <Carousel className="relative">
+                                <CarouselContent>
+                                  {webcam_snapshot.map(
+                                    (snapshot: WebcamSnapshot, index: number) => (
+                                      <CarouselItem
+                                        key={index}
+                                        className="h-full w-full rounded-lg"
+                                      >
+                                        {snapshot.file_url ? (
+                                          <img
+                                            src={snapshot.file_url}
+                                            alt={`Snapshot ${index + 1}`}
+                                            className="h-full w-full object-contain rounded-lg hover:rounded-lg"
+                                          />
+                                        ) : (
+                                          <div className="flex h-full items-center justify-center">
+                                            <FaLock className="h-8 w-8 text-muted-foreground" />
+                                          </div>
+                                        )}
+                                      </CarouselItem>
+                                    )
+                                  )}
+                                </CarouselContent>
+                                <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md" />
+                                <CarouselNext className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md" />
+                              </Carousel>
                             </div>
                           ) : (
                             <div className="mt-6 aspect-video w-full rounded-lg bg-muted flex items-center justify-center">
                               <FaLock className="h-8 w-8 text-muted-foreground" />
                             </div>
                           )}
-                          <Slider
-                            defaultValue={[0]}
-                            max={webcam_snapshot.length - 1}
-                            step={1}
-                            value={[sliderValue]}
-                            onValueChange={(value) =>
-                              handleSliderChange(value[0])
-                            }
-                          />
                         </>
                       </CardContent>
                     </Card>

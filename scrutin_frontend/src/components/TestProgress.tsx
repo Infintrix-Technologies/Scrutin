@@ -15,8 +15,8 @@ export default function TestProgress() {
 
   const candidate_test_progress_query = question?.message?.test || [];
   const specific_test_details = candidate_test_progress_query || {};
-  const totalDuration = specific_test_details?.total_duration ;
-  const remainingTime = Math.round(specific_test_details?.remaining_time );
+  const totalDuration = specific_test_details?.total_duration || 0 ;
+  const remainingTime = Math.round(specific_test_details?.remaining_time ||0 );
   const totalQuestions = specific_test_details?.total_no_of_question ;
 
   const [timeLeft, setTimeLeft] = useState(remainingTime);
@@ -57,7 +57,7 @@ export default function TestProgress() {
     const remainingSeconds = seconds % 60;
     return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
   };
-  const timeProgress = totalDuration ? (timeLeft / totalDuration) * 100 : 0;
+  const timeProgress = totalDuration ? (timeLeft  / totalDuration) * 100 : 0;
   const questionProgress = totalQuestions ? (specific_test_details.show_no_of_test_question / totalQuestions) * 100 : 0;
 
   return (
@@ -79,7 +79,7 @@ export default function TestProgress() {
           <div className="flex items-center space-x-2">
             <HelpCircle className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium">
-              {specific_test_details.show_no_of_test_question }/{totalQuestions }
+              {specific_test_details.show_no_of_test_question || 0 }/{totalQuestions || 0 }
             </span>
           </div>
           <Progress value={questionProgress} className="w-1/2" color="blue" />

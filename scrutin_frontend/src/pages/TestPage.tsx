@@ -316,14 +316,15 @@ const TestPage = () => {
           </h3>
         </div>
 
-        <Card className="w-full max-w-full md:min-w-[750px] lg:min-w-[800px] mx-auto">
+        <Card className="w-full max-w-full md:min-w-[750px] lg:min-w-[1200px] mx-auto">
           <CardContent className="space-y-6">
             <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 my-6">
-              <div className="flex-1 p-4">
+              <div className="flex-1 p-4 ">
                 <div
-                  className="ql-editor read-mode [&_ol]:list-decimal [&_ul]:list-disc [&_li]:mb-2 [&_li]:ml-4"
+                  className="ql-editor my-3 text-lg read-mode [&_ol]:list-decimal [&_ul]:list-disc [&_li]:mb-2 [&_li]:ml-4"
                   dangerouslySetInnerHTML={{
-                    __html: `Question: ${currentQuestion?.text}`,
+                    __html: `Question: ${currentQuestion?.text} 
+                    `,
                   }}
                 ></div>
               </div>
@@ -333,11 +334,12 @@ const TestPage = () => {
                   <div>
                     {currentQuestion.options.map(
                       (option: CurrentQuestionOption) => (
-                        <div
+                        <Card
                           key={option.value}
-                          className="my-2 flex items-center space-x-2"
+                          className="py-5 my-4 flex items-center space-x-2"
                         >
                           <Checkbox
+                          className="mx-3"
                             id={option.value}
                             checked={
                               Array.isArray(selectedOption) &&
@@ -347,8 +349,8 @@ const TestPage = () => {
                               handleMultiSelectChange(option.value)
                             }
                           />
-                          <Label htmlFor={option.value}>{option.label}</Label>
-                        </div>
+                          <Label className="text-base cursor-pointer" htmlFor={option.value}>{option.label}</Label>
+                        </Card>
                       )
                     )}
                   </div>
@@ -365,16 +367,17 @@ const TestPage = () => {
                   >
                     {currentQuestion?.options?.map(
                       (option: CurrentQuestionOption) => (
-                        <div
+                        <Card
                           key={option.value}
-                          className="flex items-center space-x-2"
+                          className="py-5 my-2 flex items-center space-x-2"
                         >
                           <RadioGroupItem
                             value={option.value}
                             id={option.value}
+                             className="mx-3"
                           />
-                          <Label htmlFor={option.value}>{option.label}</Label>
-                        </div>
+                          <Label className="text-base cursor-pointer" htmlFor={option.value}>{option.label}</Label>
+                        </Card>
                       )
                     )}
                   </RadioGroup>

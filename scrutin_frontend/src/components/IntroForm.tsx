@@ -55,6 +55,14 @@ export default function IntroForm() {
   const onSubmit = () => {
     navigate(`/candidacy/${candidate_id}/overview`);
   };
+
+  const detectDeviceType = () =>
+    // Use a regular expression to test the userAgent string for common mobile device identifiers.
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      ? 'Mobile' 
+      : 'Desktop'; 
+  
+  console.log(detectDeviceType());
   
   if (isLoading) return <p>Loading...</p>;
   if (error) return <NotFound/>;
@@ -159,7 +167,7 @@ export default function IntroForm() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full rounded-full">
             Next
             <ChevronRightIcon className="ml-2 h-4 w-4" />
           </Button>

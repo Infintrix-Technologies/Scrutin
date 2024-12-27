@@ -25,11 +25,11 @@ const CandidatesComparisonPage = () => {
       <h1 className="text-xl py-2 font-bold">
         Two Candidates Test Response Report Comparison Page
       </h1>
-      <div className="block lg:flex ">
+      <Card className="block lg:flex my-3 px-0 lg:my-5 lg:px-5">
         <div className="w-full p-6  space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Candidate 1 # Information</CardTitle>
+              <CardTitle>Candidate 1 : Report</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center space-x-6">
               <Avatar className="h-20 w-20">
@@ -153,7 +153,7 @@ const CandidatesComparisonPage = () => {
         <div className="w-full p-6  space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Applicant Information</CardTitle>
+              <CardTitle>Candidate 2 : Report</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center space-x-6">
               <Avatar className="h-20 w-20">
@@ -285,7 +285,7 @@ const CandidatesComparisonPage = () => {
             )
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
