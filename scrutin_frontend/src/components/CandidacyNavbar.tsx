@@ -10,14 +10,12 @@ const CandidacyNavbar = () => {
   const navigate = useNavigate(); 
   const { candidate_id } = useParams();
   const { selectedOption, setSelectedOption, updateCurrentQuestion, question } = useGlobalState();
-  const { call } = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_question_response");
+  const add_question_response = useFrappePostCall("scrutin.api.candidate_test.add_scrutin_question_response");
   const mark_test_completed  = useFrappePostCall("scrutin.api.candidate_test.mark_test_completed");
 
+  const test_id = question?.message.test.test.test_id
+  const quest_id = question?.message.test.current_question.name
 
-  // const candidate_test_progress_query = question?.message?.test || [];
-  // const specific_test_details = candidate_test_progress_query || {};
-  // const remainingTime = Math.round(specific_test_details?.remaining_time || 0);
-  
   const handleNext = async () => {
     if (!selectedOption || (Array.isArray(selectedOption) && selectedOption.length === 0)) {
       toast.error("Select an option before submitting.");
@@ -29,32 +27,30 @@ const CandidacyNavbar = () => {
         ? JSON.stringify(selectedOption?.map(Number).sort((a, b) => a - b))
         : selectedOption;
 
-      await call({
+      await add_question_response.call({
         candidate_id,
-        question_id: question?.message?.test?.current_question?.name,
+        question_id: quest_id,
         answer: sortedAnswer,
       });
 
-      if (question?.message?.test?.last_test_question) {
+      if (question.message.test.last_test_question) {
         mark_test_completed.call({
           candidate_id,
-          test_id: question.message.test.test.test_id,
+          test_id: test_id,
         });
         navigate(`/candidacy/${candidate_id}/overview`);
       } else {
         updateCurrentQuestion(candidate_id); 
-        // updateQuestionAndTime(candidate_id);
       }
 
       setSelectedOption(null); 
     } catch (error) {
       console.error(error, "error");
-      // toast.error("There was an issue submitting your response. Please try again.");
     }
   };
 
   return (
-    <div className="w-full py-2 flex justify-around items-center">
+    <div className="w-full py-2 flex justify-around items-center border-b-4">
       <div className="text-xl font-bold">Infintrix Technologies</div>
       {location?.pathname?.includes("/test") && (
         <>

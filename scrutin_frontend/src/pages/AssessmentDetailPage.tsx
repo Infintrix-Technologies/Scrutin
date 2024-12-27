@@ -51,7 +51,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronLeft, Edit2, Eye, Globe, MoreVertical } from "lucide-react";
-
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGlobalState } from "@/utils/StateProvider";
@@ -82,12 +81,8 @@ const AssessmentDetailPage = () => {
       assessment_id: assessment_id,
     }
   );
-  console.log(data, "dataddddddddddd");
 
   const assessment_data = data?.message || [];
-  console.log(assessment_data, "assessment_data");
-
-  console.log(assessment_data, "assessment_data");
 
   const formatDate = (dateString: string) => {
     return dayjs(dateString).format("DD-MM-YY  hh:mm A");
@@ -159,7 +154,7 @@ const AssessmentDetailPage = () => {
   return (
     <>
       <hr />
-      <div className="flex items-center justify-between px-4 py-2 mb-4 border-b">
+      <div className="flex items-center justify-between px-4 py-2 mb-4 border-b-4">
         <div className="flex items-center gap-8">
           <Link to="/assessments">
             <Button
@@ -237,14 +232,14 @@ const AssessmentDetailPage = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" size="icon" className="rounded-full">
+          <Button variant="ghost" size="icon" className="rounded-full hidden">
             <Eye className="h-4 w-4" />
             <span className="sr-only">Change view</span>
           </Button>
 
           <Button
             size="sm"
-            className="bg-[#E31B88] hover:bg-[#C41875] text-white"
+            className="bg-[#E31B88] hover:bg-[#C41875] text-white hidden"
           >
             Invite
           </Button>
@@ -511,7 +506,7 @@ const AssessmentDetailPage = () => {
                     <TableHead>Overall</TableHead>
                     {assessment_data?.tests?.map(
                       (test: Assessment_Detail_Page_Test, index: number) => (
-                        <TableHead key={index}>{test.title}</TableHead>
+                        <TableHead  key={index}>{test.title}</TableHead>
                       )
                     )}
                     <TableHead>Hiring stage</TableHead>
@@ -529,7 +524,7 @@ const AssessmentDetailPage = () => {
                           <Checkbox />
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 cursor-pointer">
                             {data.applicant_name || "N/A"}
                           </div>
                         </TableCell>
@@ -668,7 +663,7 @@ const AssessmentDetailPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="rounded-lg border">
-                  <div className="text-center grid grid-cols-4 gap-4 p-4 font-medium text-sm border-b">
+                  <div className=" grid grid-cols-4 gap-4 p-4 font-medium text-sm border-b">
                     <div>Test</div>
                     <div>Weight</div>
                     <div>Impact</div>
@@ -681,7 +676,7 @@ const AssessmentDetailPage = () => {
                     ) => (
                       <div
                         key={index}
-                        className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50 text-center "
+                        className="grid grid-cols-4 gap-4 p-4 text-sm border-b last:border-0 hover:bg-muted/50  "
                       >
                         <div className="text-start">
                           {assessment_data?.title}

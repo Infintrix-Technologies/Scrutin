@@ -18,7 +18,7 @@ const CandidatesComparisonPage = () => {
   );
   const comparison_two_candidates_test =
     comparison_two_candidates_test_response_report?.data?.message;
-  console.log(comparison_two_candidates_test, "comparison_two_candidates_test");
+  // console.log(comparison_two_candidates_test, "comparison_two_candidates_test");
 
   return (
     <div className="mx-3 lg:mx-28">

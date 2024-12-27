@@ -1,10 +1,7 @@
 
 import { Loader } from '@/components/common/Loader'
 
-interface Props  {
-}
-
-export const FullPageLoader = ({}: Props) => {
+export const FullPageLoader = () => {
     return (
         <Loader />
     )

@@ -21,9 +21,9 @@ const TestPage = () => {
   const [lastIp, setLastIp] = useState<string>("");
   const [inFullscreen, setInFullscreen] = useState(false);
   const [mouseInWindow, setMouseInWindow] = useState(true);
+  // const [devToolsOpen, setDevToolsOpen] = useState(false);
   const webcamRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const [devToolsOpen, setDevToolsOpen] = useState(false);
 
   const test = question?.message?.test;
   const currentQuestion = test?.current_question;
@@ -82,7 +82,7 @@ const TestPage = () => {
         mouse_always_in_test_window: mouseInWindow ? 1 : 0,
       });
       setLastIp(localIp);
-    }, 30000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [localIp, webcamError, inFullscreen, mouseInWindow, candidate_id]);
@@ -134,7 +134,7 @@ const TestPage = () => {
 
   useEffect(() => {
     startWebcam();
-    const interval = setInterval(takeSnapshot, 30000);
+    const interval = setInterval(takeSnapshot, 20000);
     return () => clearInterval(interval);
   }, []);
 
@@ -239,13 +239,11 @@ const TestPage = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const functionKeys = [
-        "F1", "F2", "F3", "F4", "F5",
-        "F6", "F7", "F8", "F9", "F10",
-        "F11", "F12", "Escape"
+        "F11", "F12", "Escape","esc","fn","Fn","FN"
       ];
       if (functionKeys.includes(event.key)) {
         event.preventDefault();
-        alert("Function keys and Escape key are disabled during the test.");
+        // alert("Function keys and Escape key are disabled during the test.");
       }
     };
 
@@ -273,34 +271,34 @@ const TestPage = () => {
   }, []);
 
   // Detect if inspect is open or closed
-  useEffect(() => {
-    const detectInspect = () => {
-      const threshold = 160; 
-      const element = new Image();
-      Object.defineProperty(element, 'id', {
-        get: () => {
-          setDevToolsOpen(true);
-        }
-      });
-      console.dir(element);
+  // useEffect(() => {
+  //   const detectInspect = () => {
+  //     const threshold = 160; 
+  //     const element = new Image();
+  //     Object.defineProperty(element, 'id', {
+  //       get: () => {
+  //         setDevToolsOpen(true);
+  //       }
+  //     });
+  //     console.dir(element);
 
-      setInterval(() => {
-        const widthDiff = window.outerWidth - window.innerWidth > threshold;
-        const heightDiff = window.outerHeight - window.innerHeight > threshold;
-        const isDevToolsOpen = widthDiff || heightDiff;
+  //     setInterval(() => {
+  //       const widthDiff = window.outerWidth - window.innerWidth > threshold;
+  //       const heightDiff = window.outerHeight - window.innerHeight > threshold;
+  //       const isDevToolsOpen = widthDiff || heightDiff;
 
-        if (isDevToolsOpen && !devToolsOpen) {
-          setDevToolsOpen(true);
-          alert('Developer tools are open, please close them to continue.');
-        } else if (!isDevToolsOpen && devToolsOpen) {
-          setDevToolsOpen(false);
-          enterFullscreen();
-        }
-      }, 1000);
-    };
+  //       if (isDevToolsOpen && !devToolsOpen) {
+  //         setDevToolsOpen(true);
+  //         alert('Developer tools or normal screen are not allowed. Please enable full-screen mode to proceed.');
+  //       } else if (!isDevToolsOpen && devToolsOpen) {
+  //         setDevToolsOpen(false);
+  //         enterFullscreen();
+  //       }
+  //     }, 1000);
+  //   };
 
-    detectInspect();
-  }, [devToolsOpen]);
+  //   detectInspect();
+  // }, [devToolsOpen]);
 
   if (loading) return <p>Loading...</p>;
   if (error?.httpStatus === 403) return <Forbidden />;

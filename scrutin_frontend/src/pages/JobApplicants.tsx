@@ -42,21 +42,28 @@ const JobApplicants = () => {
 
   const renderStars = (rating: number) => {
     const stars = [];
-    const fullStar = <FaStar className="text-yellow-500 text-xl" />;
-    const halfStar = <FaStarHalfAlt className="text-yellow-500 text-xl" />;
-    const emptyStar = <FaRegStar className="text-yellow-500 text-xl" />;
-
+    const fullStar = (index: number) => (
+      <FaStar key={`full-${index}`} className="text-yellow-500 text-xl" />
+    );
+    const halfStar = (index: number) => (
+      <FaStarHalfAlt key={`half-${index}`} className="text-yellow-500 text-xl" />
+    );
+    const emptyStar = (index: number) => (
+      <FaRegStar key={`empty-${index}`} className="text-yellow-500 text-xl" />
+    );
+  
     const convertedRating = Math.round(rating * 10);
     const fullStarsCount = Math.floor(convertedRating / 2);
     const halfStarCount = convertedRating % 2;
     const emptyStarsCount = 5 - (fullStarsCount + halfStarCount);
-
-    for (let i = 0; i < fullStarsCount; i++) stars.push(fullStar);
-    if (halfStarCount === 1) stars.push(halfStar);
-    for (let i = 0; i < emptyStarsCount; i++) stars.push(emptyStar);
-
+  
+    for (let i = 0; i < fullStarsCount; i++) stars.push(fullStar(i));
+    if (halfStarCount === 1) stars.push(halfStar(fullStarsCount));
+    for (let i = 0; i < emptyStarsCount; i++) stars.push(emptyStar(fullStarsCount + 1 + i));
+  
     return stars;
   };
+  
 
   const send_invite = useFrappePostCall(
     "scrutin.api.candidate.create_candidate"
