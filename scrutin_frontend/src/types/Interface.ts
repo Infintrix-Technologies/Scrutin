@@ -347,3 +347,7 @@ export interface AssessmentDetailResponse {
     custom_questions:string
   };
 }
+
+export interface WebcamSnapshot {
+  file_url: string;
+}
