@@ -162,6 +162,19 @@ const create_test_template_with_test = useFrappePostCall("scrutin.api.testing_ap
 
 
 
+const get_scrutin_question = useFrappePostCall("scrutin.api.testing_api.get_scrutin_questions")
+
+
+
+const add_scrutin_question = useFrappePostCall("scrutin.api.testing_api.add_scrutin_question")
+
+
+
+const create_test_from_template = useFrappePostCall("scrutin.api.testing_api.create_scrutin_test_from_template")
+
+
+
+
 
 
   return (
@@ -628,6 +641,33 @@ const create_test_template_with_test = useFrappePostCall("scrutin.api.testing_ap
         });
       }}>
         Test Template with Test Data
+      </Button>
+
+
+      <Button onClick={() => {
+        get_scrutin_question.call({
+          question_id: "1ter595312"
+        });
+      }}>
+        Get Scrutin Question
+      </Button>
+
+
+      <Button onClick={() => {
+        add_scrutin_question.call({
+          // question_id: "1ter595312"
+        });
+      }}>
+        Add Scrutin Question
+      </Button>
+
+
+      <Button onClick={() => {
+        create_test_from_template.call({
+          template_id: "lanc0edctd"
+        });
+      }}>
+        Add Scrutin Test From Test Template
       </Button>
 
 
