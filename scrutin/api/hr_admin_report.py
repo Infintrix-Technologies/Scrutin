@@ -208,6 +208,7 @@ def hr_admin_report():
         assessment_average = total_accuracy / total_tests if total_tests else 0
 
         candidates.append({
+            "candidate_id": candidate_name,
             "applicant_name": applicant_name,
             "applicant_email": applicant_email,
             "assessment_name": assessment_name,

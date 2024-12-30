@@ -7,15 +7,19 @@ import { RxTimer } from "react-icons/rx";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import { TestResponseResult } from "@/types/Interface";
+import { useParams } from "react-router-dom";
 
 const CandidatesComparisonPage = () => {
+
+  const { candidate_id_1, candidate_id_2 } = useParams<{ candidate_id_1: string; candidate_id_2: string }>();
   const comparison_two_candidates_test_response_report = useFrappeGetCall(
     "scrutin.api.candidate_response_comparison.comparison_two_candidates_test_response_report",
     {
-      candidate_id_1: "k34vmhmg2c",
-      candidate_id_2: "g4ckk5b9ml",
+      candidate_id_1, 
+      candidate_id_2, 
     }
   );
+  console.log(candidate_id_1, candidate_id_2, "candidate_id_1, candidate_id_2");
   const comparison_two_candidates_test =
     comparison_two_candidates_test_response_report?.data?.message;
   // console.log(comparison_two_candidates_test, "comparison_two_candidates_test");

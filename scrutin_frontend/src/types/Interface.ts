@@ -311,6 +311,7 @@ export interface HrAdminReportsApplicant {
   tests: HrAdminReportsTest[];
   custom_questions: number;
   assessment_average: number;
+  candidate_id: string;
 }
 
 export interface HrAdminReportResponse {
