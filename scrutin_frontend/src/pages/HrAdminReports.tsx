@@ -16,7 +16,7 @@ import NotFound from "./NotFound";
 import { HrAdminReportResponse } from "@/types/Interface";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const HrAdminReports = () => {
   const { data: hrAdminReport, error, isLoading } = useFrappeGetCall<HrAdminReportResponse>(
@@ -40,7 +40,6 @@ const HrAdminReports = () => {
       navigate(`/candidates/comparison/${selectedCandidates[0]}/${selectedCandidates[1]}`);
     } else {
       toast.error("Please select exactly 2 candidates to compare.");
-      // alert("Please select exactly 2 candidates to compare.");
     }
   };
 
@@ -49,11 +48,12 @@ const HrAdminReports = () => {
 
   return (
     <>
+    <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <div className="px-6 md:px-22 lg:px-40 py-6 md:py-10 min-h-screen">
         <div className="flex justify-between items-center pb-3">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">HR Admin Reports</h1>
-          <Button onClick={handleCompareClick}>Compare Two Candidates</Button>
+          <Button className="rounded-full" onClick={handleCompareClick}>Compare Two Candidates</Button>
         </div>
         <div className="space-y-6">
           {hrAdminReport?.message.map((report, index: number) => (
@@ -62,7 +62,7 @@ const HrAdminReports = () => {
                 <CardTitle className="flex items-center text-xl gap-2 text-gray-800">
                   <input
                     type="checkbox"
-                    className="text-black w-5 h-5"
+                    className="text-black bg-black w-5 h-5"
                     checked={selectedCandidates.includes(report.candidate_id)}
                     onChange={() => handleCheckboxChange(report.candidate_id)}
                   />
