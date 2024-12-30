@@ -5,7 +5,6 @@ import Jobs from "@/pages/Jobs";
 import MainLayout from "./layouts/MainLayout";
 import JobDetailPage from "./pages/JobDetailPage";
 import PostJob from "./pages/PostJob";
-// import AssessmentDetail from "./pages/AssessmentDetail";
 import AdminLayout from "./layouts/AdminLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import AssessmentOverview from "./pages/AssessmentOverview";
@@ -13,8 +12,6 @@ import Setup from "./pages/Setup";
 import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 import Intro from "./pages/Intro";
-// import ApiTestPage from "./pages/ApiTestPage";
-// import CandidateDetail from "./pages/ScrutinCandidate";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
 import JobApplicants from "./pages/JobApplicants";
@@ -86,7 +83,7 @@ export const router = createBrowserRouter(
               element: <CandidateDetailPage />,
             },
             {
-              path: "candidate_comparison",
+              path:"comparison/:candidate_id_1/:candidate_id_2" ,
               element: <CandidatesComparisonPage />,
             },
                   
@@ -111,7 +108,6 @@ export const router = createBrowserRouter(
             },
           ],
         },
-        //This is the Job Applicants List Page
         {
           path: "applicants",
           element: <AdminLayout />,
@@ -132,30 +128,16 @@ export const router = createBrowserRouter(
             },
           ]
         },
-        //This will show the  Candidacy Details to perform the test
         {
           path: "candidacy",
           element: <CandidatacyLayout />,
           children : [
-            //this show the specific candidate detail based on candidate_id get from URL using Prams
-
-            // {
-            //   path: ":candidate_id",
-            //   element: <ApiTestPage />,
-            //   // element: <Navigate to={`/assessments`} />,
-            // },
-
-            //This page show the Specific candidate Detail page
-            // {
-            //   path: "candidate_detail",
-            //   element: <CandidateDetail />,
-            // },
+          
             {
               path: ":candidate_id",
               element: <Navigate to="intro" />, 
             },
             {
-              //replace assessment_id to candidate_id 
               path: ":candidate_id/intro",
               element: <Intro />,
             },
