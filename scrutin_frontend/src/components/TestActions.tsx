@@ -1,0 +1,51 @@
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { TestsList } from "@/types/Interface";
+import { useFrappeDeleteDoc } from "frappe-react-sdk";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteForever } from "react-icons/md";
+
+interface TestActionsProps {
+  test: TestsList;
+}
+
+export const TestActions = ({ test }: TestActionsProps) => {
+  const delete_api = useFrappeDeleteDoc();
+  // console.log(assessment,"0000000000004")
+  const handleDelete = (name: string) => {
+    // console.log(name,"name");
+    delete_api?.deleteDoc('Scrutin Test', name);
+  };
+
+  return (
+    <div>
+      
+        <div className="mb-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none">
+                <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-24">
+         
+              <DropdownMenuItem key={test.name}>
+                <MdDeleteForever  className="h-5 w-5 mr-2" />
+                <span  onClick={() => handleDelete(test.name)}>Delete</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CiEdit className="mr-2 h-5 w-5" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+    </div>
+  );
+}
