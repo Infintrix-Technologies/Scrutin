@@ -22,6 +22,7 @@ import CandidatesComparisonPage from "./pages/CandidatesComparisonPage";
 import { CandidatesList } from "./components/CandidatesList";
 import AssessmentsList from "./pages/AssessmentsList";
 import HrAdminReports from "./pages/HrAdminReports";
+import TestsList from "./pages/TestsList";
 
 export const router = createBrowserRouter(
   [
@@ -70,7 +71,11 @@ export const router = createBrowserRouter(
           children: [
             {
               path: "",
-              element: <>show tests here </>,
+              element: <TestsList />,
+            },
+            {
+              path: "test_id",
+              element: <>Test Detail Page</>,
             },
             {
               path: "generate",

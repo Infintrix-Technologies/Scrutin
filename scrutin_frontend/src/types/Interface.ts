@@ -247,8 +247,22 @@ export interface AssessmentList {
   candidate_count: number;
 }
 
+
 export interface AssessmentListResponse {
   message: AssessmentList[];
+}
+
+export interface TestsList {
+  name: string;
+  title: string;
+  level: string;
+  test_format: string;
+  language: string;
+  // candidate_count: number;
+}
+
+export interface TestListResponse {
+  message: TestsList[];
 }
 
 
