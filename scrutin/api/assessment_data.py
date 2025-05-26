@@ -1,9 +1,7 @@
 import frappe
 from frappe import _
 from datetime import datetime
-from frappe.utils import now
 from frappe.query_builder import DocType
-from frappe.query_builder.functions import Now
 from frappe.query_builder import functions as fn
 
 
