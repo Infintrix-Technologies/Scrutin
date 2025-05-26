@@ -57,12 +57,42 @@ export const router = createBrowserRouter(
               path: ":assessment_id",
               element: <AssessmentDetailPage />,
             },
+            {
+              path: "generate",
+              element: <>Generate Assessment</>,
+            },
+            
+          ],
+        },
+        {
+          path: "tests",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <>show tests here </>,
+            },
+            {
+              path: "generate",
+              element: <>Generate test</>,
+            },
+            
+          ],
+        },
+         {
+          path: "questions",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <>show questions here </>,
+            }
             
           ],
         },
         {
           path: "admin_reports",
-          element: <PublicLayout />,
+          element: <AdminLayout />,
           children: [
             {
               path: "",
