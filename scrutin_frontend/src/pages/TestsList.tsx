@@ -12,7 +12,6 @@ import { TestActions } from "@/components/TestActions";
 import { Link, useSearchParams } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
 import { TestListResponse } from "@/types/Interface";
-import CreateAssessment from "@/components/CreateAssessment";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import CreateTest from "@/components/CreateTest";
 
 const TestsList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,10 +60,10 @@ const TestsList = () => {
 
   return (
     <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 ">
-      {/* <div className="flex flex-wrap justify-between items-center mt-6 gap-4">
+      <div className="flex flex-wrap justify-between items-center mt-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Tests</h1>
-        <CreateAssessment />
-      </div> */}
+        <CreateTest />
+      </div>
 
       <div className="my-3 flex flex-wrap gap-3 justify-between items-center">
         <Input
@@ -99,7 +99,7 @@ const TestsList = () => {
                   </Link>
                 </TableCell>
                 <TableCell className="text-center">
-                  {test.level || 0}
+                  {test.level}
                 </TableCell>
                 <TableCell>{test.language}</TableCell>
                 <TableCell>{test.test_format}</TableCell>
