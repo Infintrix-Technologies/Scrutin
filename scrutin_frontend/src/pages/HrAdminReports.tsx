@@ -1,5 +1,7 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFrappeGetCall } from "frappe-react-sdk";
-import { Clock, User } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -13,14 +15,36 @@ import { RxTimer } from "react-icons/rx";
 import NotFound from "./NotFound";
 import { HrAdminReportResponse } from "@/types/Interface";
 
+
 const HrAdminReports = () => {
   const { data: hrAdminReport, error, isLoading } = useFrappeGetCall<HrAdminReportResponse>(
     "scrutin.api.hr_admin_report.hr_admin_report"
   );
-  
+  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
+  const navigate = useNavigate();
+
+  const handleCheckboxChange = (candidateId: string) => {
+    setSelectedCandidates((prev) => {
+      if (prev.includes(candidateId)) {
+        return prev.filter((id) => id !== candidateId);
+      } else {
+        return prev.length < 2 ? [...prev, candidateId] : prev;
+      }
+    });
+  };
+
+  const handleCompareClick = () => {
+    if (selectedCandidates.length === 2) {
+      navigate(`/candidates/comparison/${selectedCandidates[0]}/${selectedCandidates[1]}`);
+    } else {
+      toast.error("Please select exactly 2 candidates to compare.");
+      // alert("Please select exactly 2 candidates to compare.");
+    }
+  };
+
   if (isLoading) return <p className="text-center p-4">Loading...</p>;
   if (error) return <NotFound />;
-  
+
   return (
     <>
     
@@ -105,19 +129,50 @@ const HrAdminReports = () => {
                             </p>
                           )}
                         </TableCell>
+
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                    </TableHeader>
+                    <TableBody>
+                      {report.tests.map((test, index: number) => (
+                        <TableRow key={index} className="whitespace-nowrap">
+                          <TableCell className="text-black">{test.test_title}</TableCell>
+                          <TableCell className="text-black">{test.test_level}</TableCell>
+                          <TableCell className="text-center text-black">{test.total_questions}</TableCell>
+                          <TableCell className="text-center text-black">{test.correct_count}</TableCell>
+                          <TableCell className="text-center text-black">{test.incorrect_count}</TableCell>
+                          <TableCell className="text-center text-black">{test.accuracy.toFixed(2)} %</TableCell>
+                          <TableCell className="text-center flex items-center gap-1 text-black">
+                            <Clock className="h-4 w-4 text-gray-600" />
+                            {test.total_duration < 60
+                              ? test.total_duration > 0
+                                ? `${test.total_duration} seconds`
+                                : ""
+                              : `${Math.floor(test.total_duration / 60)} min${
+                                  test.total_duration % 60 > 0 ? ` ${test.total_duration % 60} sec` : ""
+                                }`}
+                          </TableCell>
+                          <TableCell className="text-black">
+                            {test.finished_time === null ? (
+                              "Incomplete Test"
+                            ) : (
+                              <p className="flex gap-2 items-center">
+                                <RxTimer className="text-gray-600" />
+                                Finished in {test.finished_time.split(".")[0]}
+                              </p>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
     </>
   );
 };
 
 export default HrAdminReports;
-
