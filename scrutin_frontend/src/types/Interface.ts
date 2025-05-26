@@ -265,6 +265,17 @@ export interface TestListResponse {
   message: TestsList[];
 }
 
+export interface TestDetailResponse {
+  test_title: string;
+  questions: Array<{
+    question: string;
+    question_text: string;
+    type: string;
+    question_duration: number;
+  }>
+}
+
+
 
 export interface StartAssessment_And_Continue_Button {
   title: string;

@@ -70,7 +70,6 @@ def tests_list_page_api(test_title=None):
         )
     )
     
-    # Add a filter if assessment_name is provided
     if test_title:
         query = query.where(ScrutinTest.title.like(f"%{test_title}%"))
     
@@ -78,11 +77,122 @@ def tests_list_page_api(test_title=None):
     return results
 
 def search_test(self, text, limit=20):
-    # Use the assessment_list_page_api to get the filtered assessment list based on assessment_name
     tests = tests_list_page_api(test_title=text)
     
-    # Apply limit if needed
     if limit:
         tests = tests[:limit]
     
     return tests
+
+
+
+
+
+@frappe.whitelist()
+def get_test_questions(test_id):
+    ScrutinQuestion = DocType("Scrutin Question")
+    ScrutinTestQuestion = DocType("Scrutin Test Question")
+    ScrutinTest = DocType("Scrutin Test")
+    
+    # Query to fetch questions with test info
+    question_query = (
+        frappe.qb.from_(ScrutinTestQuestion)
+        .inner_join(ScrutinTest)
+        .on(ScrutinTest.name == ScrutinTestQuestion.parent)
+        .inner_join(ScrutinQuestion)
+        .on(ScrutinTestQuestion.question == ScrutinQuestion.name)
+        .select(
+            ScrutinTestQuestion.question,
+            ScrutinQuestion.question.as_("question_text"),
+            ScrutinQuestion.type,
+            ScrutinTest.title.as_("test_title"),
+            ScrutinQuestion.duration.as_("question_duration"),
+        )
+        .where(ScrutinTest.name == test_id)
+    )
+
+    results = question_query.run(as_dict=True)
+
+    if not results:
+        return {"test_title": "", "questions": []}
+
+    test_title = results[0]["test_title"]
+
+    # Strip test_title from each question dict
+    for q in results:
+        q.pop("test_title", None)
+
+    return {
+        "test_title": test_title,
+        "questions": results
+    }
+
+
+@frappe.whitelist()
+def create_scrutin_test_template():
+    doc = frappe.get_doc({
+        "doctype": "Scrutin Test Template",
+        "title": "Sample Test",
+        "language": "en",
+        "level": "Beginner",
+        "test_format": "Multiple-choice",
+        "status": "Draft",
+        "test_questions": json.dumps(
+        [
+    {
+        "question_text": "<div class=\"ql-editor read-mode\"><p>Which tool in Adobe Photoshop is used to remove blemishes and imperfections from an image?</p></div>",
+        "type": "Single Choice",
+        "answer": "2",
+        "question_duration": 60.0,
+        "options": [
+            {
+                "value": "1",
+                "label": "Clone Stamp Tool"
+            },
+            {
+                "value": "2",
+                "label": "Healing Brush Tool"
+            },
+            {
+                "value": "3",
+                "label": "Magic Wand Tool"
+            },
+            {
+                "value": "4",
+                "label": "Lasso Tool"
+            }
+        ]
+    },
+    {
+        "question_text": "<div class=\"ql-editor read-mode\"><p>What is the main function of the Pen Tool in Adobe Illustrator?</p></div>",
+        "type": "Single Choice",
+        "answer": "1",
+        "question_duration": 60.0,
+        "options": [
+            {
+                "value": "1",
+                "label": "Creating vector paths and shapes"
+            },
+            {
+                "value": "2",
+                "label": "Filling shapes with color"
+            },
+            {
+                "value": "3",
+                "label": "Selecting areas of an image"
+            },
+            {
+                "value": "4",
+                "label": "Applying filters to images"
+            }
+        ]
+    }
+        ])
+    })
+    doc.insert()
+    frappe.db.commit()
+    print("Scrutin Test Template created successfully.")
+
+
+
+    
