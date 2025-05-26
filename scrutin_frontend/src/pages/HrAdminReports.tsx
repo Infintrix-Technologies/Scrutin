@@ -14,7 +14,6 @@ import {
 import { RxTimer } from "react-icons/rx";
 import NotFound from "./NotFound";
 import { HrAdminReportResponse } from "@/types/Interface";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 
@@ -49,7 +48,6 @@ const HrAdminReports = () => {
 
   return (
     <>
-      <Navbar />
       <div className="px-6 md:px-22 lg:px-40 py-6 md:py-10 min-h-screen">
         <div className="flex justify-between items-center pb-3">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">HR Admin Reports</h1>
