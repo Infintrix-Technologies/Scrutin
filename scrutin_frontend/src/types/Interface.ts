@@ -230,6 +230,7 @@ export interface Create_Assessment {
   assessment_name: string;
   company: string;
   language: string;
+  test: string;
 }
 
 

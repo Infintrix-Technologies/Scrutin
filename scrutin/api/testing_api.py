@@ -93,7 +93,8 @@ def get_test_questions(test_id):
     ScrutinQuestion = DocType("Scrutin Question")
     ScrutinTestQuestion = DocType("Scrutin Test Question")
     ScrutinTest = DocType("Scrutin Test")
-    
+    ScrutinQuestionOption = DocType("Scrutin Question Option")
+
     # Query to fetch questions with test info
     question_query = (
         frappe.qb.from_(ScrutinTestQuestion)
@@ -107,6 +108,7 @@ def get_test_questions(test_id):
             ScrutinQuestion.type,
             ScrutinTest.title.as_("test_title"),
             ScrutinQuestion.duration.as_("question_duration"),
+            ScrutinQuestion.answer.as_("answer"),
         )
         .where(ScrutinTest.name == test_id)
     )
@@ -118,9 +120,21 @@ def get_test_questions(test_id):
 
     test_title = results[0]["test_title"]
 
-    # Strip test_title from each question dict
-    for q in results:
-        q.pop("test_title", None)
+    # Strip test_title and fetch options for each question
+    for question in results:
+        question.pop("test_title", None)
+
+        # Fetch options for the current question
+        option_query = (
+            frappe.qb.from_(ScrutinQuestionOption)
+            .select(
+                ScrutinQuestionOption.value,
+                ScrutinQuestionOption.label
+            )
+            .where(ScrutinQuestionOption.parent == question['question'])
+        )
+        options = option_query.run(as_dict=True)
+        question['options'] = options
 
     return {
         "test_title": test_title,
@@ -195,4 +209,3 @@ def create_scrutin_test_template():
 
 
 
-    
