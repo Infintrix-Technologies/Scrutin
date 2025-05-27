@@ -159,7 +159,7 @@ const test_template = useFrappePostCall("scrutin.api.test_template.get_scrutin_t
 const add_test_in_assessment = useFrappePostCall("scrutin.api.testing_api.add_test_in_assessment")
 
 
-
+const create_assessment = useFrappePostCall("scrutin.api.create_assessment.new_create_assessment")
 
 
 
@@ -274,6 +274,18 @@ const add_test_in_assessment = useFrappePostCall("scrutin.api.testing_api.add_te
         });
       }}>
         get_question_details
+      </Button>
+
+
+      <Button onClick={() => {
+        create_assessment.call({
+          assessment_name: "Test Assessment",
+          company: "Honda",
+          language: "en",
+          test_ids: ["o3dd6v8gc6", "948b22has1", "92j6f18kvv"],
+        });
+      }}>
+        Create Assessment
       </Button>
 
 
