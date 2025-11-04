@@ -20,6 +20,7 @@ export default function TestProgress() {
   const totalQuestions = specific_test_details?.total_no_of_question ;
 
   const [timeLeft, setTimeLeft] = useState(remainingTime);
+  // const test_id = question?.message.test.test.test_id
 
   useEffect(() => {
     updateCurrentQuestion(candidate_id);
@@ -44,7 +45,7 @@ export default function TestProgress() {
     if (timeLeft == 1) {
       // mark_test_completed.call({
       //   candidate_id,
-      //   test_id: question?.message?.test?.test?.test_id,
+      //   test_id: test_id,
       // });
       navigate(`/candidacy/${candidate_id}/overview`);
     }
