@@ -3,7 +3,7 @@ const Logo = () => {
     <>
       {/* <MountainIcon className="h-6 w-6" /> */}
       <div className="text-4xl font-afacad mb-2 group perspective">
-        <div className="flex relative inline-block transform-gpu transition-transform duration-300 group-hover:rotate-y-180">
+        <div className="flex relative transform-gpu transition-transform duration-300 group-hover:rotate-y-180">
           <span className="block transition-colors duration-300 text-red-500 group-hover:text-blue-500">
             s
           </span>

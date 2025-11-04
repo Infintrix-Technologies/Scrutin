@@ -1,0 +1,1 @@
+export  const buttonClassName = "text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg rounded-lg text-sm px-4 py-2 sm:px-5 sm:py-2.5 mb-2";

@@ -3,70 +3,105 @@
   "description": null,
   "docstatus": 0,
   "doctype": "Scrutin Test",
-  "duration": 600.0,
-  "job_role": "Junior Backend Developer",
+  "duration": null,
+  "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-12 19:33:50.125884",
-  "name": "Front End Development",
+  "modified": "2024-11-28 12:23:09.934916",
+  "name": "k9o3uoe1ob",
   "status": "Draft",
   "test_focus": [],
   "test_format": "Multiple-choice",
   "test_questions": [
    {
-    "parent": "Front End Development",
+    "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3libomlodf"
+    "question": "1ter595312"
    },
    {
-    "parent": "Front End Development",
+    "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
+    "question": "1ssr2b9q2d"
    },
    {
-    "parent": "Front End Development",
+    "parent": "k9o3uoe1ob",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
+    "question": "1s7burote5"
    }
   ],
-  "title": "Front End Development"
+  "title": "CSS Test"
  },
  {
   "description": null,
   "docstatus": 0,
   "doctype": "Scrutin Test",
-  "duration": 600.0,
-  "job_role": "Junior Backend Developer",
+  "duration": null,
+  "job_role": null,
   "language": "en",
   "level": "Beginner",
-  "modified": "2024-11-12 19:33:35.674157",
-  "name": "Backend Development",
+  "modified": "2024-11-28 12:21:58.607858",
+  "name": "f3988t64af",
   "status": "Draft",
   "test_focus": [],
   "test_format": "Multiple-choice",
   "test_questions": [
    {
-    "parent": "Backend Development",
+    "parent": "f3988t64af",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3libomlodf"
+    "question": "1nuqjb313j"
    },
    {
-    "parent": "Backend Development",
+    "parent": "f3988t64af",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "3mhqm798c5"
+    "question": "1p44dmohkp"
    },
    {
-    "parent": "Backend Development",
+    "parent": "f3988t64af",
     "parentfield": "test_questions",
     "parenttype": "Scrutin Test",
-    "question": "c7kg0nr1du"
+    "question": "1pp98pd64f"
    }
   ],
-  "title": "Backend Development"
+  "title": "Python Test"
+ },
+ {
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Scrutin Test",
+  "duration": null,
+  "job_role": null,
+  "language": "en",
+  "level": "Beginner",
+  "modified": "2024-11-28 12:22:34.906569",
+  "name": "36se65gll1",
+  "status": "Draft",
+  "test_focus": [],
+  "test_format": "Multiple-choice",
+  "test_questions": [
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1qdl8clsbn"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1r23648a1j"
+   },
+   {
+    "parent": "36se65gll1",
+    "parentfield": "test_questions",
+    "parenttype": "Scrutin Test",
+    "question": "1rkncvbr6i"
+   }
+  ],
+  "title": "JavaScript Test"
  }
 ]

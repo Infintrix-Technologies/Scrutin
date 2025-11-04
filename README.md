@@ -78,3 +78,20 @@ To install Scrutin on your Frappe environment, follow these steps:
 
 ```bash
 bench get-app https://github.com/Infintrix-Technologies/Scrutin.git
+AI-assisted scoring for written answers
+
+Conversation-style Behavioral Test Models
+
+Advanced Proctoring (eye tracking, screen recording)
+
+🤝 Contributing
+We welcome contributions that improve test integrity, scoring intelligence, or workflow integration.
+
+Open an Issue → Discuss → Submit PR.
+
+📝 License
+MIT (or whatever license you choose)
+
+⚡ Tip Before You Use This
+If you're expecting Scrutin to magically fix your hiring process while you still recruit randomly and define roles vaguely — that’s your problem, not the software.
+Scrutin works best when roles and skill expectations are clearly defined.

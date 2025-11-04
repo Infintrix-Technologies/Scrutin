@@ -1,58 +1,69 @@
 import frappe
 from frappe import _
 import datetime
+from frappe.query_builder import DocType
 
-print("Password is:", frappe.generate_hash(length=12))
 
-
-@frappe.whitelist(methods=["POST"])
-def create_candidate(assessment,job_applicant):
-    
+@frappe.whitelist()
+def create_candidate(assessment, job_applicant):
     if not assessment or not job_applicant:
         frappe.throw(_("Missing required fields: assessment or job_applicant"))
 
-    session = {
-        "data": {
-            "user": "Administrator",
-            "session_ip": "127.0.0.1",
-            "last_updated": "2024-10-10 23:22:29.225111",
-            "session_expiry": "170:00:00",
-            "full_name": None,
-            "user_type": "System User",
-            "lang": "en",
-            "csrf_token": "9258ce19825639be0b8b16ab400ee1a472a79c174617ac5b6957a072",
-        },
-        "user": "Administrator",
-        "sid": "49ade8e9de339e0de331ce53edfb444e6537c1593586abca53311717",
-    }
+    JobApplicant = DocType("Job Applicant")
+    User = DocType("User")
+    ScrutinCandidate = DocType("Scrutin Candidate")
 
-    # print(frappe.session)
+    # Fetch job applicant details
+    applicant_query = (
+        frappe.qb.from_(JobApplicant)
+        .select(JobApplicant.email_id, JobApplicant.applicant_name)
+        .where(JobApplicant.name == job_applicant)
+    )
+    applicant = applicant_query.run(as_dict=True)
+    if not applicant:
+        frappe.throw(_("Job Applicant not found"))
+    applicant = applicant[0]
 
+    # Check if user exists
+    user_query = (
+        frappe.qb.from_(User)
+        .select(User.name)
+        .where(User.email == applicant["email_id"])
+    )
+    user = user_query.run(as_dict=True)
 
-
-    job_applicant_doc = frappe.get_doc("Job Applicant", job_applicant)
-
-    user = frappe.db.exists("User", {"email": job_applicant_doc.name})
-
-    # generated_password = frappe.generate_hash(length=12)
     generated_password = "Muufhuqiwe78r3458@"
     if not user:
-        user = frappe.get_doc(
+        # Create new user
+        user_doc = frappe.get_doc(
             {
                 "doctype": "User",
-                "email": job_applicant_doc.email_id,
-                "first_name": job_applicant_doc.applicant_name,
+                "email": applicant["email_id"],
+                "first_name": applicant["applicant_name"],
                 "enabled": 1,
                 "new_password": generated_password,
-                # "roles": [{"role": role}]
             }
         )
-        user.insert()
+        user_doc.insert()
         frappe.db.commit()
-        user_name = user.name
+        user_name = user_doc.name
     else:
-        user_name = user
+        user_name = user[0]["name"]
 
+    # Check if a Scrutin Candidate already exists with the same email and assessment
+    existing_candidate_query = (
+        frappe.qb.from_(ScrutinCandidate)
+        .select(ScrutinCandidate.name)
+        .where(
+            (ScrutinCandidate.user == user_name) &
+            (ScrutinCandidate.status == "Open")
+        )
+    )
+    existing_candidate = existing_candidate_query.run(as_dict=True)
+    if existing_candidate and existing_candidate[0]["name"]:
+        return {"message": _("Candidate with the same email and status already exists.")}
+    
+    # Create a new Scrutin Candidate
     scrutin_candidate = frappe.get_doc(
         {
             "doctype": "Scrutin Candidate",
@@ -65,55 +76,28 @@ def create_candidate(assessment,job_applicant):
     frappe.db.commit()
 
     message = f"""
-    Hello {job_applicant_doc.applicant_name},
+    Hello {applicant["applicant_name"]},
 
     Your scrutin test is available at {frappe.utils.get_url()}/scrutin/candidacy/{scrutin_candidate.name}
     
-    Login with your email:{job_applicant} and password: {generated_password}
+    Login with your email: {applicant["email_id"]} and password: {generated_password}
     
     Best regards,
     Team
     """
-    print(message)
 
     scrutin_candidate.invited_on = datetime.datetime.now()
     scrutin_candidate.save()
 
     try:
-
         frappe.sendmail(
-            recipients=[job_applicant_doc.email_id],
-            subject="Invitate to Take Test Against your job application",
+            recipients=[applicant["email_id"]],
+            subject="Invitation to Take Test Against your job application",
             message=message,
         )
-
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Failed to send email to candidate")
-        # frappe.throw(f"Email sending failed: {str(e)}")
-    return {"message": message, "candidate": scrutin_candidate}
+    
+    return "Candidate Create Successfully"
 
 
-
-
-
-
-
-@frappe.whitelist()
-def update_job_applicant_status(job_applicant):
-    job_applicant_doc = frappe.get_doc("Job Applicant", job_applicant)
-    job_applicant_doc.phone_number = "03001122334"
-    job_applicant_doc.save()
-    return {"message": f"Phone Number updated to {job_applicant_doc.phone_number}"}
-
-
-
-# update the field of Scrutin Candidate #
-@frappe.whitelist()
-def update_candidate(assessment):
-    scrutin_candidate_doc = frappe.get_doc("Scrutin Candidate", assessment)
-    scrutin_candidate_doc.invite_accepted_on = datetime.datetime.now()
-    scrutin_candidate_doc.status = "Accepted"
-    scrutin_candidate_doc.save()
-    return {"message": f"Invite Accepted On {scrutin_candidate_doc.invite_accepted_on} and Status is {scrutin_candidate_doc.status}"}
-
- 

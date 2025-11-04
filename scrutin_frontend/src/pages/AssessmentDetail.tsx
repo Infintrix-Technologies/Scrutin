@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,24 +19,8 @@ import {
 import { ChevronDown, MoreHorizontal, Search, Settings } from "lucide-react";
 import TestsAndQuestions from "@/components/TestsAndQuestions";
 
-type Props = {};
+const AssessmentDetail = () => {
 
-const AssessmentDetail = (props: Props) => {
-  const [candidates, setCandidates] = useState([
-    {
-      id: 1,
-      name: "Abdul Muqeet",
-      overall: "-",
-      problemSolving: "25%",
-      communication: "18%",
-      timeManagement: "22%",
-      motivation: "-",
-      stage: "Not yet evaluated",
-      status: "Assessment started",
-      invitedOn: "Sep 30, 2024",
-      rating: 0,
-    },
-  ]);
   return (
     <div className="px-32">
       <div className="p-6 bg-background">

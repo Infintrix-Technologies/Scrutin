@@ -25,6 +25,7 @@ import {
   useAssessmentsListQuery,
   useCompanyListQuery,
   useLanguageListQuery,
+  useTestListQuery,
 } from "@/hooks/query-hooks";
 import {
   Select,
@@ -35,13 +36,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { RainbowButton } from "./ui/rainbow-button";
+import { Create_Assessment } from "../types/Interface";
 
-type ScrutinAssessment = {
-  assessment_name: string;
-  company: string;
-  language: string;
-};
 
 const CreateAssessment = () => {
   const globalState = useGlobalState();
@@ -58,16 +54,12 @@ const CreateAssessment = () => {
       }}
     >
       <DialogTrigger asChild>
-        <RainbowButton>
-        <FaPlus />
-        Create Assessment
-        </RainbowButton>
-        {/* <Button variant="default">
-          <FaPlus />
+        <Button className="shadow-lg rounded-full">
+          <FaPlus className="mr-2" />
           Create Assessment
-        </Button> */}
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="bg-white sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create Assessment</DialogTitle>
           <DialogDescription>
@@ -81,16 +73,17 @@ const CreateAssessment = () => {
 };
 
 const AssessmentForm = () => {
-  const form = useForm<ScrutinAssessment>();
+  const form = useForm<Create_Assessment>();
 
   const globalState = useGlobalState();
   const assessments_query = useAssessmentsListQuery();
   const languages_query = useLanguageListQuery();
   const companies_query = useCompanyListQuery();
+  const tests_query = useTestListQuery();
 
   const create_frappe_doc = useFrappeCreateDoc();
 
-  const onSubmit = async (data: ScrutinAssessment) => {
+  const onSubmit = async (data: Create_Assessment) => {
     try {
       await create_frappe_doc.createDoc("Scrutin Assessment", data);
       assessments_query.mutate();
@@ -133,8 +126,8 @@ const AssessmentForm = () => {
                       <SelectGroup>
                         <SelectLabel>Languages</SelectLabel>
                         {(languages_query?.data || []).map((language) => (
-                          <SelectItem key={language.name} value={language.name}>
-                            {language.name}
+                          <SelectItem key={language?.name} value={language?.name}>
+                            {language?.name}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -160,8 +153,35 @@ const AssessmentForm = () => {
                       <SelectGroup>
                         <SelectLabel>Companies</SelectLabel>
                         {(companies_query?.data || []).map((company) => (
-                          <SelectItem key={company.name} value={company.name}>
-                            {company.company_name}
+                          <SelectItem key={company?.name} value={company?.name}>
+                            {company?.company_name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="test"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Test</FormLabel>
+                <FormControl>
+                  <Select onValueChange={(value) => field.onChange(value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Test" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tests</SelectLabel>
+                        {(tests_query?.data || []).map((test) => (
+                          <SelectItem key={test?.name} value={test?.name}>
+                            {test?.title}
                           </SelectItem>
                         ))}
                       </SelectGroup>

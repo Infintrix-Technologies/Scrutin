@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-11-22 19:33:19.818659",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "test",
+  "started_at",
+  "completed_at",
+  "duration"
+ ],
+ "fields": [
+  {
+   "fieldname": "test",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Test",
+   "options": "Scrutin Test",
+   "reqd": 1
+  },
+  {
+   "fieldname": "started_at",
+   "fieldtype": "Datetime",
+   "label": "Started At"
+  },
+  {
+   "fieldname": "completed_at",
+   "fieldtype": "Datetime",
+   "label": "Completed At"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Duration",
+   "label": "Duration"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-12-12 12:53:04.371507",
+ "modified_by": "Administrator",
+ "module": "Scrutin",
+ "name": "Scrutin Test Progress",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

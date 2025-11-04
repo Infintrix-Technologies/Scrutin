@@ -1,7 +1,7 @@
 import { useFrappeAuth } from 'frappe-react-sdk'
 import { FC, PropsWithChildren } from 'react'
 import { createContext } from 'react'
-import { Navigate } from 'react-router-dom'
+// import { Navigate } from 'react-router-dom'
 
 export interface UserContextProps {
     isLoading: boolean,

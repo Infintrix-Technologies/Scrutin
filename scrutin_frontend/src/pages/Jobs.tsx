@@ -59,42 +59,42 @@ const jobs = [
 
 export default function Component() {
   return (
-    <div className="container mx-auto px-32">
-       <div className="flex justify-between mt-10">
+    <div className="container mx-auto px-8 lg:px-32">
+       <div className="flex justify-between my-6">
         <h1 className="text-3xl font-bold">Jobs</h1>
         <Link to="/jobs/post">
-        <Button>
-          <FaPlus />
+        <Button className="shadow-lg rounded-full">
+          <FaPlus className="mr-2" />
           Post Job
         </Button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 pb-6 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
-          <Card key={job.id} className="flex flex-col">
+          <Card key={job?.id} className="flex flex-col">
             <CardHeader>
               <Link to={`/jobs/detail`}>
-               <CardTitle>{job.title}</CardTitle>
+               <CardTitle>{job?.title}</CardTitle>
               </Link>
              
-              <CardDescription>{job.company}</CardDescription>
+              <CardDescription>{job?.company}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-2">
                 <MapPin className="w-4 h-4" />
-                <span>{job.location}</span>
+                <span>{job?.location}</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
                 <Briefcase className="w-4 h-4" />
-                <span>{job.type}</span>
+                <span>{job?.type}</span>
               </div>
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="secondary" className="mb-4 shadow-lg rounded-full ">
                 <Clock className="w-4 h-4 mr-1" />
-                {job.postedAt}
+                {job?.postedAt}
               </Badge>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Apply Now</Button>
+              <Button className="shadow-lg rounded-full w-full" >Apply Now</Button>
             </CardFooter>
           </Card>
         ))}

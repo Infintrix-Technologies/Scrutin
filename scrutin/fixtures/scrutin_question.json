@@ -1,98 +1,362 @@
 [
  {
-    "answer": {},
+  "answer": "2",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "modified": "2024-11-12 19:12:10.786896",
-  "name": "3libomlodf",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:06:10.664752",
+  "name": "1nuqjb313j",
   "options": [
    {
-    "label": "12-15",
-    "parent": "3libomlodf",
+    "label": "print(typeof(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "16-18",
-    "parent": "3libomlodf",
+    "label": "print(type(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "20-25",
-    "parent": "3libomlodf",
+    "label": "print(class(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "30+",
-    "parent": "3libomlodf",
+    "label": "print(var(x))",
+    "parent": "1nuqjb313j",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is your age?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>What is the correct syntax to output the type of a variable or object in Python?</p></div>",
   "type": "Single Choice"
  },
  {
-  "answer": {},
+  "answer": "4",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "modified": "2024-11-12 19:13:59.972369",
-  "name": "3mhqm798c5",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:08:10.084040",
+  "name": "1p44dmohkp",
   "options": [
    {
-    "label": "BBA",
-    "parent": "3mhqm798c5",
+    "label": "/* This is a comment */",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "1"
    },
    {
-    "label": "BSCS",
-    "parent": "3mhqm798c5",
+    "label": "... This is a comment ...",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "2"
    },
    {
-    "label": "LLB",
-    "parent": "3mhqm798c5",
+    "label": "// This is a comment",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "3"
    },
    {
-    "label": "BSSE",
-    "parent": "3mhqm798c5",
+    "label": "# This is a comment",
+    "parent": "1p44dmohkp",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
     "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is your Degree?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you start a comment in Python?</p></div>",
   "type": "Single Choice"
  },
  {
-    "answer": {},
+  "answer": "2",
   "docstatus": 0,
   "doctype": "Scrutin Question",
-  "modified": "2024-10-01 15:32:59.222043",
-  "name": "c7kg0nr1du",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:09:17.785163",
+  "name": "1pp98pd64f",
   "options": [
    {
-    "label": "Representational State Transfer",
-    "parent": "c7kg0nr1du",
+    "label": "func",
+    "parent": "1pp98pd64f",
     "parentfield": "options",
     "parenttype": "Scrutin Question",
-    "value": "a"
+    "value": "1"
+   },
+   {
+    "label": "def",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "function",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "define",
+    "parent": "1pp98pd64f",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
    }
   ],
-  "question": "<div class=\"ql-editor read-mode\"><p>What is RESTful API?</p></div>",
+  "question": "<div class=\"ql-editor read-mode\"><p>Which keyword is used to create a function in Python?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "2",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:10:22.942017",
+  "name": "1qdl8clsbn",
+  "options": [
+   {
+    "label": "variable x;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "var x;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "v x;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "x variable;",
+    "parent": "1qdl8clsbn",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you declare a JavaScript variable?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "3",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:11:28.298621",
+  "name": "1r23648a1j",
+  "options": [
+   {
+    "label": "var colors = \"red\", \"green\", \"blue\";",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "var colors = (1:\"red\", 2:\"green\", 3:\"blue\");",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "var colors = [\"red\", \"green\", \"blue\"];",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "var colors = 1 = (\"red\"), 2 = (\"green\"), 3 = (\"blue\");",
+    "parent": "1r23648a1j",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which of the following is a correct way to create an array in JavaScript?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "4",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:12:27.927326",
+  "name": "1rkncvbr6i",
+  "options": [
+   {
+    "label": "msg(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "alertBox(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "msgBox(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "alert(\"Hello World\");",
+    "parent": "1rkncvbr6i",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you write \"Hello World\" in an alert box?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "1",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:13:27.581544",
+  "name": "1s7burote5",
+  "options": [
+   {
+    "label": "background-color: red;",
+    "parent": "1s7burote5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "bgcolor: red;",
+    "parent": "1s7burote5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "background: red;",
+    "parent": "1s7burote5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "color: red;",
+    "parent": "1s7burote5",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you change the background color of an element in CSS?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "2",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:14:36.349201",
+  "name": "1ssr2b9q2d",
+  "options": [
+   {
+    "label": "font-weight",
+    "parent": "1ssr2b9q2d",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "font-family",
+    "parent": "1ssr2b9q2d",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "font-style",
+    "parent": "1ssr2b9q2d",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "font-text",
+    "parent": "1ssr2b9q2d",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>Which property is used to change the font of an element?</p></div>",
+  "type": "Single Choice"
+ },
+ {
+  "answer": "1",
+  "docstatus": 0,
+  "doctype": "Scrutin Question",
+  "duration": 60.0,
+  "modified": "2024-11-28 12:15:46.713914",
+  "name": "1ter595312",
+  "options": [
+   {
+    "label": "box-shadow: 10px 10px 5px grey;",
+    "parent": "1ter595312",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "1"
+   },
+   {
+    "label": "shadow: 10px 10px 5px grey;",
+    "parent": "1ter595312",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "2"
+   },
+   {
+    "label": "box-shadow: grey 10px 10px 5px;",
+    "parent": "1ter595312",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "3"
+   },
+   {
+    "label": "shadow-box: 10px 10px 5px grey;",
+    "parent": "1ter595312",
+    "parentfield": "options",
+    "parenttype": "Scrutin Question",
+    "value": "4"
+   }
+  ],
+  "question": "<div class=\"ql-editor read-mode\"><p>How do you add a shadow to a box in CSS?</p></div>",
   "type": "Single Choice"
  }
 ]

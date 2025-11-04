@@ -1,31 +1,59 @@
 [
  {
-  "assessment_name": "React Developer",
+  "assessment_name": "Python Assessment",
   "assessment_tests": [
    {
-    "parent": "vk1m38vch1",
+    "parent": "ju7mgf9ceg",
     "parentfield": "assessment_tests",
     "parenttype": "Scrutin Assessment",
-    "test": "Front End Development",
+    "test": "36se65gll1",
+    "weight": "1"
+   },
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "f3988t64af",
+    "weight": "1"
+   },
+   {
+    "parent": "ju7mgf9ceg",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "k9o3uoe1ob",
     "weight": "1"
    }
   ],
-  "company": "Infintrix",
+  "company": "Infintrix (Demo)",
   "custom_questions": [],
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
-  "language": "en-US",
-  "modified": "2024-11-12 19:34:50.908283",
-  "name": "vk1m38vch1"
+  "language": "en",
+  "modified": "2024-11-28 12:24:19.905918",
+  "name": "ju7mgf9ceg"
  },
  {
-  "assessment_name": "Python Developer",
+  "assessment_name": "JavaScript Assessment",
   "assessment_tests": [
    {
-    "parent": "0b1bdsk5tu",
+    "parent": "juocinh9un",
     "parentfield": "assessment_tests",
     "parenttype": "Scrutin Assessment",
-    "test": "Backend Development",
+    "test": "k9o3uoe1ob",
+    "weight": "1"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "f3988t64af",
+    "weight": "1"
+   },
+   {
+    "parent": "juocinh9un",
+    "parentfield": "assessment_tests",
+    "parenttype": "Scrutin Assessment",
+    "test": "36se65gll1",
     "weight": "1"
    }
   ],
@@ -33,8 +61,8 @@
   "custom_questions": [],
   "docstatus": 0,
   "doctype": "Scrutin Assessment",
-  "language": "sq",
-  "modified": "2024-11-12 19:35:01.734279",
-  "name": "0b1bdsk5tu"
+  "language": "en",
+  "modified": "2024-11-28 12:25:21.026199",
+  "name": "juocinh9un"
  }
 ]

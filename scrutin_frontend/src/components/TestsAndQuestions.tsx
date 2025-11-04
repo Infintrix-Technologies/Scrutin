@@ -3,19 +3,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Timer, Star } from 'lucide-react'
+import { CustomQuestion, CustomTestQuestions } from '../types/Interface'
 
-type Test = {
-  name: string
-  duration: string
-}
 
-type CustomQuestion = {
-  question: string
-  type: string
-  duration: string
-}
 
-const tests: Test[] = [
+const tests: CustomTestQuestions[] = [
   { name: "Problem Solving", duration: "9'" },
   { name: "Communication", duration: "8'" },
   { name: "Time Management", duration: "9'" },
@@ -58,15 +50,15 @@ const IncludedTests: React.FC = () => (
           </tr>
         </thead>
         <tbody>
-          {tests.map((test, index) => (
+          {tests?.map((test, index) => (
             <tr key={index} className="border-b last:border-b-0">
-              <TableCell>{test.name}</TableCell>
+              <TableCell>{test?.name}</TableCell>
               <TableCell>--</TableCell>
               <TableCell>--</TableCell>
               <TableCell>
                 <div className="flex items-center">
                   <Timer className="w-4 h-4 mr-1" />
-                  {test.duration}
+                  {test?.duration}
                 </div>
               </TableCell>
             </tr>
@@ -92,7 +84,7 @@ const CustomQuestions: React.FC = () => (
           </tr>
         </thead>
         <tbody>
-          {customQuestions.map((question, index) => (
+          {customQuestions?.map((question, index) => (
             <tr key={index} className="border-b last:border-b-0">
               <TableCell>
                 <TooltipProvider>
@@ -100,21 +92,21 @@ const CustomQuestions: React.FC = () => (
                     <TooltipTrigger asChild>
                       <div className="flex items-center">
                         <Star className="w-5 h-5 mr-2 text-amber-500" />
-                        <span className="truncate max-w-xs">{question.question}</span>
+                        <span className="truncate max-w-xs">{question?.question}</span>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className="max-w-xs">{question.question}</p>
+                      <p className="max-w-xs">{question?.question}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </TableCell>
-              <TableCell>{question.type}</TableCell>
+              <TableCell>{question?.type}</TableCell>
               <TableCell>
-                {question.duration !== "―" && (
+                {question?.duration !== "―" && (
                   <div className="flex items-center">
                     <Timer className="w-4 h-4 mr-1" />
-                    {question.duration}
+                    {question?.duration}
                   </div>
                 )}
                 {question.duration === "―" && "―"}

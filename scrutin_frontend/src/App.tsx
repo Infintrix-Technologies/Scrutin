@@ -1,19 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FrappeProvider } from "frappe-react-sdk";
 import { RouterProvider } from "react-router-dom";
-
 import '@/App.css'
-
 import { GlobalStateProvider } from "@/utils/StateProvider";
 import { ThemeProvider } from "@/utils/ThemeProvider";
 import { router } from "./Routes";
 import { getSiteName, localStorageProvider } from "./utils";
 
-
-
 function App() {
 
-  
   return (
     <div className="App font-montserrat">
       <FrappeProvider
@@ -24,7 +18,7 @@ function App() {
       }}
       siteName={getSiteName()}
       >
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <GlobalStateProvider>
         <RouterProvider router={router} />
         </GlobalStateProvider>

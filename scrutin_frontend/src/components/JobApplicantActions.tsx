@@ -9,29 +9,28 @@ import { useFrappeDeleteDoc } from "frappe-react-sdk";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
+import { JobApplicantActionsProps } from "../types/Interface";
 
-interface Props {
-  applicant: any;
-}
 
-export const JobApplicantActions = ({applicant}:Props )=> {
+
+export const JobApplicantActions: React.FC<JobApplicantActionsProps> = ({ applicant }) => {
   const delete_api = useFrappeDeleteDoc();
 
-  console.log(applicant,"0000000000004")
+  // console.log(applicant,"console for applicant")
 
   const handleDelete = (name: string) => {
-    console.log(name,"name");
+    // console.log(name,"name");
     delete_api?.deleteDoc('Job Applicant', name);
   };
 
   return (
     <div>
       
-        <div  style={{ marginBottom: "1rem" }}>
+        <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button style={{ background: "none", border: "none", color: "white", boxShadow: "none" }}>
-                <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
+            <Button className="bg-transparent border-none text-black hover:bg-transparent   shadow-none">
+            <BsThreeDotsVertical className="cursor-pointer h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-24">

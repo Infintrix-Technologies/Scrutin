@@ -1,13 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import Login from "@/pages/auth/Login";
-import Assessments from "@/pages/Assessments";
-import Candidates from "@/pages/Candidates";
 import Jobs from "@/pages/Jobs";
 import MainLayout from "./layouts/MainLayout";
 import JobDetailPage from "./pages/JobDetailPage";
 import PostJob from "./pages/PostJob";
-import AssessmentDetail from "./pages/AssessmentDetail";
 import AdminLayout from "./layouts/AdminLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import AssessmentOverview from "./pages/AssessmentOverview";
@@ -15,14 +12,18 @@ import Setup from "./pages/Setup";
 import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 import Intro from "./pages/Intro";
-import ApiTestPage from "./pages/ApiTestPage";
-import CandidateDetail from "./pages/ScrutinCandidate";
 import CandidatacyLayout from "./layouts/CandidatacyLayout";
 import CandidateLayout from "./layouts/CandidateLayout";
-import CandidateDashboard from "./pages/CandidateDashboard";
 import JobApplicants from "./pages/JobApplicants";
-import AssessmentDashboard from "./pages/AssessmentDashboard";
-import CandidateAssessmentDashboard from "./pages/CandidateAssessmentDashboard";
+import CandidateDetailPage from "./pages/CandidatesDetailPage";
+import AssessmentDetailPage from "./pages/AssessmentDetailPage";
+import TestAPI from "./pages/TestAPI";
+import CandidatesComparisonPage from "./pages/CandidatesComparisonPage";
+import { CandidatesList } from "./components/CandidatesList";
+import AssessmentsList from "./pages/AssessmentsList";
+import HrAdminReports from "./pages/HrAdminReports";
+import TestsList from "./pages/TestsList";
+import TestDetailPage from "./pages/TestDetailPage";
 
 export const router = createBrowserRouter(
   [
@@ -52,13 +53,57 @@ export const router = createBrowserRouter(
           children: [
             {
               path: "",
-              element: <Assessments />,
+              element: <AssessmentsList />,
             },
             {
-              path: "detail",
-              element: <AssessmentDetail />,
+              path: ":assessment_id",
+              element: <AssessmentDetailPage />,
+            },
+            {
+              path: "generate",
+              element: <>Generate Assessment</>,
             },
             
+          ],
+        },
+        {
+          path: "tests",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <TestsList />,
+            },
+            {
+              path: ":test_id",
+              element: <TestDetailPage />,
+            },
+            {
+              path: "generate",
+              element: <>Generate test</>,
+            },
+            
+          ],
+        },
+         {
+          path: "questions",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <>show questions here </>,
+            }
+            
+          ],
+        },
+        {
+          path: "admin_reports",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <HrAdminReports />,
+            },
           ],
         },
         {
@@ -67,10 +112,20 @@ export const router = createBrowserRouter(
           children: [
             {
               path: "",
-              element: <Candidates />,
+              element: <CandidatesList />,
             },
+            {
+              path: ":email",
+              element: <CandidateDetailPage />,
+            },
+            {
+              path:"comparison/:candidate_id_1/:candidate_id_2" ,
+              element: <CandidatesComparisonPage />,
+            },
+                  
           ],
         },
+        //This Show the Jobs Page 
         {
           path: "jobs",
           element: <AdminLayout />,
@@ -100,32 +155,12 @@ export const router = createBrowserRouter(
           ],
         },
         {
-          path: "candidate",
+          path: "testapi",
           element: <CandidateLayout />,
           children : [
             {
               path: "",
-              element: <CandidateDashboard />,
-            },
-          ]
-        },
-        {
-          path: "assessment-dashboard",
-          element: <AssessmentDashboard />,
-          children : [
-            {
-              path: "",
-              element: <CandidateDashboard />,
-            },
-          ]
-        },
-        {
-          path: "candidate-assessment-dashboard",
-          element: <CandidateAssessmentDashboard />,
-          children : [
-            {
-              path: "",
-              element: <CandidateDashboard />,
+              element: <TestAPI />,
             },
           ]
         },
@@ -133,29 +168,25 @@ export const router = createBrowserRouter(
           path: "candidacy",
           element: <CandidatacyLayout />,
           children : [
+          
             {
               path: ":candidate_id",
-              element: <ApiTestPage />,
-              // element: <Navigate to={`/assessments`} />,
+              element: <Navigate to="intro" />, 
             },
             {
-              path: "candidate_detail",
-              element: <CandidateDetail />,
-            },
-            {
-              path: ":assessment_id/intro",
+              path: ":candidate_id/intro",
               element: <Intro />,
             },
             {
-              path: ":assessment_id/overview",
+              path: ":candidate_id/overview",
               element: <AssessmentOverview />,
             },
             {
-              path: ":assessment_id/setup",
+              path: ":candidate_id/setup",
               element: <Setup />,
             },
             {
-              path: ":assessment_id/test/:test_id",
+              path: ":candidate_id/test/",
               element: <TestPage />,
               
             },

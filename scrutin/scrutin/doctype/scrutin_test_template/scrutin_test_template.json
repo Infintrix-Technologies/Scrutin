@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-12-16 14:28:20.350833",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "language",
+  "level",
+  "test_format",
+  "status",
+  "test_questions",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Link",
+   "label": "Language",
+   "options": "Language"
+  },
+  {
+   "default": "Beginner",
+   "fieldname": "level",
+   "fieldtype": "Select",
+   "label": "Level",
+   "options": "Beginner\nIntermediate\nExpert"
+  },
+  {
+   "default": "Multiple-choice",
+   "fieldname": "test_format",
+   "fieldtype": "Select",
+   "label": "Test Format",
+   "options": "Multiple-choice\nCoding\nTyping\nQuestionnaire\nSimulation\u00a0\u00a0(0)"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Published\nDraft"
+  },
+  {
+   "fieldname": "test_questions",
+   "fieldtype": "JSON",
+   "label": "Test Questions"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-12-16 14:33:15.185803",
+ "modified_by": "Administrator",
+ "module": "Scrutin",
+ "name": "Scrutin Test Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

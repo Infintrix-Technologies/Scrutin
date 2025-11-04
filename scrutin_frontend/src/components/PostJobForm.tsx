@@ -33,6 +33,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+import {
+  Card,
+
+} from "@/components/ui/card"
+
 const formSchema = z.object({
   job_title: z.string().min(2, {
     message: "Job title must be at least 2 characters.",
@@ -79,11 +84,13 @@ export default function PostJobForm() {
   }
 
   return (
+    <>
+     <Card className="p-8 mx-12  my-8 ">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Job Details</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="job_title"
@@ -135,14 +142,14 @@ export default function PostJobForm() {
               control={form.control}
               name="posted_on"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem >
                   <FormLabel>Posted On</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
-                          className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
+                          className={`w-full pl-3 text-left font-normal ${!field?.value && "text-muted-foreground"}`}
                         >
                           {field.value ? (
                             format(field.value, "PPP")
@@ -174,7 +181,7 @@ export default function PostJobForm() {
 
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Company Details</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="company"
@@ -207,7 +214,7 @@ export default function PostJobForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Employment Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field?.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select employment type" />
@@ -241,7 +248,7 @@ export default function PostJobForm() {
 
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Vacancy Details</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="vacancies"
@@ -249,7 +256,7 @@ export default function PostJobForm() {
                 <FormItem>
                   <FormLabel>Vacancies</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} onChange={e => field.onChange(+e.target.value)} />
+                    <Input type="number" {...field} onChange={e => field.onChange(+e?.target?.value)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -303,7 +310,7 @@ export default function PostJobForm() {
 
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Salary Details</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="currency"
@@ -382,8 +389,8 @@ export default function PostJobForm() {
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
                     <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
+                      checked={field?.value}
+                      onCheckedChange={field?.onChange}
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
@@ -400,8 +407,10 @@ export default function PostJobForm() {
           </div>
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button className="rounded-full" type="submit">Submit</Button>
       </form>
     </Form>
+    </Card>
+    </>
   )
 }

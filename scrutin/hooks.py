@@ -11,7 +11,7 @@ required_apps = ["frappe/hrms"]
 #Add Fixtures of Scrutin Assessment, Test & Question
 
 fixtures = [
-    "Scrutin Assessment", "Scrutin Test", "Scrutin Question"
+    "Scrutin Assessment", "Scrutin Test", "Scrutin Question", "Job Applicant", "Scrutin Candidate", "Job Opening",
 ]
 
 
@@ -152,7 +152,11 @@ fixtures = [
 # 		"on_trash": "method"
 # 	}
 # }
-
+# doc_events = {
+#     "*": {
+#         "after_insert": "scrutin.api.upload_webcam_snapshots.upload_image"
+#     }
+# }
 # Scheduled Tasks
 # ---------------
 

@@ -1,17 +1,9 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -28,104 +20,83 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { JobApplicantActions } from "@/components/JobApplicantActions";
+import { JobApplicant, JobApplication } from "@/types/Interface";
+import { Card } from "@/components/ui/card";
 
 const JobApplicants = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const renderStars = (rating: number) => {
-    let stars = [];
-    const fullStar = <FaStar />;
-    const halfStar = <FaStarHalfAlt />;
-    const emptyStar = <FaRegStar />;
+    const stars = [];
+    const fullStar = (index: number) => (
+      <FaStar key={`full-${index}`} className="text-yellow-500 text-xl" />
+    );
+    const halfStar = (index: number) => (
+      <FaStarHalfAlt key={`half-${index}`} className="text-yellow-500 text-xl" />
+    );
+    const emptyStar = (index: number) => (
+      <FaRegStar key={`empty-${index}`} className="text-yellow-500 text-xl" />
+    );
   
-    switch (rating) {
-      case 1:
-        stars = [fullStar, fullStar, fullStar, fullStar, fullStar];
-        break;
-      case 0.1:
-        stars = [halfStar, emptyStar, emptyStar, emptyStar, emptyStar];
-        break;
-      case 0.2:
-        stars = [fullStar, emptyStar, emptyStar, emptyStar, emptyStar];
-        break;
-      case 0.3:
-        stars = [fullStar, halfStar, emptyStar, emptyStar, emptyStar];
-        break;
-      case 0.4:
-        stars = [fullStar, fullStar, emptyStar, emptyStar, emptyStar];
-        break;
-      case 0.5:
-        stars = [fullStar, fullStar, halfStar, emptyStar, emptyStar];
-        break;
-      case 0.6:
-        stars = [fullStar, fullStar, fullStar, emptyStar, emptyStar];
-        break;
-      case 0.7:
-        stars = [fullStar, fullStar, fullStar, halfStar, emptyStar];
-        break;
-      case 0.8:
-        stars = [fullStar, fullStar, fullStar, fullStar, emptyStar];
-        break;
-      case 0.9:
-        stars = [fullStar, fullStar, fullStar, fullStar, halfStar];
-        break;
-      default:
-        stars = [emptyStar, emptyStar, emptyStar, emptyStar, emptyStar];
-    }
+    const convertedRating = Math.round(rating * 10);
+    const fullStarsCount = Math.floor(convertedRating / 2);
+    const halfStarCount = convertedRating % 2;
+    const emptyStarsCount = 5 - (fullStarsCount + halfStarCount);
+  
+    for (let i = 0; i < fullStarsCount; i++) stars.push(fullStar(i));
+    if (halfStarCount === 1) stars.push(halfStar(fullStarsCount));
+    for (let i = 0; i < emptyStarsCount; i++) stars.push(emptyStar(fullStarsCount + 1 + i));
   
     return stars;
   };
   
+
   const send_invite = useFrappePostCall(
     "scrutin.api.candidate.create_candidate"
   );
- 
+
   const job_applicants_query = useFrappeGetDocList("Job Applicant", {
     fields: ["*"],
-    orderBy: {
-      field: "creation",
-      order: "desc",
-    },
+    orderBy: { field: "creation", order: "desc" },
     asDict: true,
   });
+
   const job_applicants = job_applicants_query?.data || [];
-  console.log(job_applicants,"job_aacapplicantsjob_applicants");
 
   const assessments_query = useFrappeGetDocList("Scrutin Assessment", {
     fields: ["*"],
-    orderBy: {
-      field: "creation",
-      order: "desc",
-    },
+    orderBy: { field: "creation", order: "desc" },
     asDict: true,
   });
-  const assessments = assessments_query?.data || [];
-  console.log(assessments_query, "assessments_query")
 
-  const job_opening_query =  useFrappeGetDocList(
-    'Job Opening',
-    {
-      fields: ['name', 'job_title'],
-      orderBy: {
-        field: 'creation',
-        order: 'desc',
-      },
-      asDict: true,
-    },
-  );
-  const job_opening = job_opening_query?.data || []
-  console.log(job_opening_query, "job_opening_query")
+  const assessments = assessments_query?.data || [];
+
+  const job_opening_query = useFrappeGetDocList("Job Opening", {
+    fields: ["name", "job_title"],
+    orderBy: { field: "creation", order: "desc" },
+    asDict: true,
+  });
+
+  const job_opening = job_opening_query?.data || [];
   const job_openingMap = job_opening.reduce((map, jobopening) => {
     map[jobopening.name] = jobopening.job_title;
     return map;
   }, {});
 
-  // React Hook Form setup
   const {
     register,
     handleSubmit,
@@ -139,16 +110,15 @@ const JobApplicants = () => {
     },
   });
 
-  // Function to handle form submission
-  const onSubmit = (data: { assessment: string; job_applicant: string }) => {
-    send_invite.call(data).then(()=>{
-        setIsDialogOpen(false); // Close the dialog after form submission
-        reset(); // Reset the form fields
-    })
+  const onSubmit = (data: JobApplication) => {
+    send_invite.call(data).then(() => {
+      setIsDialogOpen(false);
+      reset();
+    });
   };
 
   return (
-    <div className="px-32">
+    <div className="px-4 sm:px-8 lg:px-32 py-4 min-h-screen text-gray-800 ">
       {/* Invite Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
@@ -162,10 +132,8 @@ const JobApplicants = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 py-4">
-              {/* Job Applicant Field */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="job_applicant">Job Applicant</Label>
-                <br />
                 <Input
                   disabled
                   id="job_applicant"
@@ -180,16 +148,10 @@ const JobApplicants = () => {
                 )}
               </div>
 
-              {/* Assessment Field */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="assessment">Assessment</Label>
-                <br />
-
                 <Select
-                
-                  onValueChange={(value) => {
-                    setValue("assessment", value);
-                  }}
+                  onValueChange={(value) => setValue("assessment", value)}
                   {...register("assessment", { required: true })}
                 >
                   <SelectTrigger className="w-max">
@@ -215,10 +177,9 @@ const JobApplicants = () => {
                 )}
               </div>
             </div>
-
             <DialogFooter>
               <Button type="submit">
-                {send_invite.loading ? "Inviting.." : "Send Invite"}
+                {send_invite.loading ? "Inviting..." : "Send Invite"}
               </Button>
             </DialogFooter>
           </form>
@@ -226,78 +187,78 @@ const JobApplicants = () => {
       </Dialog>
 
       {/* Job Applicants Table */}
-      <div className="flex justify-between mt-10">
-        <h1 className="text-3xl font-bold">Job Applicants</h1>
+      <div className="flex flex-wrap justify-between items-center mt-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">Job Applicants</h1>
       </div>
 
-      <div className="my-3 flex justify-between"></div>
-
-      <Table>
-        <TableCaption>A list of job applicants.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Applicant Name</TableHead>
-            <TableHead>Rating</TableHead>
-            <TableHead>Job Title</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Send Invite</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {job_applicants.map((applicant) => (
-                        
-            <>
-            <TableRow key={applicant.name}>
-              <TableCell>{applicant.applicant_name}</TableCell>
-              <TableCell className="flex">{renderStars(applicant.applicant_rating)}</TableCell>
-              {/* <TableCell>{applicant.job_title}</TableCell> */}
-              <TableCell>{job_openingMap[applicant.job_title] || 'N/A'}</TableCell>
-
-              {/* <TableCell>{applicant.status}</TableCell> */}
-              <TableCell>
-              <div className="flex items-center gap-2">
-                {/* <span className="w-16 text-sm text-muted-foreground">Status</span> */}
-                {applicant.status === 'Open' || applicant.status === 'Replied' ? (
-                  <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-100">
-                    {/* Open */}
-                    {applicant.status === 'Open' ? "Open": "Replied"}
-                  </Badge>
-                ): applicant.status === 'Rejected' || applicant.status === 'Hold' ?(
-                  <Badge variant="secondary" className="bg-red-100 text-red-700 hover:bg-red-100">
-                    {applicant.status === 'Rejected' ? "Rejected": "Hold"}
-                  </Badge>
-                ): (
-                  <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100">
-                    Accepted
-                  </Badge>
-                )}
-              </div>
-            </TableCell>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setValue("job_applicant", applicant.name);
-                    setIsDialogOpen(true);
-                  }}
-                >
-                  <FaPaperPlane />
-                </Button>
-              </TableCell>
-              <TableCell><JobApplicantActions applicant={applicant}/></TableCell>
+      <Card className="bg-white rounded-lg  my-6">
+        <Table>
+          {/* <TableCaption>A list of job applicants.</TableCaption> */}
+          <TableHeader>
+            <TableRow className="whitespace-nowrap tableeadclass">
+              <TableHead className="p-[20px] text-black font-bold" >Applicant Name</TableHead>
+              <TableHead className="text-black font-bold">Rating</TableHead>
+              <TableHead className="text-black font-bold" >Job Title</TableHead>
+              <TableHead className="text-black font-bold">Status</TableHead>
+              <TableHead className="text-black font-bold">Send Invite</TableHead>
+              <TableHead className="text-black font-bold">Actions</TableHead>
             </TableRow>
-            </>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={5}>
-              Total applicants: {job_applicants.length}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {job_applicants?.map((applicant: JobApplicant, index: number) => (
+              <TableRow key={index} className="whitespace-nowrap">
+                <TableCell className="p-[20px]">{applicant.applicant_name}</TableCell>
+                <TableCell className="flex py-6">
+                  {renderStars(applicant.applicant_rating)}
+                </TableCell>
+                <TableCell>
+                  {job_openingMap[applicant?.job_title] || "N/A"}
+                </TableCell>
+                <TableCell>
+                  <Badge
+                  
+                    variant="secondary"
+                    className={`${
+                      applicant.status === "Open" ||
+                      applicant.status === "Replied"
+                        ? "bg-orange-100 hover:bg-orange-100 text-orange-700"
+                        : applicant.status === "Rejected" ||
+                          applicant.status === "Hold"
+                        ? "bg-red-100 hover:bg-red-100 text-red-700"
+                        : "bg-green-100 hover:bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {applicant.status}
+                  </Badge>
+                </TableCell>
+                <TableCell >
+                  <Button
+                  className="bg-transparent border-none text-black hover:bg-transparent   shadow-none"
+                    variant="ghost"
+                    onClick={() => {
+                      setValue("job_applicant", applicant.name);
+                      setIsDialogOpen(true);
+                    }}
+                  >
+                    <FaPaperPlane />
+
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <JobApplicantActions applicant={applicant} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell className="pl-[20px]" colSpan={5}>
+                Total applicants: {job_applicants?.length}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </Card>
     </div>
   );
 };
