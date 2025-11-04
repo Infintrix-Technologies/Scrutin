@@ -43,6 +43,20 @@ export const useCompanyListQuery = () =>{
       );
 }
 
+export const useTestListQuery = () =>{
+    return useFrappeGetDocList<any>(
+        'Scrutin Test',
+        {
+          fields: ['*'],
+          orderBy: {
+            field: 'creation',
+            order: 'desc',
+          },
+          asDict: true,
+        },
+      );
+}
+
 export const useLanguageListQuery = () =>{
     return useFrappeGetDocList<any>(
         'Language',

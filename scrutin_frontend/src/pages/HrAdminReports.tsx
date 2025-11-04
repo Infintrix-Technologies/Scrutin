@@ -14,7 +14,6 @@ import {
 import { RxTimer } from "react-icons/rx";
 import NotFound from "./NotFound";
 import { HrAdminReportResponse } from "@/types/Interface";
-import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 

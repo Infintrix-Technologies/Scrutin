@@ -14,6 +14,14 @@ const navitems = [
     title: "Assessments",
     href: "/assessments",
   },
+   {
+    title: "Tests",
+    href: "/tests",
+  },
+   {
+    title: "Questions Bank",
+    href: "/questions",
+  },
   {
     title: "Candidates",
     href: "/candidates",

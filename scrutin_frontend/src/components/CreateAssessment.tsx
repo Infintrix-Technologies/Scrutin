@@ -25,6 +25,7 @@ import {
   useAssessmentsListQuery,
   useCompanyListQuery,
   useLanguageListQuery,
+  useTestListQuery,
 } from "@/hooks/query-hooks";
 import {
   Select,
@@ -36,7 +37,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Create_Assessment } from "../types/Interface";
-// import { RainbowButton } from "./ui/rainbow-button";
 
 
 const CreateAssessment = () => {
@@ -54,18 +54,10 @@ const CreateAssessment = () => {
       }}
     >
       <DialogTrigger asChild>
-        {/* <RainbowButton>
-        <FaPlus />
-        Create Assessment
-        </RainbowButton> */}
         <Button className="shadow-lg rounded-full">
           <FaPlus className="mr-2" />
           Create Assessment
         </Button>
-        {/* <Button variant="default">
-          <FaPlus />
-          Create Assessment
-        </Button> */}
       </DialogTrigger>
       <DialogContent className="bg-white sm:max-w-[425px]">
         <DialogHeader>
@@ -87,6 +79,7 @@ const AssessmentForm = () => {
   const assessments_query = useAssessmentsListQuery();
   const languages_query = useLanguageListQuery();
   const companies_query = useCompanyListQuery();
+  const tests_query = useTestListQuery();
 
   const create_frappe_doc = useFrappeCreateDoc();
 
@@ -162,6 +155,33 @@ const AssessmentForm = () => {
                         {(companies_query?.data || []).map((company) => (
                           <SelectItem key={company?.name} value={company?.name}>
                             {company?.company_name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="test"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Test</FormLabel>
+                <FormControl>
+                  <Select onValueChange={(value) => field.onChange(value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Test" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tests</SelectLabel>
+                        {(tests_query?.data || []).map((test) => (
+                          <SelectItem key={test?.name} value={test?.name}>
+                            {test?.title}
                           </SelectItem>
                         ))}
                       </SelectGroup>

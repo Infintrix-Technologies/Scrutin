@@ -230,6 +230,7 @@ export interface Create_Assessment {
   assessment_name: string;
   company: string;
   language: string;
+  test: string;
 }
 
 
@@ -247,9 +248,34 @@ export interface AssessmentList {
   candidate_count: number;
 }
 
+
 export interface AssessmentListResponse {
   message: AssessmentList[];
 }
+
+export interface TestsList {
+  name: string;
+  title: string;
+  level: string;
+  test_format: string;
+  language: string;
+  // candidate_count: number;
+}
+
+export interface TestListResponse {
+  message: TestsList[];
+}
+
+export interface TestDetailResponse {
+  test_title: string;
+  questions: Array<{
+    question: string;
+    question_text: string;
+    type: string;
+    question_duration: number;
+  }>
+}
+
 
 
 export interface StartAssessment_And_Continue_Button {

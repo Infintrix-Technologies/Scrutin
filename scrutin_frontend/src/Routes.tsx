@@ -22,6 +22,8 @@ import CandidatesComparisonPage from "./pages/CandidatesComparisonPage";
 import { CandidatesList } from "./components/CandidatesList";
 import AssessmentsList from "./pages/AssessmentsList";
 import HrAdminReports from "./pages/HrAdminReports";
+import TestsList from "./pages/TestsList";
+import TestDetailPage from "./pages/TestDetailPage";
 
 export const router = createBrowserRouter(
   [
@@ -57,12 +59,46 @@ export const router = createBrowserRouter(
               path: ":assessment_id",
               element: <AssessmentDetailPage />,
             },
+            {
+              path: "generate",
+              element: <>Generate Assessment</>,
+            },
+            
+          ],
+        },
+        {
+          path: "tests",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <TestsList />,
+            },
+            {
+              path: ":test_id",
+              element: <TestDetailPage />,
+            },
+            {
+              path: "generate",
+              element: <>Generate test</>,
+            },
+            
+          ],
+        },
+         {
+          path: "questions",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <>show questions here </>,
+            }
             
           ],
         },
         {
           path: "admin_reports",
-          element: <PublicLayout />,
+          element: <AdminLayout />,
           children: [
             {
               path: "",

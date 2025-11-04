@@ -155,12 +155,11 @@ const hr_admin_report = useFrappePostCall("scrutin.api.hr_admin_report.hr_admin_
 const test_template = useFrappePostCall("scrutin.api.test_template.get_scrutin_test_templete_data")
 
 
-const test_detail = useFrappePostCall("scrutin.api.testing_api.get_test_details_with_options")
+
+const add_test_in_assessment = useFrappePostCall("scrutin.api.testing_api.add_test_in_assessment")
 
 
-const create_test_template_with_test = useFrappePostCall("scrutin.api.testing_api.create_test_template_from_test")
-
-
+const create_assessment = useFrappePostCall("scrutin.api.create_assessment.new_create_assessment")
 
 
 
@@ -275,6 +274,18 @@ const create_test_template_with_test = useFrappePostCall("scrutin.api.testing_ap
         });
       }}>
         get_question_details
+      </Button>
+
+
+      <Button onClick={() => {
+        create_assessment.call({
+          assessment_name: "Test Assessment",
+          company: "Honda",
+          language: "en",
+          test_ids: ["o3dd6v8gc6", "948b22has1", "92j6f18kvv"],
+        });
+      }}>
+        Create Assessment
       </Button>
 
 
@@ -614,20 +625,12 @@ const create_test_template_with_test = useFrappePostCall("scrutin.api.testing_ap
 
 
       <Button onClick={() => {
-        test_detail.call({
-          test_id: "k9o3uoe1ob"
+        add_test_in_assessment.call({
+          assessment_id: "8krk7dvcgu",
+          test_id: ["92j6f18kvv","948b22has1"]
         });
       }}>
-        Test Detail
-      </Button>
-
-
-      <Button onClick={() => {
-        create_test_template_with_test.call({
-          test_id: "k9o3uoe1ob"
-        });
-      }}>
-        Test Template with Test Data
+        Add test into assessment
       </Button>
 
 
