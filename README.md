@@ -1,88 +1,83 @@
-# Scrutin
+<p align="center">
+  <a href="https://github.com/Infintrix-Technologies/Scrutin">
+    <img src="scrutin_logo.png" alt="Scrutin logo" height="100" />
+  </a>
 
-Scrutin is a **job applicant testing and evaluation app** built on **Frappe / ERPNext / FrappeHR**.  
-It helps organizations **evaluate candidates objectively** before hiring — without leaving their HR system.
+  <h3 align="center">Scrutin</h3>
+  <p align="center">Open Source Talent Assessment Tool built on ERPNext and Frappe
+    <br />
+    <br />
+    <a href="https://frappecloud.com/marketplace/apps/scrutin"><strong>Install on Frappe Cloud »</strong></a>
+    <br />
+    <br />
+    <a href="https://scrutin.infintrix.tech"><strong>Learn More »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/Infintrix-Technologies/Scrutin/issues">Issues</a>
+    ·
+    <a href="https://community.scrutin.tech">Community</a>
+    ·
+    <a href="https://github.com/sponsors/Infintrix-Technologies">Sponsor Us!</a>
+  </p>
+</p>
 
-If you already use ERPNext for Recruitment or FrappeHR, Scrutin becomes the missing piece between **Application → Evaluation → Hiring**.
+<p align="center">
+  <a href="https://github.com/Infintrix-Technologies/Scrutin/blob/main/LICENSE">
+    <img alt="license" src="https://img.shields.io/badge/license-AGPLv3-blue">
+  </a>
+  <a href="https://github.com/Infintrix-Technologies/Scrutin/stargazers">
+    <img src="https://img.shields.io/github/stars/Infintrix-Technologies/Scrutin" alt="Github Stars">
+  </a>
+  <a href="https://github.com/Infintrix-Technologies/Scrutin/pulse">
+    <img src="https://img.shields.io/github/commit-activity/m/Infintrix-Technologies/Scrutin" alt="Commits-per-month">
+  </a>
+</p>
 
----
+<br>
 
-## 🚀 Why Scrutin Exists
+**Scrutin** is a powerful, open-source Talent Assessment Tool designed for evaluating candidates through various assessments. Built on the [Frappe Framework](https://frappeframework.com) and [ERPNext](https://erpnext.com/), Scrutin provides flexible assessment creation, including different test types with customizable questions.
 
-Most companies test candidates using scattered tools (Google Forms, PDFs, WhatsApp, TestGorilla, etc.).  
-That creates chaos, cheating, and zero traceability.
+<hr>
 
-Scrutin **centralizes testing inside ERPNext**, so:
+## Motivation
 
-- Recruiters stay in one system.
-- Tests link directly to Job Applicants.
-- Scores become part of hiring decisions.
-- No data is lost, duplicated, or manually imported/exported.
+Scrutin was created to streamline the assessment process, making it easier to manage, organize, and evaluate talent within organizations. Many existing tools are either too complex or require high subscription fees. Scrutin leverages ERPNext to provide an integrated, cost-effective solution for talent management.
 
----
+<hr>
 
-## ✨ Core Features
+## Features
 
-| Feature | Description |
-|--------|-------------|
-| **Question Bank** | Store, tag, and organize questions by skill, difficulty, and role. |
-| **Randomized Tests** | Each candidate receives a unique test instance to reduce cheating. |
-| **Timers & Auto-Submit** | Tests auto-submit on timeout to stop gaming the system. |
-| **Webcam Snapshot (Proctoring)** | Capture periodic webcam shots during the test. |
-| **Screen Focus Detection** | Logs when a candidate switches tabs or leaves test window. |
-| **Multiple Test Types** | MCQs, written response, coding tasks (extendable). |
-| **Custom Scoring Rubrics** | Define scoring logic per test or per question. |
-| **Recruiter Evaluation View** | Central screen to review answers, proctor logs, and scoring. |
-| **Direct Integration with ERPNext / FrappeHR** | Link test results directly to Job Applicants → Job Offers → Employees. |
+1. Create and manage multiple types of assessments with various question formats
+2. Configure tests with timers and scoring systems
+3. Organize assessments into categories based on roles or skills
+4. Invite candidates via unique links for specific assessments
+5. Review detailed results and analytics for each candidate
+6. Dark mode support 🌙 for comfortable assessment creation and review
+7. Seamless integration with ERPNext for user and data management
 
----
+<hr>
 
-## 🔥 Built For
+## Built with
 
-- Companies using **ERPNext** or **FrappeHR**
-- HR Teams needing structured, defensible evaluation processes
-- Recruitment agencies who want scalable screening workflows
-- Teams hiring remote or freelance talent
+Scrutin leverages the [Frappe Framework](https://frappeframework.com), a robust full-stack development framework. Key technologies include:
 
----
+- [Python](https://www.python.org)
+- [MariaDB](https://mariadb.org/)
+- [Redis](https://redis.io/)
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
-## 🧱 Architecture
+<hr>
 
-| Layer | Stack |
-|------|-------|
-| Backend | Frappe Framework (Python) |
-| Frontend | Frappe UI + Custom Pages |
-| Database | MariaDB (via ERPNext) |
-| Deployment | Works on Frappe Cloud or self-hosted environments |
+## Installation
 
-Scrutin does **not** require any external services by default.
+To install Scrutin on your Frappe environment, follow these steps:
 
----
-
-## 🛠️ Installation
+1. Ensure your Frappe site is set up and running.
+2. Install Scrutin via the following commands:
 
 ```bash
-bench get-app scrutin https://github.com/<your-org>/scrutin.git
-bench --site yoursite.com install-app scrutin
-bench migrate
-🏁 Usage Workflow
-Create Question Bank entries.
-
-Create a Test Template with rules & scoring.
-
-Attach a test to a Job Applicant or Recruitment Flow.
-
-Candidate receives test link.
-
-Candidate completes test under monitoring.
-
-HR reviews results and makes hiring decisions confidently.
-
-🗺️ Roadmap
-Code Editor-based Programming Tests (with sandbox execution)
-
-Audio/Video interview prompts
-
+bench get-app https://github.com/Infintrix-Technologies/Scrutin.git
 AI-assisted scoring for written answers
 
 Conversation-style Behavioral Test Models
